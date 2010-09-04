@@ -1,1 +1,1 @@
-require File.dirname(__FILE__) + '/model/base.rb'
+require File.dirname(__FILE__) + '/model/base'
