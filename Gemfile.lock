@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    mockdown (0.1.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    minitest (1.7.2)
+    rake (0.8.7)
+    unindentable (0.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  minitest (~> 1.7.0)
+  mockdown!
+  rake (~> 0.8.3)
+  unindentable (~> 0.0.3)

@@ -1,1 +1,1 @@
-require File.dirname(__FILE__) + '/model/base'
+require 'mockdown/parser/base'
