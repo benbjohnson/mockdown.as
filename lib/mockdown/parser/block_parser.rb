@@ -53,6 +53,7 @@ module Mockdown
         root  = Block.new(nil, 0, nil)
         stack = [root]
         last_block = root
+        multiline_block = nil
         
         # Loop over lines and group into blocks
         lines = content.split(/\n/)
@@ -60,19 +61,25 @@ module Mockdown
           line_number = index+1
           line = lines[index]
 
+          # Skip line if blank
+          if line.index(/^\s*$/) == 0
+            multiline_block = nil
+            next
+          end
+
           # Split of indentation and rest of line
           m, indentation, content = *line.match(/^(\s*)(.+)$/)
           
-          # Skip line if blank
-          if m.nil?
-            next
           # Throw error if indentation is wrong
-          elsif indentation.length % 2 != 0
+          if indentation.length % 2 != 0
             raise IndentationError.new(line_number, 'You cannot indent an odd number of spaces.')
           # Throw error if tabs were used
           elsif indentation.index(/\t/)
             raise IndentationError.new(line_number, 'You cannot use tabs for indentation.')
           end
+          
+          # Clean content
+          content.strip!
           
           # Determine level by indentation
           level = (indentation.length/2) + 1
@@ -88,15 +95,46 @@ module Mockdown
           elsif level > stack_level+1
             raise IndentationError.new(line_number, 'You can not indent multiple levels between lines.')
           end
+  
+          # Clear multiline block when changing indentation
+          multiline_block = nil if level != stack_level
           
-          # Create block for this line
-          parent = stack.last
-          block = Block.new(parent, level, line_number, content)
-          parent.children << block
-          last_block = block
+          # If this line extends a multiline block, append the content
+          if !multiline_block.nil? && !single_line_block?(content)
+            multiline_block.content += "\n#{content}"
+            
+          # Otherwise create a new block for this line
+          else
+            parent = stack.last
+            block = Block.new(parent, level, line_number, content)
+            parent.children << block
+            last_block = block
+            multiline_block = (single_line_block?(content) ? nil : block)
+          end
+          
         end
         
         return root
+      end
+      
+
+      #########################################################################
+      #
+      # Protected Methods
+      #
+      #########################################################################
+
+      protected
+      
+      # Determines if a block is a single line block. This is true if the
+      # content of the line begins with an exclamation point or a percent sign.
+      #
+      # content - The content of the line.
+      #
+      # Returns true if the line should be a single line block. Returns false
+      # if line could be a part of a previous multiline block.
+      def single_line_block?(content)
+        content.index(/^(%|!)/) == 0
       end
     end
   end

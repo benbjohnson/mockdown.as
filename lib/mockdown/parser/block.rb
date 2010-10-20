@@ -25,10 +25,6 @@ module Mockdown
 
       # The indented children of the block.
       attr_accessor :children
-      
-      def to_s
-        "<#{level}: content>"
-      end
     end
   end
 end

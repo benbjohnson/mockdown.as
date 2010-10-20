@@ -78,4 +78,34 @@ class TestBlockParser < MiniTest::Unit::TestCase
     assert_block bar2, 3, 4, '%baz1', 0, baz1
     assert_block bar2, 3, 6, '%baz2', 0, baz2
   end
+
+  # Should join multiple lines together unless they start with a single line
+  # character (% or !).
+  def test_parse_multiline
+    root = @parser.parse(unindent(
+      <<-BLOCK
+        %foo
+          This is a test
+          of a multiline
+          block.
+          
+          This is another 
+          block.
+          
+          One more block
+          %bar
+      BLOCK
+    ))
+    
+    foo = *root.children
+    b1, b2, b3, bar = *foo.children
+
+    assert_block root, 1, 1, '%foo', 4, foo
+    assert_block foo, 2, 2, "This is a test\nof a multiline\nblock.", 0, b1
+    assert_block foo, 2, 6, "This is another\nblock.", 0, b2
+    assert_block foo, 2, 9, "One more block", 0, b3
+    assert_block foo, 2, 10, "%bar", 0, bar
+  end
+  
+  #def test_error_on_parse_nested_within_multiline
 end
