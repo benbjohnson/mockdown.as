@@ -18,34 +18,17 @@ module Mockdown
       # Public: Parses a whitespace aware text file into a hierarchy of logical
       # blocks.
       #
-      # file  - The file to parse.
-      # new_block? - A block that is called for each line to determine if a new
-      #              block should be created. This is not called when lines
-      #              change indentation levels.
+      # content - The white-space aware text to parse.
       #
-      # Examples
+      # Example:
       #
-      #   parser = Mockdown::Parser::BlockParser.new()
-      #   block = parser.parse('homepage.mkdn') do |block, line|
-      #     if line[0] == "%"
-      #       return true
-      #     elsif line[0] == "*" && block.content[0] != "*"
-      #       return true
-      #     else
-      #       return false
-      #     end
-      #   end
+      #   content = IO.read('homepage.mkd')
+      #   parser  = Mockdown::Parser::BlockParser.new()
+      #   root    = parser.parse(content)
       #
       # Returns a Mockdown::Parser::Block.
-      def parse(options={}, &f)
-        # If a string was passed in, use it as the content
-        if options.is_a?(String)
-          content = options
-        # Use content passed in through options
-        elsif options['content']
-          content = options['content']
-        # If we didn't receive any content then raise an error
-        else
+      def parse(content, options={})
+        if content.nil?
           raise ParseError.new(0, 'Content is required for parsing')
         end
         
@@ -68,7 +51,7 @@ module Mockdown
           end
 
           # Split of indentation and rest of line
-          m, indentation, content = *line.match(/^(\s*)(.+)$/)
+          m, indentation, line = *line.match(/^(\s*)(.+)$/)
           
           # Throw error if indentation is wrong
           if indentation.length % 2 != 0
@@ -79,7 +62,7 @@ module Mockdown
           end
           
           # Clean content
-          content.strip!
+          line.strip!
           
           # Determine level by indentation
           level = (indentation.length/2) + 1
@@ -100,16 +83,16 @@ module Mockdown
           multiline_block = nil if level != stack_level
           
           # If this line extends a multiline block, append the content
-          if !multiline_block.nil? && !single_line_block?(content)
-            multiline_block.content += "\n#{content}"
+          if !multiline_block.nil? && !single_line_block?(line)
+            multiline_block.content += "\n#{line}"
             
           # Otherwise create a new block for this line
           else
             parent = stack.last
-            block = Block.new(parent, level, line_number, content)
+            block = Block.new(parent, level, line_number, line)
             parent.children << block
             last_block = block
-            multiline_block = (single_line_block?(content) ? nil : block)
+            multiline_block = (single_line_block?(line) ? nil : block)
           end
           
         end

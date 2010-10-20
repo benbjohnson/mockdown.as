@@ -25,6 +25,10 @@ module Mockdown
 
       # The indented children of the block.
       attr_accessor :children
+      
+      def inspect
+        "<#{line_number}: content>"
+      end
     end
   end
 end

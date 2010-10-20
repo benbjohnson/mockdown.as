@@ -84,6 +84,9 @@ class TestBlockParser < MiniTest::Unit::TestCase
   def test_parse_multiline
     root = @parser.parse(unindent(
       <<-BLOCK
+        !pragma1
+        !pragma2
+        
         %foo
           This is a test
           of a multiline
@@ -97,15 +100,15 @@ class TestBlockParser < MiniTest::Unit::TestCase
       BLOCK
     ))
     
-    foo = *root.children
+    pragma1, pragma2, foo = *root.children
     b1, b2, b3, bar = *foo.children
 
-    assert_block root, 1, 1, '%foo', 4, foo
-    assert_block foo, 2, 2, "This is a test\nof a multiline\nblock.", 0, b1
-    assert_block foo, 2, 6, "This is another\nblock.", 0, b2
-    assert_block foo, 2, 9, "One more block", 0, b3
-    assert_block foo, 2, 10, "%bar", 0, bar
+    assert_block root, 1, 1, '!pragma1', 0, pragma1
+    assert_block root, 1, 2, '!pragma2', 0, pragma2
+    assert_block root, 1, 4, '%foo', 4, foo
+    assert_block foo, 2, 5, "This is a test\nof a multiline\nblock.", 0, b1
+    assert_block foo, 2, 9, "This is another\nblock.", 0, b2
+    assert_block foo, 2, 12, "One more block", 0, b3
+    assert_block foo, 2, 13, "%bar", 0, bar
   end
-  
-  #def test_error_on_parse_nested_within_multiline
 end
