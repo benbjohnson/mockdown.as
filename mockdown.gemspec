@@ -15,6 +15,9 @@ Gem::Specification.new do |s|
   #s.executables = ['mockdown']
   #s.default_executable = 'mockdown'
 
+  s.add_dependency('chunky_png', '~> 0.10.5')
+  s.add_dependency('rmagick', '~> 2.13.1')
+
   s.add_development_dependency('rake', '~> 0.8.3')
   s.add_development_dependency('minitest', '~> 1.7.0')
   s.add_development_dependency('unindentable', '~> 0.0.3')
