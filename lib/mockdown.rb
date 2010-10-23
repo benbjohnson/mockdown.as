@@ -1,1 +1,2 @@
-require 'mockdown/parser/base'
+require 'mockdown/model'
+require 'mockdown/parser'

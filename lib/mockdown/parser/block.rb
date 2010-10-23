@@ -1,5 +1,5 @@
 module Mockdown
-  module Parser
+  class Parser
     # Represents a logical block of lines in a Mockdown file. This is used
     # internally by the parser.
     class Block

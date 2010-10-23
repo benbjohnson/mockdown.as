@@ -1,5 +1,5 @@
 module Mockdown
-  module Parser
+  class Parser
     class ParseError < StandardError
     end
 

@@ -1,9 +1,11 @@
+lib = File.expand_path(File.dirname(__FILE__) + '/lib')
+$:.unshift lib unless $:.include?(lib)
+
 require 'rubygems'
 require 'rake'
-require 'minitest/autorun'
 require 'rake/testtask'
-require 'cucumber/rake/task'
 require 'rake/rdoctask'
+require 'mockdown'
 
 #############################################################################
 #
@@ -17,35 +19,12 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "--format progress"
+Rake::RDocTask.new do |rd|
+  rd.main = 'README.md'
+  rd.rdoc_files.include('README.md', 'lib/**/*.rb')
+  rd.rdoc_dir = 'doc'
+  rd.title = 'Mockdown Documentation'
 end
-
-desc "Generate RCov test coverage and open in your browser"
-task :coverage do
-  require 'rcov'
-  sh "rm -fr coverage"
-  sh "rcov test/test_*.rb"
-  sh "open coverage/index.html"
-end
-
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "#{name} #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-desc "Open an irb session preloaded with this library"
-task :console do
-  sh "irb -rubygems -r ./lib/#{name}.rb"
-end
-
-#############################################################################
-#
-# Custom tasks (add your own tasks here)
-#
-#############################################################################
 
 
 #############################################################################
@@ -54,20 +33,24 @@ end
 #
 #############################################################################
 
-# TODO: Define version
-task :release => :build do
+task :release do
+  puts ""
+  print "Are you sure you want to relase Mockdown #{Mockdown::VERSION}? [y/N] "
+  exit unless STDIN.gets.index(/y/i) == 0
+  
   unless `git branch` =~ /^\* master$/
     puts "You must be on the master branch to release!"
     exit!
   end
-  sh "git commit --allow-empty -a -m 'v#{version}'"
-  sh "git tag v#{version}"
+  
+  # Build gem and upload
+  sh "gem build mockdown.gemspec"
+  sh "gem push mockdown-#{Mockdown::VERSION}.gem"
+  sh "rm mockdown-#{Mockdown::VERSION}.gem"
+  
+  # Commit
+  sh "git commit --allow-empty -a -m 'v#{Mockdown::VERSION}'"
+  sh "git tag v#{Mockdown::VERSION}"
   sh "git push origin master"
-  sh "git push origin v#{version}"
-  sh "gem push mockdown-#{version}.gem"
-end
-
-task :build do
-  sh "mkdir -p pkg"
-  sh "gem build mockdown-#{version}.gem"
+  sh "git push origin v#{Mockdown::VERSION}"
 end

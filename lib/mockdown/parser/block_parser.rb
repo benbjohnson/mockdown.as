@@ -1,5 +1,5 @@
 module Mockdown
-  module Parser
+  class Parser
     # The BlockParser parses logical blocks of code in a whitespace-aware text
     # file. Blocks can be organized in several ways:
     #

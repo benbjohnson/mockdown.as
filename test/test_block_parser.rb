@@ -10,13 +10,6 @@ class TestBlockParser < MiniTest::Unit::TestCase
     @parser = Mockdown::Parser::BlockParser.new()
   end
 
-
-  ##############################################################################
-  #
-  # Helpers
-  #
-  ##############################################################################
-  
   def assert_block(parent, level, line_number, content, child_count, block)
     assert_equal parent, block.parent, 'Block parent'
     assert_equal level, block.level, 'Block level'

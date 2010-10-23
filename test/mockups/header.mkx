@@ -1,0 +1,5 @@
+%row top=10 width=100%
+  ## Welcome to my web site
+
+  %text value="Hi there!"
+
