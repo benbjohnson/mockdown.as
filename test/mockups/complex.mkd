@@ -1,2 +1,0 @@
-%col width=100%
-  %header width=200 height=30
