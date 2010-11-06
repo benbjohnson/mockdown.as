@@ -1,0 +1,27 @@
+<flex-config>
+	<output>../../../target/mockdown.swc</output>
+	<target-player>10.0.0</target-player>
+	<benchmark>false</benchmark>
+	<warnings>true</warnings>
+
+	<compiler>
+		<debug>true</debug>
+
+		<keep-generated-actionscript>false</keep-generated-actionscript>
+
+		<source-path>
+			<path-element>../actionscript</path-element>
+		</source-path>
+	</compiler>
+
+	<include-classes>
+		<class>MockdownClasses</class>
+	</include-classes>
+
+	<metadata>
+		<creator>Ben Johnson</creator>
+		<description>A Markdown-inspired mockup library.</description>
+		<language>EN</language>
+		<title>mockdown</title>
+	</metadata>
+</flex-config>
