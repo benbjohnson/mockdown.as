@@ -1,4 +1,4 @@
-package mockdown.data
+package mockdown.components
 {
 /**
  *	This class represents a simple text area.

@@ -1,8 +1,8 @@
-package mockdown.data
+package mockdown.components
 {
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
-public class DataSuite
+public class ComponentsSuite
 {
 	public var t0:NodeTest;
 }

@@ -1,4 +1,4 @@
-package mockdown.data
+package mockdown.core
 {
 import flash.events.EventDispatcher;
 

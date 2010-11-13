@@ -1,4 +1,4 @@
-package mockdown.data
+package mockdown.components
 {
 import org.flexunit.Assert;
 

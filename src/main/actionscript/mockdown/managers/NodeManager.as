@@ -1,9 +1,9 @@
 package mockdown.managers
 {
-import mockdown.data.Column;
-import mockdown.data.Node;
-import mockdown.data.Row;
-import mockdown.data.Text;
+import mockdown.components.Column;
+import mockdown.components.Node;
+import mockdown.components.Row;
+import mockdown.components.Text;
 
 import flash.events.EventDispatcher;
 

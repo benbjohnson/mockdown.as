@@ -50,7 +50,7 @@ public class NodeManagerTest
 }
 
 
-import mockdown.data.Node;
+import mockdown.components.Node;
 
 class TestClass extends Node
 {

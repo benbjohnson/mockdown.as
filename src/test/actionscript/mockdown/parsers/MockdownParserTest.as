@@ -1,6 +1,7 @@
 package mockdown.parsers
 {
-import mockdown.data.*;
+import mockdown.components.*;
+import mockdown.core.Document;
 
 import org.flexunit.Assert;
 

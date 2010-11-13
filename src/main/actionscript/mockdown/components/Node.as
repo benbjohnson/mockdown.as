@@ -1,5 +1,6 @@
-package mockdown.data
+package mockdown.components
 {
+import mockdown.core.Document;
 import mockdown.parsers.Block;
 
 import flash.events.EventDispatcher;

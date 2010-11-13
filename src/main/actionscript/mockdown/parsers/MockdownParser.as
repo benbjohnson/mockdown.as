@@ -1,8 +1,8 @@
 package mockdown.parsers
 {
-import mockdown.data.Document;
-import mockdown.data.Node;
-import mockdown.data.Text;
+import mockdown.components.Node;
+import mockdown.components.Text;
+import mockdown.core.Document;
 import mockdown.errors.BlockParseError;
 import mockdown.errors.ParseError;
 import mockdown.managers.NodeManager;
