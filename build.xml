@@ -20,12 +20,16 @@
 
 	<!-- Target: Initialization -->
 	<target name="init">
+		<!-- TestRunner dependencies -->
 		<mkdir dir="${target.dir}/test"/>
 		<copy file="${src.dir}/test/resources/TestRunner-app.xml" tofile="${target.dir}/test/TestRunner-app.xml" overwrite="true"/>
+		<copy todir="${target.dir}/test/mockups" overwrite="true">
+			<fileset dir="${src.dir}/test/resources/mockups"/>
+		</copy>
 	</target>
 
 	<!-- Target: Build SWC -->
-	<!-- compc -load-config+=src/main/resources/mockdown-config.xml -->
+	<!-- compc +configname=air -load-config+=src/main/resources/mockdown-config.xml -->
 	<target name="build" depends="init">
 		<java jar="${compc.jar}" fork="true" failonerror="true">
 			<jvmarg value="-Xmx1024M"/>
@@ -35,7 +39,6 @@
 		</java>
 	</target>
 	
-
 	<!-- Target: Test -->
 	<!-- mxmlc +configname=air -load-config+=src/test/resources/TestRunner-config.xml src/test/flex/TestRunner.mxml -->
 	<target name="test-build" depends="init">

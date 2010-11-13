@@ -1,0 +1,2 @@
+%col
+  %header width:200 height:30
