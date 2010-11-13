@@ -15,15 +15,20 @@ public class MockdownParserTest
 	//---------------------------------------------------------------------
 
 	private var parser:MockdownParser;
+
 	private var mockupsDirectory:File;
+	private var libDirectory:File;
+	private var lib2Directory:File;
 	
 	[Before]
 	public function setup():void
 	{
 		mockupsDirectory = File.applicationDirectory.resolvePath("mockups");
+		libDirectory = mockupsDirectory.resolvePath("lib");
+		lib2Directory = mockupsDirectory.resolvePath("lib2");
 		
 		parser = new MockdownParser();
-		parser.paths = [mockupsDirectory.nativePath];
+		parser.paths = [libDirectory.nativePath, mockupsDirectory.nativePath];
 	}
 	
 
@@ -66,29 +71,24 @@ public class MockdownParserTest
 	}
 
 	[Test]
-	public function shouldParseComplexDocument():void
+	public function shouldSearchLoadPathInOrder():void
 	{
-		var root:Node = parser.parse("complex");
+		parser.paths = [lib2Directory.nativePath].concat(parser.paths);
+		var root:Node = parser.parse("load_paths");
 
-		// Verify root col
-		Assert.assertTrue(root is Column);
-		Assert.assertEquals(mockupsDirectory.resolvePath("complex.mkd").nativePath, root.document.filename);
+		// Verify object
+		var foo:Object = root.children[0];
+		Assert.assertEquals("2", foo.width);
+	}
 
-		// Verify header
-		var header:Object = root.children[0];
-		Assert.assertTrue(header is Row);
-		Assert.assertEquals("200", header.width);
-		Assert.assertEquals('30', header.height);
-		Assert.assertEquals('10', header.top);
-		Assert.assertEquals(mockupsDirectory.resolvePath('header.mkx').nativePath, header.document.filename);
-		Assert.assertEquals(2, header.children.length);
+	[Test]
+	public function shouldFindComponentsWithinDirectories():void
+	{
+		var root:Node = parser.parse("dirs");
 
-		var h2:Object   = header.children[0];
-		var text:Object = header.children[1];
-		Assert.assertTrue(h2 is Text);
-		Assert.assertEquals("## Test Header", h2.content);
-		Assert.assertTrue(text is Text);
-		Assert.assertEquals("The header content.", text.content);
+		// Verify object
+		var node:Object = root.children[0];
+	    Assert.assertEquals(mockupsDirectory.resolvePath("subdir/bar.mkx").nativePath, node.document.filename);
 	}
 }
 }

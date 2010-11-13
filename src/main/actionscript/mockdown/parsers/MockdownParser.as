@@ -74,7 +74,7 @@ public class MockdownParser
 	/**
 	 *	Parses a Mockdown file into a recursive node tree. This method will
 	 *	search the registered node types as well as search the load path. Files
-	 *	can be specified within folders by using the ":" colon separator.
+	 *	can be specified within folders by using the pipe ("|") separator.
 	 *
 	 *	@param name  The name of the node to parse.
 	 *	
@@ -87,8 +87,8 @@ public class MockdownParser
 			throw new IllegalOperationError("The node name is required for parsing");
 		}
 		// Throw error if name starts with a slash
-		if(name.indexOf("/") == 0 || name.indexOf(":") == 0) {
-			throw new IllegalOperationError("You cannot a node name with '/' or ':'");
+		if(name.indexOf("/") == 0 || name.indexOf("|") == 0) {
+			throw new IllegalOperationError("You cannot a node name with '/' or '|'");
 		}
 		// Throw error if a double dot is found in the name
 		if(name.indexOf("..") != -1) {
@@ -101,7 +101,7 @@ public class MockdownParser
 		// If type is not registered, search the load path
 		if(!node) {
 			// Change colons to directory seperators
-			name = name.replace(":", "/");
+			var filename:String = name.replace(/\|/g, "/");
 			
 			var extensions:Array = this.extensions.slice();
 			extensions.unshift(null);
@@ -110,9 +110,17 @@ public class MockdownParser
 				for each(var extension:String in extensions) {
 					extension = (extension ? "." + extension : "");
 					
-					var file:File = (new File(path)).resolvePath(name + extension);
+					var file:File = (new File(path)).resolvePath(filename + extension);
 					if(file.exists) {
-						node = parseContent(FileUtil.read(file));
+						var content:String;
+						try {
+							content = FileUtil.read(file);
+						}
+						catch(e:Error) {
+							throw new ParseError("Cannot find component: " + name);
+						}
+						
+						node = parseContent(content);
 					
 						// Assign a document to this node
 						if(node) {
@@ -214,11 +222,9 @@ public class MockdownParser
 		var node:Node;
 		
 		// Parse block as component if it starts with a percent sign
-		trace("pCB: " + block.content);
-		
 		if(lexer.match("%")) {
 			var name:String;
-			if(!(name = lexer.match(/^(\w+)\s*/))) {
+			if(!(name = lexer.match(/([^ ]+)\s*/))) {
 				throw new BlockParseError(block, 'Missing component name');
 			}
 			
@@ -285,7 +291,6 @@ public class MockdownParser
 			
 			// Assign values to properties
 			for(key in data) {
-				trace("pCB set: " + key + " : " + data[key]);
 				node[key] = data[key];
 			}
 		}

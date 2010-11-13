@@ -36,9 +36,10 @@ public class Node extends EventDispatcher
 	public var parent:Node;
 	
 	/**
-	 *	The name of the node.
+	 *	The identifier for the node. This can be used only within a document
+	 *	context.
 	 */
-	public var name:Node;
+	public var id:String;
 	
 	/**
 	 *	The block the node was parsed from.
