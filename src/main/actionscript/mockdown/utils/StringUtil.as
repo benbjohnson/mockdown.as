@@ -20,6 +20,10 @@ public class StringUtil
 	//
 	//--------------------------------------------------------------------------
 
+	//---------------------------------
+	//	Trim
+	//---------------------------------
+	
 	/**
 	 *	Strips leading and trailing whitespace.
 	 * 
@@ -27,7 +31,7 @@ public class StringUtil
 	 *
 	 *	@returns    A trimmed string.
 	 */			
-	public static function trim(str:String):String
+	static public function trim(str:String):String
 	{
 		return StringUtil.ltrim(StringUtil.rtrim(str));
 	}
@@ -39,7 +43,7 @@ public class StringUtil
 	 *
 	 *	@returns    A left trimmed string.
 	 */			
-	public static function ltrim(str:String):String
+	static public function ltrim(str:String):String
 	{
 		var n:int = str.length;
 		for(var i:int=0; i<n; i++) {
@@ -57,7 +61,7 @@ public class StringUtil
 	 *
 	 *	@returns    A right trimmed string.
 	 */			
-	public static function rtrim(str:String):String
+	static public function rtrim(str:String):String
 	{
 		var n:int = str.length;
 		for(var i:int=n; i>0; i--) {
@@ -66,6 +70,53 @@ public class StringUtil
 			}
 		}
 		return "";
+	}
+
+
+	//---------------------------------
+	//	Parsing
+	//---------------------------------
+	
+	/**
+	 *	Parses a string into an integer.
+	 * 
+	 *	@param str  The string to parse.
+	 *
+	 *	@returns    The parsed integer.
+	 */			
+	static public function parseNumber(str:String):Number
+	{
+		var match:Array;
+		if(str && (match = str.match(/^-?\d+$/))) {
+			return parseInt(str);
+		}
+		else if(str && (match = str.match(/^-?\d+(?:\.\d+)?$/))) {
+			return parseFloat(str);
+		}
+		else {
+			return NaN;
+		}
+	}
+
+	/**
+	 *	Parses a string into a percentage.
+	 * 
+	 *	@param str  The string to parse.
+	 *
+	 *	@returns    The parsed integer percentage.
+	 */			
+	static public function parsePercentage(str:String):Number
+	{
+		var match:Array;
+		if(str && (match = str.match(/^(-?\d+)%$/))) {
+			return parseInt(match[1]);
+		}
+		else if(str && (match = str.match(/^(-?\d+(?:\.\d+)?)%$/))) {
+			return parseFloat(match[1]);
+		}
+		else {
+			return NaN;
+		}
 	}
 }
 }
