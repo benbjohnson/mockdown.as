@@ -129,14 +129,14 @@ public class ColumnTest
 	[Test]
 	public function shouldAlignLeft():void
 	{
-		root = n("root", Column, {align:"left", width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+		root = n("root", Column, {align:"left", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
 			n("a", VisualNode, {width:"10", height:"20"}),
 			n("b", VisualNode, {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
 
-		assertDimension("root", 0, 0, 200, 200);
+		assertDimension("root", 0, 0, 200, 100);
 		assertDimension("a", 3, 1, 10, 20);
 		assertDimension("b", 3, 25, 30, 40);
 	}
@@ -144,29 +144,29 @@ public class ColumnTest
 	[Test]
 	public function shouldAlignCenter():void
 	{
-		root = n("root", Column, {align:"center", width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+		root = n("root", Column, {align:"center", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
 			n("a", VisualNode, {width:"10", height:"20"}),
 			n("b", VisualNode, {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
 
-		assertDimension("root", 0, 0, 200, 200);
-		assertDimension("a", 95, 1, 10, 20);
-		assertDimension("b", 85, 25, 30, 40);
+		assertDimension("root", 0, 0, 200, 100);
+		assertDimension("a", 94, 1, 10, 20);
+		assertDimension("b", 84, 25, 30, 40);
 	}
 
 	[Test]
 	public function shouldAlignRight():void
 	{
-		root = n("root", Column, {align:"right", width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+		root = n("root", Column, {align:"right", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
 			n("a", VisualNode, {width:"10", height:"20"}),
 			n("b", VisualNode, {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
 
-		assertDimension("root", 0, 0, 200, 200);
+		assertDimension("root", 0, 0, 200, 100);
 		assertDimension("a", 186, 1, 10, 20);
 		assertDimension("b", 166, 25, 30, 40);
 	}
@@ -178,14 +178,14 @@ public class ColumnTest
 	[Test]
 	public function shouldVAlignTop():void
 	{
-		root = n("root", Column, {valign:"top", width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+		root = n("root", Column, {valign:"top", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
 			n("a", VisualNode, {width:"10", height:"20"}),
 			n("b", VisualNode, {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
 
-		assertDimension("root", 0, 0, 200, 200);
+		assertDimension("root", 0, 0, 100, 200);
 		assertDimension("a", 3, 1, 10, 20);
 		assertDimension("b", 3, 25, 30, 40);
 	}
@@ -193,16 +193,31 @@ public class ColumnTest
 	[Test]
 	public function shouldVAlignMiddle():void
 	{
-		root = n("root", Column, {valign:"middle", width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+		root = n("root", Column, {valign:"middle", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
 			n("a", VisualNode, {width:"10", height:"20"}),
 			n("b", VisualNode, {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
 
-		assertDimension("root", 0, 0, 200, 200);
-		assertDimension("a", 3, 68, 10, 20);
-		assertDimension("b", 3, 92, 30, 40);
+		assertDimension("root", 0, 0, 100, 200);
+		assertDimension("a", 3, 67, 10, 20);
+		assertDimension("b", 3, 91, 30, 40);
+	}
+
+	[Test]
+	public function shouldVAlignBottom():void
+	{
+		root = n("root", Column, {valign:"bottom", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", VisualNode, {width:"10", height:"20"}),
+			n("b", VisualNode, {width:"30", height:"40"})
+		);
+		root.measure();
+		root.layout();
+
+		assertDimension("root", 0, 0, 100, 200);
+		assertDimension("a", 3, 134, 10, 20);
+		assertDimension("b", 3, 158, 30, 40);
 	}
 }
 }

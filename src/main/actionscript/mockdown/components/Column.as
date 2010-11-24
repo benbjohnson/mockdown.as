@@ -238,18 +238,19 @@ public class Column extends VisualNode
 				child.x = pixelWidth - pixelPaddingRight - child.pixelWidth;
 			}
 			else if(align == "center") {
-				child.x = (pixelWidth/2) - (child.pixelWidth/2);
+				// TODO: Include padding in calculation
+				child.x = ((pixelWidth-pixelPaddingLeft-pixelPaddingRight)/2) - (child.pixelWidth/2) + pixelPaddingLeft;
 			}
 			else {
 				child.x = pixelPaddingLeft;
 			}
 			
 			// Y position
-			if(valign == "right") {
-				child.y = pixelWidth - total - pixelPaddingBottom + pos;
+			if(valign == "bottom") {
+				child.y = pixelHeight - total - pixelPaddingBottom + pos;
 			}
 			else if(valign == "middle") {
-				child.y = (pixelWidth/2) - (total/2) + pos;
+				child.y = ((pixelHeight-pixelPaddingTop-pixelPaddingBottom)/2) - (total/2) + pos + pixelPaddingTop;
 			}
 			else {
 				child.y = pixelPaddingTop + pos;
