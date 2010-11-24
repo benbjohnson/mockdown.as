@@ -1,5 +1,7 @@
 package mockdown.components
 {
+import mockdown.utils.NodeTestUtil;
+
 import org.flexunit.Assert;
 
 public class ColumnTest
@@ -10,50 +12,33 @@ public class ColumnTest
 	//
 	//---------------------------------------------------------------------
 	
-	private var column:Column;
-	private var a:VisualNode;
-	private var b:VisualNode;
-	private var c:VisualNode;
+	private var root:Column;
+	private var nodes:Object;
 	
 	[Before]
 	public function setup():void
 	{
-		column = new Column();
-		
-		a = new VisualNode();
-		b = new VisualNode();
-		c = new VisualNode();
-
-		column.addChild(a);
-		column.addChild(b);
-		column.addChild(c);
+		nodes = {};
 	}
 	
-	
-	//---------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//---------------------------------------------------------------------
-	
-	[Test]
-	public function shouldCalculateTotalPercentHeight():void
+	[After]
+	public function tearDown():void
 	{
-		a.height = "10%";
-		b.height = "80";
-		c.height = "30%";
-		Assert.assertEquals(40, column.totalChildPercentHeight);
 	}
 	
-	[Test]
-	public function shouldCalculateTotalFixedHeight():void
+	//---------------------------------
+	//	Node Test Helpers
+	//---------------------------------
+	
+	private function n(id:String, clazz:Class, properties:Object, ...children):*
 	{
-		a.height = "10";
-		b.height = "80";
-		c.height = "30%";
-		Assert.assertEquals(90, column.totalChildFixedHeight);
+		return NodeTestUtil.create(nodes, id, clazz, properties, children);
 	}
 
+	private function assertSize(id:String, w:uint, h:uint):void
+	{
+		NodeTestUtil.assertSize(nodes, id, w, h);
+	}
 
 	//---------------------------------------------------------------------
 	//
@@ -61,71 +46,53 @@ public class ColumnTest
 	//
 	//---------------------------------------------------------------------
 	
+	//---------------------------------
+	//	Child aggregate height
+	//---------------------------------
+	
 	[Test]
-	public function shouldMeasurePercentChildrenOnly():void
+	public function shouldCalculateTotalPercentHeight():void
 	{
-		column.height = "1000";
-		a.height = "30%";
-		b.height = "20%";
-		c.height = "50%";
-		column.measure();
-		Assert.assertEquals(300, a.pixelHeight);
-		Assert.assertEquals(200, b.pixelHeight);
-		Assert.assertEquals(500, c.pixelHeight);
+		root = n(null, Column, {},
+			n(null, VisualNode, {height:"10%"}),
+			n(null, VisualNode, {height:"80"}),
+			n(null, VisualNode, {height:"30%"})
+		);
+		Assert.assertEquals(40, root.getTotalChildPercentHeight());
 	}
 	
 	[Test]
-	public function shouldMeasureUnevenPercentChildrenOnly():void
+	public function shouldCalculateTotalExplicitHeight():void
 	{
-		column.height = "1000";
-		a.height = "37%";
-		b.height = "15%";
-		c.height = "5%";
-		column.measure();
-		Assert.assertEquals(649, a.pixelHeight);
-		Assert.assertEquals(263, b.pixelHeight);
-		Assert.assertEquals(88, c.pixelHeight);
+		root = n(null, Column, {},
+			n(null, VisualNode, {height:"10"}),
+			n(null, VisualNode, {height:"80"}),
+			n(null, VisualNode, {height:"30%"})
+		);
+		Assert.assertEquals(90, root.getTotalChildExplicitHeight());
 	}
 
-	[Test]
-	public function shouldMeasureMixedChildren():void
-	{
-		column.height = "1000";
-		a.height = "30%";
-		b.height = "100";
-		c.height = "50%";
-		column.measure();
-		Assert.assertEquals(338, a.pixelHeight);
-		Assert.assertEquals(100, b.pixelHeight);
-		Assert.assertEquals(562, c.pixelHeight);
-	}
 
-	[Test]
-	public function shouldResizeWhenChildrenAreTooLarge():void
-	{
-		column.height = "100";
-		a.height = "50";
-		b.height = "100";
-		c.height = "20%";
-		column.measure();
-		Assert.assertEquals(33, a.pixelHeight);
-		Assert.assertEquals(67, b.pixelHeight);
-		Assert.assertEquals(0, c.pixelHeight);
-	}
 
+	//---------------------------------
+	//	Measurement
+	//---------------------------------
+	
 	[Test]
-	public function shouldMeasurePercentChildrenWithPadding():void
+	public function shouldMeasureExplicitChildren():void
 	{
-		column.height = "1000";
-		column.paddingTop = "20";
-		column.paddingBottom = "60";
-		a.height = "30%";
-		b.height = "20%";
-		c.height = "50%";
-		column.measure();
-		Assert.assertEquals(276, a.pixelHeight);
-		Assert.assertEquals(184, b.pixelHeight);
-		Assert.assertEquals(460, c.pixelHeight);
+		root = n("root", Column, {width:"300", height:"200"},
+			n("a", VisualNode, {width:"10", height:"20"},
+				n("aa", VisualNode, {width:"30", height:"40"}),
+				n("ab", VisualNode, {width:"50", height:"60"})
+			)
+		);
+		root.measure();
+
+		assertSize("root", 300, 200);
+		assertSize("a", 10, 20);
+		assertSize("aa", 30, 40);
+		assertSize("ab", 50, 60);
 	}
 }
 }

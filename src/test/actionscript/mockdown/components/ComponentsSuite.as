@@ -5,9 +5,8 @@ package mockdown.components
 public class ComponentsSuite
 {
 	public var t0:ColumnTest;
-	public var t1:ContainerTest;
-	public var t2:NodeTest;
-	public var t3:RowTest;
-	public var t4:VisualNodeTest;
+	public var t1:NodeTest;
+	public var t2:RowTest;
+	public var t3:VisualNodeTest;
 }
 }

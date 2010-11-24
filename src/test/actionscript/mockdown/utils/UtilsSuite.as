@@ -5,5 +5,6 @@ package mockdown.utils
 public class UtilsSuite
 {
 	public var t0:StringUtilTest;
+	public var t1:MathUtilTest;
 }
 }

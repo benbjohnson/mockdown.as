@@ -5,7 +5,7 @@ import mockdown.utils.StringUtil;
 /**
  *	This class represents a container that horizontally lays out its children.
  */
-public class Row extends Container
+public class Row extends VisualNode
 {
 	//--------------------------------------------------------------------------
 	//

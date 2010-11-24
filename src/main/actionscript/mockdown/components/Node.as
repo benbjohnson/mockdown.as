@@ -129,6 +129,17 @@ public class Node extends EventDispatcher
 		}
 	}
 
+	/**
+	 *	Removes all children from a node.
+	 */
+	public function removeAllChildren():void
+	{
+		var children:Array = this.children;
+		for each(var child:Node in children) {
+			removeChild(child);
+		}
+	}
+
 
 	//---------------------------------
 	//	Document

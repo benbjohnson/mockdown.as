@@ -70,5 +70,23 @@ public class StringUtilTest
 		Assert.assertTrue(isNaN(StringUtil.parsePercentage("")));
 		Assert.assertTrue(isNaN(StringUtil.parsePercentage(null)));
 	}
+
+	[Test]
+	public function shouldShowNullAsEmpty():void
+	{
+		Assert.assertTrue(StringUtil.isEmpty(null));
+	}
+
+	[Test]
+	public function shouldShowBlankStringAsEmpty():void
+	{
+		Assert.assertTrue(StringUtil.isEmpty(""));
+	}
+
+	[Test]
+	public function shouldNotShowNonBlankStringAsEmpty():void
+	{
+		Assert.assertFalse(StringUtil.isEmpty("foo"));
+	}
 }
 }

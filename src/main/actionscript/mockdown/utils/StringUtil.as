@@ -118,5 +118,17 @@ public class StringUtil
 			return NaN;
 		}
 	}
+	
+	/**
+	 *	Checks if the given string is a null or blank string.
+	 * 
+	 *	@param str  The string to check.
+	 *
+	 *	@return     True if empty. Otherwise false.
+	 */			
+	static public function isEmpty(str:String):Boolean
+	{
+		return (str == null || str == "");
+	}
 }
 }

@@ -5,7 +5,7 @@ import mockdown.utils.StringUtil;
 /**
  *	This class represents a container that vertically lays out its children.
  */
-public class Column extends Container
+public class Column extends VisualNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -32,27 +32,20 @@ public class Column extends Container
 	//	Total child fixed height
 	//---------------------------------
 	
-	private var _totalChildFixedHeight:Number;
-	
 	/**
 	 *	The summed total height for all children that have a fixed height
 	 *	specified.
 	 */
-	public function get totalChildFixedHeight():Number
+	public function getTotalChildExplicitHeight():Number
 	{
-		var num:Number;
+		var total:uint = 0;
 		
-		if(isNaN(_totalChildFixedHeight)) {
-			_totalChildFixedHeight = 0;
-			
-			for each(var child:VisualNode in visualChildren) {
-				if(!isNaN(num = StringUtil.parseNumber(child.height))) {
-					_totalChildFixedHeight += num;
-				}
-			}
+		for each(var child:VisualNode in visualChildren) {
+			var num:Number = child.explicitHeight;
+			total += !isNaN(num) ? num : 0;
 		}
 
-		return _totalChildFixedHeight;		
+		return total;
 	}
 
 
@@ -60,27 +53,20 @@ public class Column extends Container
 	//	Total child percent height
 	//---------------------------------
 	
-	private var _totalChildPercentHeight:Number;
-	
 	/**
 	 *	The summed total height for all children that have a percent height
 	 *	specified.
 	 */
-	public function get totalChildPercentHeight():Number
+	public function getTotalChildPercentHeight():Number
 	{
-		var percent:Number;
+		var total:uint = 0;
 		
-		if(isNaN(_totalChildPercentHeight)) {
-			_totalChildPercentHeight = 0;
-			
-			for each(var child:VisualNode in visualChildren) {
-				if(!isNaN(percent = StringUtil.parsePercentage(child.height))) {
-					_totalChildPercentHeight += percent;
-				}
-			}
+		for each(var child:VisualNode in visualChildren) {
+			var num:Number = child.percentHeight;
+			total += !isNaN(num) ? num : 0;
 		}
 
-		return _totalChildPercentHeight;		
+		return total;
 	}
 
 
@@ -92,70 +78,66 @@ public class Column extends Container
 	//--------------------------------------------------------------------------
 
 	//---------------------------------
-	//	Child management
-	//---------------------------------
-
-	/**
-	 *	@private
-	 */
-	override public function addChild(child:Node):void
-	{
-		_totalChildPercentHeight = NaN;
-		_totalChildFixedHeight   = NaN;
-		super.addChild(child);
-	}
-	
-	/**
-	 *	@private
-	 */
-	override public function removeChild(child:Node):void
-	{
-		_totalChildPercentHeight = NaN;
-		_totalChildFixedHeight   = NaN;
-		super.removeChild(child);
-	}
-
-
-	//---------------------------------
 	//	Measurement
 	//---------------------------------
 	
 	/**
-	 *	@inheritDoc
+	 *	Calculates the dimension of this node as the sum of its children
 	 */
-	override public function measure():void
+	override protected function measureImplicit():void
 	{
-		super.measure();
+		var child:VisualNode;
 		
-		measureChildren();
-		measureByChildSize();
+		// Calculate height as sum of child heights
+		if(height == null) {
+			// Loop over children and determine size.
+			for each(child in visualChildren) {
+				if(!isNaN(child.pixelHeight)) {
+					pixelHeight += child.pixelHeight;
+				}
+			}
+			
+			// Add top and bottom padding to height
+			pixelHeight += pixelPaddingTop + pixelPaddingBottom;
+			
+			this.pixelHeight = pixelHeight;
+		}
+		
+		// Calculate width as the maximum child width
+		if(width == null) {
+			// Loop over children and determine size.
+			for each(child in visualChildren) {
+				if(!isNaN(child.pixelWidth)) {
+					pixelWidth = Math.max(pixelWidth, child.pixelHeight);
+				}
+			}
+			
+			// Add left and right padding to width
+			pixelWidth += pixelPaddingLeft + pixelPaddingLeft;
+			
+			this.pixelWidth = pixelWidth;
+		}
+		
 	}
 
-
-	/**
-	 *	Measures the size for each of the direct children.
-	 */
-	protected function measureChildren():void
+	//---------------------------------
+	//	Layout
+	//---------------------------------
+	
+	/** @private */
+	override public function layout():void
 	{
 		var num:Number;
-		var child:VisualNode;
 		var lastPercentChild:VisualNode;
 
-		// Reset child pixel dimensions and measure children with unset height
-		for each(child in visualChildren) {
-			child.pixelWidth = child.pixelHeight = NaN;
-			
-			if(child.height == null) {
-				child.measure();
-			}
-		}
-
 		// Determine remaining height for percentages
-		var totalRemaining:int = pixelHeight - pixelPaddingTop - pixelPaddingBottom - totalChildFixedHeight;
+		var totalChildExplicitHeight:Number = getTotalChildExplicitHeight();
+		var totalChildPercentHeight:Number = getTotalChildPercentHeight();
+		var totalRemaining:int = pixelHeight - pixelPaddingTop - pixelPaddingBottom - totalChildExplicitHeight;
 		var remaining:int = totalRemaining;
 		
 		// Calculate percent width & height for children
-		for each(child in visualChildren) {
+		for each(var child:VisualNode in visualChildren) {
 			// Calculate height based on percentage
 			if(!isNaN(num = StringUtil.parsePercentage(child.height))) {
 				// If there is height available, calculate percentage of it.
@@ -164,22 +146,6 @@ public class Column extends Container
 					remaining -= child.pixelHeight;
 					lastPercentChild = child;
 				}
-				else {
-					child.pixelHeight = 0;
-				}
-			}
-			// Determine fixed height
-			else if(!isNaN(num = StringUtil.parseNumber(child.height))) {
-				// If the children are larger than the parent then resize the children
-				if(totalRemaining < 0) {
-					var diff:Number = Math.max(remaining, Math.round((num/totalChildFixedHeight) * totalRemaining));
-					child.pixelHeight = num + diff;
-					remaining += diff;
-				}
-				// Otherwise just set the height of the child explicitly
-				else {
-					child.pixelHeight = num;
-				}
 			}
 		}
 		
@@ -187,19 +153,6 @@ public class Column extends Container
 		if(lastPercentChild && remaining > 0) {
 			lastPercentChild.pixelHeight += remaining;
 		}
-
-		// If we have any negative remaining, remove from the last fixed child
-		if(child && remaining < 0) {
-			child.pixelHeight += remaining;
-		}
-	}
-
-	/**
-	 *	Calculates the dimension of this node as the sum of its children
-	 */
-	protected function measureByChildSize():void
-	{
-		// TODO: Loop over children and determine size.
 	}
 }
 }

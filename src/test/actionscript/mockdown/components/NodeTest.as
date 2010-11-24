@@ -35,5 +35,15 @@ public class NodeTest
 		Assert.assertNull(child.parent);
 		Assert.assertEquals(0, parent.children.length);
 	}
+
+	[Test]
+	public function shouldRemoveAllChildren():void
+	{
+		var parent:Node = new Node();
+		parent.addChild(new Node());
+		parent.addChild(new Node());
+		parent.removeAllChildren();
+		Assert.assertEquals(0, parent.children.length);
+	}
 }
 }
