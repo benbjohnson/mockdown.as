@@ -1,6 +1,7 @@
 package mockdown
 {
 import mockdown.components.ComponentsSuite;
+import mockdown.display.DisplaySuite;
 import mockdown.parsers.ParsersSuite;
 import mockdown.managers.ManagersSuite;
 import mockdown.utils.UtilsSuite;
@@ -10,8 +11,9 @@ import mockdown.utils.UtilsSuite;
 public class MockdownSuite
 {
 	public var s0:ComponentsSuite;
-	public var s1:ParsersSuite;
-	public var s2:ManagersSuite;
-	public var s3:UtilsSuite;
+	public var s1:DisplaySuite;
+	public var s2:ParsersSuite;
+	public var s3:ManagersSuite;
+	public var s4:UtilsSuite;
 }
 }

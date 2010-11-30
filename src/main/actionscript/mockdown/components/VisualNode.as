@@ -1,5 +1,6 @@
 package mockdown.components
 {
+import mockdown.display.IRenderObject;
 import mockdown.utils.MathUtil;
 import mockdown.utils.StringUtil;
 
@@ -367,7 +368,7 @@ public class VisualNode extends Node
 	/**
 	 *	Renders the node visually to the screen
 	 */
-	public function render():void
+	public function render(display:IRenderObject):void
 	{
 		// This is overridden by the subclass.
 	}
