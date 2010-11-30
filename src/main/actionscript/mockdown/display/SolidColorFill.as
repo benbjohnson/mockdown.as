@@ -5,7 +5,7 @@ package mockdown.display
  *
  *	@see IRenderObject
  */
-public class SolidColorFill
+public class SolidColorFill extends Fill
 {
 	//--------------------------------------------------------------------------
 	//
@@ -15,10 +15,15 @@ public class SolidColorFill
 	
 	/**
 	 *	Constructor.
+	 *
+	 *	@param color  The color of the fill.
+	 *	@param alpha  The alpha transparency value of the fill.
 	 */
-	public function SolidColorFill():void
+	public function SolidColorFill(color:uint=0x000000, alpha:uint=100):void
 	{
 		super();
+		this.color = color;
+		this.alpha = alpha;
 	}
 	
 	

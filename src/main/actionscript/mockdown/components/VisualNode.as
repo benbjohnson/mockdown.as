@@ -1,6 +1,9 @@
 package mockdown.components
 {
 import mockdown.display.IRenderObject;
+import mockdown.display.Stroke;
+import mockdown.display.SolidColorFill;
+import mockdown.geom.Rectangle;
 import mockdown.utils.MathUtil;
 import mockdown.utils.StringUtil;
 
@@ -366,11 +369,17 @@ public class VisualNode extends Node
 	//---------------------------------
 
 	/**
-	 *	Renders the node visually to the screen
+	 *	Renders the node visually to the screen.
 	 */
 	public function render(display:IRenderObject):void
 	{
-		// This is overridden by the subclass.
+		trace("render: " + this + " : " + x + ", " + y + " -- " + pixelWidth + ", " + pixelHeight);
+		display.move(x, y);
+		display.resize(pixelWidth, pixelHeight);
+		
+		display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), Stroke.BLACK, new SolidColorFill(0, 20));
+		display.drawLine(0, 0, pixelWidth, pixelHeight, Stroke.BLACK);
+		display.drawLine(0, pixelHeight, pixelWidth, 0, Stroke.BLACK);
 	}
 }
 }

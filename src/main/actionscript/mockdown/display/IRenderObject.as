@@ -17,17 +17,41 @@ public interface IRenderObject
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
+	//	Dimensions
+	//---------------------------------
+
+	/**
+	 *	Moves the rendered display to the specified position relative to its
+	 *	parent.
+	 *
+	 *	@param x  The x coordinate from the top-left corner of the parent.
+	 *	@param y  The y coordinate from the top-left corner of the parent.
+	 */
+	function move(x:int, y:int):void;
+
+	/**
+	 *	Sets the size of the rendered display object.
+	 *
+	 *	@param width   The width of the display object.
+	 *	@param height  The height of the display object.
+	 */
+	function resize(width:uint, height:uint):void;
+
+
+	//---------------------------------
 	//	Drawing
 	//---------------------------------
 
 	/**
 	 *	Draws a line on the rendered output.
 	 *
-	 *	@param p1      The starting point to draw from.
-	 *	@param p2      The ending point to draw to.
+	 *	@param x1      The starting x coordinate to draw from.
+	 *	@param y1      The starting y coordinate to draw from.
+	 *	@param x2      The ending x coordinate to draw to.
+	 *	@param y2      The ending y coordinate to draw to.
 	 *	@param stroke  The style of stroke to use.
 	 */
-	function drawLine(p1:Point, p2:Point, stroke:Stroke):void;
+	function drawLine(x1:int, y1:int, x2:int, y2:int, stroke:Stroke):void;
 
 	/**
 	 *	Draws a rectangle on the rendered output.
@@ -36,7 +60,7 @@ public interface IRenderObject
 	 *	@param stroke  The style of stroke to use.
 	 *	@param fill    The style of fill to use.
 	 */
-	function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill):void;
+	function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void;
 
 	/**
 	 *	Clears all previous drawing from the rendered output.
@@ -54,18 +78,18 @@ public interface IRenderObject
 	 *
 	 *	@param child  The child to add.
 	 */
-	function addChild(child:IRenderObject):void;
+	function addRenderChild(child:IRenderObject):void;
 
 	/**
 	 *	Removes a rendered child from this object.
 	 *
 	 *	@param child  The child to remove.
 	 */
-	function removeChild(child:IRenderObject):void;
+	function removeRenderChild(child:IRenderObject):void;
 
 	/**
 	 *	Removes all rendered children from this object.
 	 */
-	function removeAllChildren():void;
+	function removeAllRenderChildren():void;
 }
 }

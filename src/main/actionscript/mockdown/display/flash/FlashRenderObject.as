@@ -1,13 +1,19 @@
 package mockdown.display.flash
 {
 import mockdown.display.IRenderObject;
+import mockdown.display.Stroke;
+import mockdown.display.Fill;
+import mockdown.display.SolidColorFill;
+import mockdown.geom.Point;
+import mockdown.geom.Rectangle;
 
 import flash.display.Graphics;
+import flash.display.Sprite;
 
 /**
  *	This class renders to a Adobe Flash-based output.
  */
-public class FlashRenderObject implements IRenderObject
+public class FlashRenderObject extends Sprite implements IRenderObject
 {
 	//--------------------------------------------------------------------------
 	//
@@ -21,7 +27,6 @@ public class FlashRenderObject implements IRenderObject
 	public function FlashRenderObject()
 	{
 		super();
-		_sprite = new Sprite();
 	}
 
 
@@ -31,20 +36,6 @@ public class FlashRenderObject implements IRenderObject
 	//
 	//--------------------------------------------------------------------------
 	
-	//---------------------------------
-	//	Sprite
-	//---------------------------------
-
-	private var _sprite:Sprite;
-	
-	/**
-	 *	The sprite used to render the output.
-	 */
-	public function get sprite():Sprite
-	{
-		return _sprite;
-	}
-
 	//---------------------------------
 	//	Children
 	//---------------------------------
@@ -67,31 +58,50 @@ public class FlashRenderObject implements IRenderObject
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
+	//	Dimensions
+	//---------------------------------
+	
+	/**
+	 *	@copy mockdown.display.IRenderOutput#move()
+	 */
+	public function move(x:int, y:int):void
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	/**
+	 *	@copy mockdown.display.IRenderOutput#resize()
+	 */
+	public function resize(width:uint, height:uint):void
+	{
+		//this.width  = width;
+		//this.height = height;
+	}
+
+
+	//---------------------------------
 	//	Drawing
 	//---------------------------------
 	
 	/**
 	 *	@copy mockdown.display.IRenderOutput#drawLine()
 	 */
-	public function drawLine(p1:Point, p2:Point, stroke:Stroke):void
+	public function drawLine(x1:int, y1:int, x2:int, y2:int, stroke:Stroke):void
 	{
-		var graphics:Graphics = sprite.graphics;
 		setStrokeStyle(stroke);
-		graphics.moveTo(p1.x, p1.y);
-		graphics.lineTo(p2.x, p2.y);
+		graphics.moveTo(x1, y1);
+		graphics.lineTo(x2, y2);
 	}
 
 	/**
 	 *	@copy mockdown.display.IRenderOutput#drawRect()
 	 */
-	public function drawRect(rect:Rectangle, radius:CornerRadius,
-							 stroke:Stroke, fill:Fill):void
+	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void
 	{
-		var graphics:Graphics = sprite.graphics;
 		setStrokeStyle(stroke);
 		setFillStyle(fill);
-		graphics.moveTo(p1.x, p1.y);
-		graphics.lineTo(p2.x, p2.y);
+		graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
 		graphics.endFill();
 	}
 
@@ -100,7 +110,7 @@ public class FlashRenderObject implements IRenderObject
 	 */
 	public function clear():void
 	{
-		sprite.graphics.clear();
+		graphics.clear();
 	}
 	
 	/**
@@ -108,7 +118,12 @@ public class FlashRenderObject implements IRenderObject
 	 */
 	private function setStrokeStyle(stroke:Stroke):void
 	{
-		sprite.graphics.lineStyle(stroke.thickness, stroke.color, stroke.alpha/100);
+		if(stroke) {
+			graphics.lineStyle(stroke.thickness, stroke.color, stroke.alpha/100, true);
+		}
+		else {
+			graphics.lineStyle(NaN);
+		}
 	}
 
 	/**
@@ -127,7 +142,7 @@ public class FlashRenderObject implements IRenderObject
 	 */
 	private function beginSolidColorFill(fill:SolidColorFill):void
 	{
-		beginFill(fill.color, fill.alpha/100);
+		graphics.beginFill(fill.color, fill.alpha/100);
 	}
 
 
@@ -138,46 +153,39 @@ public class FlashRenderObject implements IRenderObject
 	/**
 	 *	@copy mockdown.display.IRenderOutput#addChild()
 	 */
-	public function addChild(child:IRenderObject):void
+	public function addRenderChild(child:IRenderObject):void
 	{
 		// Exit if no child to add
-		if(!child) {
+		if(!(child is FlashRenderObject)) {
 			return;
 		}
-		_children.push(child);
-		sprite.addChild(child.sprite);
+		addChild(child as FlashRenderObject);
 	}
 	
 	/**
 	 *	@copy mockdown.display.IRenderOutput#removeChild()
 	 */
-	public function removeChild(child:IRenderObject):void
+	public function removeRenderChild(child:IRenderObject):void
 	{
 		// Exit if no child to remove
-		if(!child) {
+		if(!(child is FlashRenderObject)) {
 			return;
 		}
 		
-		// Remove from render children
-		var index:int = _children.indexOf(child);
-		if(index != -1) {
-			_children.splice(index, 1);
-		}
-		
 		// Remove from sprite children
-		if(sprite.contains(child.sprite)) {
-			sprite.removeChild(child.sprite);
+		if(contains(child as FlashRenderObject)) {
+			removeChild(child as FlashRenderObject);
 		}
 	}
 	
 	/**
 	 *	@copy mockdown.display.IRenderOutput#removeAllChildren()
 	 */
-	public function removeAllChildren():void
+	public function removeAllRenderChildren():void
 	{
-		var children:Array = this.children;
-		for each(var child:IRenderObject in children) {
-			removeChild(child);
+		var n:int = numChildren;
+		for(var i:int=0; i<n; i++) {
+			removeChildAt(0);
 		}
 	}
 }

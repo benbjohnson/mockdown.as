@@ -10,16 +10,35 @@ public class Stroke
 {
 	//--------------------------------------------------------------------------
 	//
-	//	Constructor
+	//	Static Constants
 	//
 	//--------------------------------------------------------------------------
+
+	/**
+	 *	A 1-pixel thick black line.
+	 */
+	static public const BLACK:Stroke = new Stroke(0x000000, 100, 1);
+
+
+	//--------------------------------------------------------------------------
+	//
+	//	Constructor
+	//
+	//--------------------------------------------------------------------------	
 	
 	/**
 	 *	Constructor.
+	 *	
+	 *	@param color  The color of the stroke.
+	 *	@param alpha  The alpha transparency of the stroke.
+	 *	@param color  The thickness of the stroke.
 	 */
-	public function Stroke():void
+	public function Stroke(color:uint=0, alpha:uint=100, thickness:uint=1):void
 	{
 		super();
+		this.color = color;
+		this.alpha = alpha;
+		this.thickness = thickness;
 	}
 	
 	
@@ -28,11 +47,6 @@ public class Stroke
 	//	Properties
 	//
 	//--------------------------------------------------------------------------
-
-	/**
-	 *	The thickness of the line, in pixels.
-	 */
-	public var thickness:uint;
 
 	/**
 	 *	The RGB color of the line.
@@ -44,5 +58,10 @@ public class Stroke
 	 *	0 and 100.
 	 */
 	public var alpha:uint;
+
+	/**
+	 *	The thickness of the line, in pixels.
+	 */
+	public var thickness:uint;
 }
 }

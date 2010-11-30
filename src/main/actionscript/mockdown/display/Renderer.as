@@ -59,13 +59,17 @@ public class Renderer
 			return null;
 		}
 		
+		// Measure and layout node
+		node.measure();
+		node.layout();
+		
 		// Render the node
 		var object:IRenderObject = new renderObjectClass();
 		node.render(object);
 		
 		// Render children
 		for each(var child:VisualNode in node.visualChildren) {
-			object.addChild(render(child));
+			object.addRenderChild(render(child));
 		}
 		
 		return object;

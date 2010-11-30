@@ -1,0 +1,17 @@
+<flex-config>
+	<output>../../../target/test/MockdownViewer.swf</output>
+	<target-player>10.0.0</target-player>
+	<benchmark>false</benchmark>
+	<warnings>true</warnings>
+
+	<compiler>
+		<debug>true</debug>
+		<allow-source-path-overlap>true</allow-source-path-overlap>
+		<verbose-stacktraces>true</verbose-stacktraces>
+		
+		<source-path>
+			<path-element>../../main/actionscript</path-element>
+			<path-element>../actionscript</path-element>
+		</source-path>
+	</compiler>
+</flex-config>
