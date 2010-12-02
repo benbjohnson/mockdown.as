@@ -11,6 +11,7 @@ import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.display.Sprite;
 import flash.events.InvokeEvent;
+import flash.events.MouseEvent;
 import flash.filesystem.File;
 
 /**
@@ -42,6 +43,8 @@ public class MockdownViewer extends Sprite
 				render();
 			}
 		);
+		
+		addEventListener(MouseEvent.CLICK, onClick);
 	}
 	
 
@@ -73,6 +76,8 @@ public class MockdownViewer extends Sprite
 	 */
 	public function render():void
 	{
+		var t0:Date = new Date();
+		
 		graphics.clear();
 		
 		// Remove previous output
@@ -97,7 +102,7 @@ public class MockdownViewer extends Sprite
 		
 		// Render
 		var renderer:FlashRenderer = new FlashRenderer();
-		var output:FlashRenderObject = renderer.render(node) as FlashRenderObject;
+		output = renderer.render(node) as FlashRenderObject;
 		addChild(output);
 		
 		// Center output
@@ -108,7 +113,21 @@ public class MockdownViewer extends Sprite
 		
 		// Set title
 		stage.nativeWindow.title = filename;
+
+		var t1:Date = new Date();
+		trace("time: " + (t1.valueOf()-t0.valueOf()));
 	}
 
+
+	//--------------------------------------------------------------------------
+	//
+	//	Events
+	//
+	//--------------------------------------------------------------------------
+	
+	private function onClick(event:MouseEvent):void
+	{
+		render();
+	}
 }
 }

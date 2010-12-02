@@ -4,11 +4,13 @@ import mockdown.display.IRenderObject;
 import mockdown.display.Stroke;
 import mockdown.display.Fill;
 import mockdown.display.SolidColorFill;
+import mockdown.display.GradientFill;
 import mockdown.geom.Point;
 import mockdown.geom.Rectangle;
 
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.geom.Matrix;
 
 /**
  *	This class renders to a Adobe Flash-based output.
@@ -27,27 +29,6 @@ public class FlashRenderObject extends Sprite implements IRenderObject
 	public function FlashRenderObject()
 	{
 		super();
-	}
-
-
-	//--------------------------------------------------------------------------
-	//
-	//	Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//---------------------------------
-	//	Children
-	//---------------------------------
-
-	private var _children:Array = [];
-	
-	/**
-	 *	The children of the render object in the display tree.
-	 */
-	public function get children():Array
-	{
-		return _children.slice();
 	}
 
 
@@ -100,7 +81,7 @@ public class FlashRenderObject extends Sprite implements IRenderObject
 	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void
 	{
 		setStrokeStyle(stroke);
-		setFillStyle(fill);
+		setFillStyle(rect, fill);
 		graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
 		graphics.endFill();
 	}
@@ -129,20 +110,35 @@ public class FlashRenderObject extends Sprite implements IRenderObject
 	/**
 	 *	Begins a fill for a polygon.
 	 */
-	private function setFillStyle(fill:Fill):void
+	private function setFillStyle(rect:Rectangle, fill:Fill):void
 	{
-		// Solid color fill
 		if(fill is SolidColorFill) {
 			beginSolidColorFill(fill as SolidColorFill);
 		}
+		else if(fill is GradientFill) {
+			beginGradientFill(rect, fill as GradientFill);
+		}
 	}
 
-	/**
-	 *	Begins a solid color fill for a polygon.
-	 */
 	private function beginSolidColorFill(fill:SolidColorFill):void
 	{
 		graphics.beginFill(fill.color, fill.alpha/100);
+	}
+
+	private function beginGradientFill(rect:Rectangle, fill:GradientFill):void
+	{
+		// Generate matrix for linear gradients
+		var matrix:Matrix;
+		if(fill.type == "linear") {
+		 	matrix = new Matrix();
+			matrix.createGradientBox(rect.width,  rect.height, fill.angle * (Math.PI/180));
+		}
+
+		// Convert alpha values to a value between 0 and 1
+		var alphas:Array = fill.alphas.map(function(alpha:uint,...args):Number{return alpha/100});
+
+		// Start the fill
+		graphics.beginGradientFill(fill.type, fill.colors, alphas, null, matrix);
 	}
 
 

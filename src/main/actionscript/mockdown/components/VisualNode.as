@@ -3,6 +3,7 @@ package mockdown.components
 import mockdown.display.IRenderObject;
 import mockdown.display.Stroke;
 import mockdown.display.SolidColorFill;
+import mockdown.display.GradientFill;
 import mockdown.geom.Rectangle;
 import mockdown.utils.MathUtil;
 import mockdown.utils.StringUtil;
@@ -373,7 +374,6 @@ public class VisualNode extends Node
 	 */
 	public function render(display:IRenderObject):void
 	{
-		trace("render: " + this + " : " + x + ", " + y + " -- " + pixelWidth + ", " + pixelHeight);
 		display.move(x, y);
 		display.resize(pixelWidth, pixelHeight);
 		

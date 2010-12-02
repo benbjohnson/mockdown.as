@@ -110,7 +110,6 @@ public class MockdownParser
 				for each(var extension:String in extensions) {
 					extension = (extension ? "." + extension : "");
 					
-					trace("File: " + path + " : " + filename + " : " + extension);
 					var file:File = (new File(path)).resolvePath(filename + extension);
 					if(file.exists) {
 						var content:String;
