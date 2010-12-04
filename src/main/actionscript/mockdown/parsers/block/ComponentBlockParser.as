@@ -1,4 +1,4 @@
-package mockdown.parsers
+package mockdown.parsers.block
 {
 import mockdown.components.Node;
 import mockdown.components.Text;
@@ -6,18 +6,16 @@ import mockdown.core.Document;
 import mockdown.errors.BlockParseError;
 import mockdown.errors.ParseError;
 import mockdown.managers.NodeManager;
-import mockdown.parsers.block.IBlockParser;
 import mockdown.parsers.property.IPropertyParser;
 import mockdown.utils.FileUtil;
-import mockdown.utils.StringUtil;
 
 import flash.errors.IllegalOperationError;
 import flash.filesystem.File; // TODO: Remove AIR dep
 
 /**
- *	This class represents a parser for a Mockdown file.
+ *	This class parses blocks into components.
  */
-public class MockdownParser
+public class ComponentBlockParser implements IBlockParser
 {
 	//--------------------------------------------------------------------------
 	//
@@ -28,9 +26,9 @@ public class MockdownParser
 	/**
 	 *	Constructor.
 	 */
-	public function MockdownParser()
+	public function ComponentBlockParser()
 	{
-		nodeManager = new NodeManager();
+		super()
 	}
 
 
@@ -41,35 +39,9 @@ public class MockdownParser
 	//--------------------------------------------------------------------------
 	
 	/**
-	 *	Manages the registration and creation of nodes by name.
+	 *  A list of parsers used to parse property values by data type.
 	 */
-	public var nodeManager:NodeManager;
-	
-
-	/**
-	 *	The load path for finding file-based nodes by type.
-	 */
-	public var paths:Array = [];
-	
-	/**
-	 *	A list of supported extensions to use.
-	 */
-	public var extensions:Array = ["mkd", "mkx"];
-	
-	
-	//---------------------------------
-	//	Block parsers
-	//---------------------------------
-
-	private var _blockParsers:Array = [];
-	
-	/**
-	 *  A list of parsers used to parse blocks into nodes.
-	 */
-	public function get blockParsers():Array
-	{
-		return _blockParsers.slice();
-	}
+	private var propertyParsers:Object = {};
 	
 
 	//--------------------------------------------------------------------------
@@ -79,139 +51,41 @@ public class MockdownParser
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
-	//	Block parser management
+	//	Property parser management
 	//---------------------------------
 
 	/**
-	 *	Adds a parser to use while parsing blocks. Parsers are attempted one
-	 *	after another in the order they are added until one of them
-	 *	successfully returns a node while parsing.
+	 *	Sets the property parser to use for a given data type.
 	 *
-	 *	@param parser  The block parser to add.
+	 *	@param type    The data type to use this property parser for.
+	 *	@param parser  The property parser to use for this type.
 	 */
-	public function addBlockParser(parser:IBlockParser):void
+	public function registerPropertyParser(type:String, parser:IPropertyParser):void
 	{
-		_blockParsers.push(parser);
+		propertyParsers[type] = parser;
 	}
 
 	/**
-	 *	Removes a parser from the list of block parsers.
+	 *	Unsets the property parser to use for a given data type.
 	 *
-	 *	@param parser  The block parser to remove.
+	 *	@param type    The data type to use this property parser for.
 	 */
-	public function removeBlockParser(parser:IBlockParser):void
+	public function unregisterPropertyParser(type:String):void
 	{
-		var index:int = _blockParsers.indexOf(parser);
-		if(index != -1) {
-			_blockParsers.splice(index, 1);
-		}
-	}
-
-
-	//---------------------------------
-	//	Block preprocessing
-	//---------------------------------
-
-	/**
-	 *	Parses a string into a tree of blocks which are grouped by indentation.
-	 *
-	 *	@param content - The string to parse.
-	 *	
-	 *	@return          A tree of blocks. Each block contains the unindented
-	 *	                 content, line number and other parsing information.
-	 */
-	public function createBlockTree(content:String):Block
-	{
-		// Validate content exists
-		if(content == null) {
-			throw new ParseError('Content is required for parsing');
-        }
-
-		// Setup root & state
-		var root:Block  = new Block(null, 0, 0)
-		var stack:Array = [root];
-		var lastBlock:Block = root;
-		var multilineBlock:Block;
-
-		// Loop over lines and group into blocks
-		var lines:Array = content.split(/\n/);
-		for(var i:int=0; i<lines.length; i++) {
-			var lineNumber:int = i+1;
-			var line:String = lines[i];
-
-			// Skip line if blank
-			if(line.search(/^\s*$/) == 0) {
-				multilineBlock = null;
-			}
-			else {
-				// Split of indentation and rest of line
-				var match:Array = line.match(/^(\s*)(.+)$/);
-				var indentation:String = match[1];
-				line = StringUtil.trim(match[2]);
-          
-				// Throw error if indentation is wrong
-				if(indentation.length % 2 != 0) {
-					throw new ParseError('You cannot indent an odd number of spaces.', lineNumber)
-				}
-				// Throw error if tabs were used
-				else if(indentation.search(/\t/) != -1) {
-					throw new ParseError('You cannot use tabs for indentation.', lineNumber)
-				}
-          
-				// Determine level by indentation
-				var level:int = (indentation.length/2) + 1;
-				var stackLevel:int = stack.length - 1;
-          
-				// Adjust stack if level we go down in levels
-				if(level < stackLevel) {
-					for(var x:int=0; x<(stackLevel-level); x++) {
-						stack.pop();
-					}
-				}
-				// Add last block to stack if level goes up by one
-				else if(level == stackLevel+1) {
-					stack.push(lastBlock)
-				}
-				// Throw error if we go up by more than one level
-				else if(level > stackLevel+1) {
-					throw new ParseError('You can not indent multiple levels between lines.', lineNumber)
-				}
-  
-				// Clear multiline block when changing indentation
-				if(level != stackLevel) {
-					multilineBlock = null;
-				}
-          
-				// If this line extends a multiline block, append the content
-				if(multilineBlock && !isSingleLineBlock(line)) {
-					multilineBlock.content += "\n" + line;
-				}
-				// Otherwise create a new block for this line
-				else {
-					var parent:Block = stack[stack.length-1];
-					var block:Block = new Block(parent, level, lineNumber, line);
-					parent.addChild(block);
-					lastBlock = block;
-					multilineBlock = (isSingleLineBlock(line) ? null : block);
-				}
-			}
-		}
-        
-        return root;
+		propertyParsers[type] == null;
+		delete propertyParsers[type];
 	}
 
 	/**
-	 *	Determines if a block is a single line block. This is true if the
-	 *	content of the line begins with an exclamation point or a percent sign.
+	 *	Retrieves the property parser to use for a given data type.
 	 *
-	 *	@param content  The content of the line.
-	 *
-	 *	@return         A flag if the line should be a single line block.
+	 *	@param type  The data type to use this property parser for.
+	 * 
+	 *	@return      The parser to use for this data type.
 	 */
-	protected function isSingleLineBlock(content:String):Boolean
+	public function getPropertyParser(type:String):IPropertyParser
 	{
-		// TODO: Move this to the Block parsers
-		return content.search(/^(%|!)/) == 0
+		return propertyParsers[type] as IPropertyParser;
 	}
 
 
@@ -230,17 +104,17 @@ public class MockdownParser
 	 */
 	public function parse(name:String):Node
 	{
-		// Throw error if name is not passed in.
+		// Throw error if name starts with a slash
 		if(name == null || name == "") {
-			throw new ArgumentError("The node name is required for parsing");
+			throw new IllegalOperationError("The node name is required for parsing");
 		}
 		// Throw error if name starts with a slash
 		if(name.indexOf("/") == 0 || name.indexOf("|") == 0) {
-			throw new ArgumentError("You cannot a node name with '/' or '|'");
+			throw new IllegalOperationError("You cannot a node name with '/' or '|'");
 		}
 		// Throw error if a double dot is found in the name
 		if(name.indexOf("..") != -1) {
-			throw new ArgumentError("You cannot specify '..' in a node name");
+			throw new IllegalOperationError("You cannot specify '..' in a node name");
 		}
 		
 		// Attempt to create a registered node type first
@@ -309,7 +183,7 @@ public class MockdownParser
         }
 
 		// Generate block tree and document
-		var root:Block = createBlockTree(content);
+		var root:Block = preprocessor.createBlockTree(content);
 
 		// Recursively parse from first child node
 		var node:Node;

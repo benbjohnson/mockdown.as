@@ -51,11 +51,14 @@ class NOPRenderObject implements IRenderObject
 {
 	public function get children():Array {return []}
 
-	public function drawLine(p1:Point, p2:Point, stroke:Stroke):void {}
-	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill):void {}
+	public function move(x:int, y:int):void {}
+	public function resize(width:uint, height:uint):void {}
+	
+	public function drawLine(x1:int, y1:int, x2:int, y2:int, stroke:Stroke):void {}
+	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void {}
 	public function clear():void {}
 
-	public function addChild(child:IRenderObject):void {}
-	public function removeChild(child:IRenderObject):void {}
-	public function removeAllChildren():void {}
+	public function addRenderChild(child:IRenderObject):void {}
+	public function removeRenderChild(child:IRenderObject):void {}
+	public function removeAllRenderChildren():void {}
 }
