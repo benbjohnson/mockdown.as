@@ -10,10 +10,24 @@ public interface IBlockParser
 {
 	//--------------------------------------------------------------------------
 	//
+	//	Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *	The document parser that invoked this block parser.
+	 */
+	public function get documentParser():DocumentParser;
+	public function set documentParser(value:DocumentParser):void;
+	
+	                                                             
+	//--------------------------------------------------------------------------
+	//
 	//	Methods
 	//
 	//--------------------------------------------------------------------------
 	                                                                           
+
 	/**
 	 *	Tests whether a block is completely parsed. This is used to define
 	 *	single-line blocks.
@@ -24,7 +38,7 @@ public interface IBlockParser
 	 *                to the content of this block. False if the next line
 	 *	              should be read to possibly append.
 	 */
-	function isBlockComplete(block:Block):Boolean
+	function isSingleLineBlock(block:Block):Boolean;
 
 	/**
 	 *	Parses a block into a node object.
@@ -33,6 +47,6 @@ public interface IBlockParser
 	 *
 	 *	@return       A node generated from parsing the block.
 	 */
-	function parse(block:Block):Node
+	function parse(block:Block):Node;
 }
 }

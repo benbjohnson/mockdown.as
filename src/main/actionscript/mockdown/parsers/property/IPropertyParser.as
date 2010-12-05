@@ -14,6 +14,13 @@ public interface IPropertyParser
 	//--------------------------------------------------------------------------
 	                                                                           
 	/**
+	 *	Checks to see if a given type can be parsed by the parser.
+	 *
+	 *	@param type  The data type.
+	 */
+	function canParseType(type:String):Boolean;
+
+	/**
 	 *	Parses a property from a node based on its data type and then assigns
 	 *	the value to the appropriate property.
 	 *

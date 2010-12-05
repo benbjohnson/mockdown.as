@@ -35,6 +35,14 @@ public class BooleanPropertyParser implements IPropertyParser
 	//--------------------------------------------------------------------------
 	
 	/**
+	 *	@copy IPropertyParser#canParseType()
+	 */
+	public function canParseType(type:String):void
+	{
+		return (type == "boolean");
+	}
+
+	/**
 	 *	@copy IPropertyParser#parse()
 	 */
 	public function parse(node:Node, property:String, value:String):void

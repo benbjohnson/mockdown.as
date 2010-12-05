@@ -37,6 +37,14 @@ public class NumberPropertyParser implements IPropertyParser
 	//--------------------------------------------------------------------------
 	
 	/**
+	 *	@copy IPropertyParser#canParseType()
+	 */
+	public function canParseType(type:String):void
+	{
+		return (type == "integer" || type == "decimal");
+	}
+
+	/**
 	 *	@copy IPropertyParser#parse()
 	 */
 	public function parse(node:Node, property:String, value:String):void

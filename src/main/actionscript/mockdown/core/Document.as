@@ -16,10 +16,10 @@ public class Document extends EventDispatcher
 	/**
 	 *	Constructor.
 	 */
-	public function Document(filename:String=null)
+	public function Document(file:IFile=null)
 	{
 		super();
-		this.filename = filename;
+		this.file = file;
 	}
 
 
@@ -30,8 +30,8 @@ public class Document extends EventDispatcher
 	//--------------------------------------------------------------------------
 	
 	/**
-	 *	The filename that the document was parsed from.
+	 *	The file that the document was parsed from.
 	 */
-	public var filename:String;
+	public var file:String;
 }
 }

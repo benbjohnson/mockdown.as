@@ -10,7 +10,6 @@ import mockdown.parsers.property.IPropertyParser;
 import mockdown.utils.FileUtil;
 
 import flash.errors.IllegalOperationError;
-import flash.filesystem.File; // TODO: Remove AIR dep
 
 /**
  *	This class parses blocks into components.
@@ -29,6 +28,10 @@ public class ComponentBlockParser implements IBlockParser
 	public function ComponentBlockParser()
 	{
 		super()
+		
+		addPropertyParser(new StringPropertyParser());
+		addPropertyParser(new NumberPropertyParser());
+		addPropertyParser(new BooleanPropertyParser());
 	}
 
 
@@ -38,10 +41,19 @@ public class ComponentBlockParser implements IBlockParser
 	//
 	//--------------------------------------------------------------------------
 	
+	//---------------------------------
+	//	Property parsers
+	//---------------------------------
+
+	private var _propertyParsers:Array = [];
+	
 	/**
-	 *  A list of parsers used to parse property values by data type.
+	 *  A list of parsers used to parse property values.
 	 */
-	private var propertyParsers:Object = {};
+	public function get propertyParsers():Array
+	{
+		return _propertyParsers.slice();
+	}
 	
 
 	//--------------------------------------------------------------------------
@@ -55,37 +67,28 @@ public class ComponentBlockParser implements IBlockParser
 	//---------------------------------
 
 	/**
-	 *	Sets the property parser to use for a given data type.
+	 *	Adds a property parser.
 	 *
-	 *	@param type    The data type to use this property parser for.
-	 *	@param parser  The property parser to use for this type.
+	 *	@param parser  The property parser.
 	 */
-	public function registerPropertyParser(type:String, parser:IPropertyParser):void
+	public function addPropertyParser(parser:IPropertyParser):void
 	{
-		propertyParsers[type] = parser;
+		if(propertyParsers.indexOf(parser) == -1) {
+			propertyParsers.push(parser);
+		}
 	}
 
 	/**
-	 *	Unsets the property parser to use for a given data type.
+	 *	Removes a property parser.
 	 *
-	 *	@param type    The data type to use this property parser for.
+	 *	@param parser  The property parser.
 	 */
-	public function unregisterPropertyParser(type:String):void
+	public function removePropertyParser(parser:IPropertyParser):void
 	{
-		propertyParsers[type] == null;
-		delete propertyParsers[type];
-	}
-
-	/**
-	 *	Retrieves the property parser to use for a given data type.
-	 *
-	 *	@param type  The data type to use this property parser for.
-	 * 
-	 *	@return      The parser to use for this data type.
-	 */
-	public function getPropertyParser(type:String):IPropertyParser
-	{
-		return propertyParsers[type] as IPropertyParser;
+		var index:int = propertyParsers.indexOf(parser);
+		if(index != -1) {
+			propertyParsers.splice(index, 1);
+		}
 	}
 
 
@@ -94,162 +97,32 @@ public class ComponentBlockParser implements IBlockParser
 	//---------------------------------
 
 	/**
-	 *	Parses a Mockdown file into a recursive node tree. This method will
-	 *	search the registered node types as well as search the load path. Files
-	 *	can be specified within folders by using the pipe ("|") separator.
-	 *
-	 *	@param name  The name of the node to parse.
-	 *	
-	 *	@return      A node object.
+	 *	@copy IBlockParser#isSingleLineBlock()
 	 */
-	public function parse(name:String):Node
+	public function isSingleLineBlock(block:Block):Node
 	{
-		// Throw error if name starts with a slash
-		if(name == null || name == "") {
-			throw new IllegalOperationError("The node name is required for parsing");
-		}
-		// Throw error if name starts with a slash
-		if(name.indexOf("/") == 0 || name.indexOf("|") == 0) {
-			throw new IllegalOperationError("You cannot a node name with '/' or '|'");
-		}
-		// Throw error if a double dot is found in the name
-		if(name.indexOf("..") != -1) {
-			throw new IllegalOperationError("You cannot specify '..' in a node name");
-		}
-		
-		// Attempt to create a registered node type first
-		var node:Node = nodeManager.create(name);
-		
-		// If type is not registered, search the load path
-		if(!node) {
-			// Change colons to directory seperators
-			var filename:String = name.replace(/\|/g, "/");
-			
-			var extensions:Array = this.extensions.slice();
-			extensions.unshift(null);
-
-			for each(var path:String in paths) {
-				for each(var extension:String in extensions) {
-					extension = (extension ? "." + extension : "");
-					
-					var file:File = (new File(path)).resolvePath(filename + extension);
-					if(file.exists) {
-						var content:String;
-						try {
-							content = FileUtil.read(file);
-						}
-						catch(e:Error) {
-							throw new ParseError("Cannot find component: " + name);
-						}
-						
-						node = parseContent(content);
-					
-						// Assign a document to this node
-						if(node) {
-							node.document = new Document(file.nativePath);
-						}
-						
-						return node;
-					}
-				}
-			}
-		}
-		
-		// Throw error if no node is found
-		if(!node) {
-			throw new ParseError("Cannot find node type in load path: " + name);
-        }
-		
-		return node;
+		return (block.content && block.content.charAt(0) == "%");
 	}
 
 	/**
-	 *	Parses Mockdown content into a document object model.
-	 *
-	 *	@param content  The Mockdown content to parse.
-	 *	
-	 *	@return         A root document node.
+	 *	@copy IBlockParser#parse()
 	 */
-	protected function parseContent(content:String):Node
+	public function parse(block:Block):Node
 	{
-		// Validate content exists
-		if(content == null) {
-			throw new ParseError('Content is required for parsing');
-        }
-
-		// Return null if there is no content
-		if(content.search(/\S/) == -1) {
-			return null;
-        }
-
-		// Generate block tree and document
-		var root:Block = preprocessor.createBlockTree(content);
-
-		// Recursively parse from first child node
-		var node:Node;
-		if(root.children.length == 1) {		// TODO: Support pragmas
-			node = parseBlock(root.children[0]);
-		}
-
-		return node;
-	}
-
-
-	//---------------------------------
-	//	Node Parsing
-	//---------------------------------
-
-	/**
-	 *	Parses block into a node.
-	 *
-	 *	@param block  The block to parse.
-	 *	
-	 *	@return       A node.
-	 */
-	protected function parseBlock(block:Block):Node
-	{
-		// If we don't receive a block then return null
-		if(!block) {
+		// Exit if first character is not a percent sign
+		if(!block.content || block.content.charAt(0) != "%") {
 			return null;
 		}
 		
-		// Attempt to parse block
 		var node:Node;
 		var lexer:Lexer = new Lexer(block.content);
-
-		if((node = parseComponentBlock(block, lexer)) != null) {}
-		else if((node = parseMarkdownBlock(block, lexer)) != null) {}
-		else {throw new BlockParseError(block, "Unable to parse block");}
 		
-		// Assign original block to node for parse error reporting.
-		node.block = block;
-		
-		// Parse child blocks
-		for each(var childBlock:Block in block.children) {
-			node.addChild(parseBlock(childBlock));
+		// Parse name
+		var name:String;
+		if(!(name = lexer.match(/([^ ]+)\s*/))) {
+			throw new BlockParseError(block, 'Expected component name');
 		}
 		
-		return node
-	}
-	
-	/**
-	 *	Parses a component block into a node.
-	 *
-	 *	@param block  The block to parse.
-	 *	
-	 *	@return       A node.
-	 */
-	protected function parseComponentBlock(block:Block, lexer:Lexer):Node
-	{
-		var node:Node;
-		
-		// Parse block as component if it starts with a percent sign
-		if(lexer.match("%")) {
-			var name:String;
-			if(!(name = lexer.match(/([^ ]+)\s*/))) {
-				throw new BlockParseError(block, 'Missing component name');
-			}
-			
 			// Create node by name
 			node = nodeManager.create(name);
 

@@ -31,6 +31,14 @@ public class StringPropertyParser implements IPropertyParser
 	//--------------------------------------------------------------------------
 	
 	/**
+	 *	@copy IPropertyParser#canParseType()
+	 */
+	public function canParseType(type:String):void
+	{
+		return (type == "string");
+	}
+	
+	/**
 	 *	@copy IPropertyParser#parse()
 	 */
 	public function parse(node:Node, property:String, value:String):void
