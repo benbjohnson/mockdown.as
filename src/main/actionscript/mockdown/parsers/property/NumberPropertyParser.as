@@ -3,8 +3,6 @@ package mockdown.parsers.property
 import mockdown.components.Node;
 import mockdown.errors.BlockParseError;
 
-import flash.errors.IllegalOperationError;
-
 import org.as3commons.reflect.Field;
 import org.as3commons.reflect.MetaData;
 import org.as3commons.reflect.Type;

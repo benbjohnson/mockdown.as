@@ -27,5 +27,8 @@ public class TestNode extends Node
 
 	[DataType(type="integer")]
 	public var toPercentageProperty:Number;
+
+	[DataType(type="boolean")]
+	public var booleanProperty:Boolean;
 }
 }
