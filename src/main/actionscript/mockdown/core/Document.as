@@ -1,5 +1,7 @@
 package mockdown.core
 {
+import mockdown.filesystem.IFile;
+
 import flash.events.EventDispatcher;
 
 /**
@@ -32,6 +34,6 @@ public class Document extends EventDispatcher
 	/**
 	 *	The file that the document was parsed from.
 	 */
-	public var file:String;
+	public var file:IFile;
 }
 }

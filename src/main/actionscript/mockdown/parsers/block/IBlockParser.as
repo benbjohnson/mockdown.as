@@ -17,8 +17,8 @@ public interface IBlockParser
 	/**
 	 *	The document parser that invoked this block parser.
 	 */
-	public function get documentParser():DocumentParser;
-	public function set documentParser(value:DocumentParser):void;
+	//public function get documentParser():DocumentParser;
+	//public function set documentParser(value:DocumentParser):void;
 	
 	                                                             
 	//--------------------------------------------------------------------------

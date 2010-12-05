@@ -33,7 +33,7 @@ public class StringPropertyParser implements IPropertyParser
 	/**
 	 *	@copy IPropertyParser#canParseType()
 	 */
-	public function canParseType(type:String):void
+	public function canParseType(type:String):Boolean
 	{
 		return (type == "string");
 	}
