@@ -249,7 +249,7 @@ public class MockdownParser
 		// If type is not registered, search the load path
 		if(!node) {
 			// Change colons to directory seperators
-			var filename:String = name.replace(/\|/g, "/");
+			var filename:String = name.replace(/:/g, "/");
 			
 			var extensions:Array = this.extensions.slice();
 			extensions.unshift(null);
