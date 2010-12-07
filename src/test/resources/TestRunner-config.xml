@@ -7,24 +7,19 @@
 	<compiler>
 		<debug>true</debug>
 		<allow-source-path-overlap>true</allow-source-path-overlap>
+		<verbose-stacktraces>true</verbose-stacktraces>
+		<headless-server>true</headless-server>
 		
 		<source-path>
 			<path-element>../../main/actionscript</path-element>
 			<path-element>../actionscript</path-element>
-			<path-element>../flex</path-element>
 		</source-path>
 
 		<library-path append="true">
 			<path-element>../../../libs/as3commons-lang-0.3.1.swc</path-element>
 			<path-element>../../../libs/as3commons-logging-1.1.1.swc</path-element>
 			<path-element>../../../libs/as3commons-reflect-1.3.1.swc</path-element>
-			<path-element>../../../libs/FlexUnit4.swc</path-element>
-			<path-element>../../../libs/FlexUnit4CIListener.swc</path-element>
-			<path-element>../../../libs/FlexUnit4UIRunner.swc</path-element>
-			<path-element>../../../libs/mock4as.swc</path-element>
+			<path-element>../../../libs/asunit-4.0.swc</path-element>
 		</library-path>
-		
-		<verbose-stacktraces>true</verbose-stacktraces>
-		<headless-server>true</headless-server>
 	</compiler>
 </flex-config>

@@ -55,7 +55,7 @@
 	</target>
 
 	<!-- Target: Test -->
-	<!-- mxmlc +configname=air -load-config+=src/test/resources/TestRunner-config.xml src/test/flex/TestRunner.mxml -->
+	<!-- mxmlc +configname=air -load-config+=src/test/resources/TestRunner-config.xml src/test/actionscript/TestRunner.as -->
 	<target name="test-build" depends="init">
 		<!-- TestRunner -->
 		<java jar="${mxmlc.jar}" fork="true" failonerror="true">
@@ -64,7 +64,7 @@
 			<arg value="+flexlib=${FLEX_HOME}/frameworks"/>
 			<arg value="+configname=air"/>
 			<arg value="-load-config+=${src.dir}/test/resources/TestRunner-config.xml"/>
-			<arg value="${src.dir}/test/flex/TestRunner.mxml"/>
+			<arg value="${src.dir}/test/actionscript/TestRunner.as"/>
 		</java>
 	</target>
 	

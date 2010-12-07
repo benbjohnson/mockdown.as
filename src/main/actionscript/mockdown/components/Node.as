@@ -1,14 +1,20 @@
 package mockdown.components
 {
-import mockdown.core.Document;
-import mockdown.parsers.Block;
+import mockdown.components.Component;
+import mockdown.components.properties.ComponentProperty;
 
-import flash.events.EventDispatcher;
+import flash.utils.Proxy;
+import flash.utils.flash_proxy;
+
+use namespace flash_proxy;
 
 /**
- *	This class represents a node within the document object model.
+ *	This class represents a visual node within the document object model. The
+ *	properties and behavior of the node are defined by its component. In effect,
+ *	a node is an instance of a component in the same way an object is an
+ *	instance of a class in object oriented programming.
  */
-public class Node extends EventDispatcher
+public dynamic class Node extends Proxy
 {
 	//--------------------------------------------------------------------------
 	//
@@ -19,9 +25,16 @@ public class Node extends EventDispatcher
 	/**
 	 *	Constructor.
 	 */
-	public function Node()
+	public function Node(component:Component)
 	{
 		super();
+		
+		// Require the component to be defined
+		if(!component) {
+			throw new ArgumentError("Component must be defined when creating a node");
+		}
+		
+		_component = component;
 	}
 
 
@@ -31,66 +44,28 @@ public class Node extends EventDispatcher
 	//
 	//--------------------------------------------------------------------------
 	
-	/**
-	 *	The parent node in the document object model.
-	 */
-	public var parent:Node;
+	//---------------------------------
+	//	Internal
+	//---------------------------------
 	
-	/**
-	 *	The identifier for the node. This can be used only within a document
-	 *	context.
-	 */
-	public var id:String;
-	
-	/**
-	 *	The block the node was parsed from.
-	 */
-	public var block:Block;
+	private var __values__:Object = {};
 	
 	
 	//---------------------------------
-	//	Children
+	//	Component
 	//---------------------------------
 	
-	private var _children:Array = [];
+	private var _component:Component;
 	
 	/**
-	 *	The child nodes attached to this node.
+	 *	The structural definition of the node.
 	 */
-	public function get children():Array
+	public function get component():Component
 	{
-		return _children.slice();
+		return _component;
 	}
 
 
-	//---------------------------------
-	//	Document
-	//---------------------------------
-	
-	private var _document:Document;
-	
-	/**
-	 *	The document node that this node was parsed from. If this is not set
-	 *	explicitly, it is searched for through the parent hierarchy.
-	 */
-	public function get document():Document
-	{
-		if(_document) {
-			return _document;
-		}
-		else if(parent) {
-			return parent.document;
-		}
-		else {
-			return null;
-		}
-	}
-	
-	/** @private */
-	public function set document(value:Document):void
-	{
-		_document = value;
-	}
 
 
 	//--------------------------------------------------------------------------
@@ -100,57 +75,35 @@ public class Node extends EventDispatcher
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
-	//	Children
+	//	Proxy
 	//---------------------------------
-	
-	/**
-	 *	Appends a node to the list of children.
-	 *	
-	 *	@param child  The node to append.
-	 */
-	public function addChild(child:Node):void
-	{
-		if(child != null) {
-			child.parent = this;
-			_children.push(child);
-		}
-	}
-	
-	/**
-	 *	Removes a node from the list of children.
-	 *	
-	 *	@param child  The node to remove.
-	 */
-	public function removeChild(child:Node):void
-	{
-		if(child != null && children.indexOf(child) != -1) {
-			child.parent = null;
-			_children.splice(children.indexOf(child), 1);
-		}
-	}
 
-	/**
-	 *	Removes all children from a node.
-	 */
-	public function removeAllChildren():void
+	/** @private */
+	flash_proxy override function setProperty(name:*, value:*):void
 	{
-		var children:Array = this.children;
-		for each(var child:Node in children) {
-			removeChild(child);
+		var property:ComponentProperty = component.getProperty(name);
+
+		// Throw error if property doesn't exist
+		if(!property) {
+			throw new ReferenceError("Property does not exist on node: " + name);
 		}
+
+		// If the property exists, use it to parse the value
+		__values__[property.name] = property.parse(value);
 	}
 
 
-	//---------------------------------
-	//	Document
-	//---------------------------------
-
-	/**
-	 *	Returns a flag stating if the node is a root document node.
-	 */
-	public function isRoot():Boolean
+	/** @private */
+	flash_proxy override function getProperty(name:*):*
 	{
-		return (_document != null);
+		var property:ComponentProperty = component.getProperty(name.toString());
+
+		// Throw error if property doesn't exist
+		if(!property) {
+			throw new ReferenceError("Property does not exist on node: " + name);
+		}
+
+		return __values__[property.name];
 	}
 }
 }

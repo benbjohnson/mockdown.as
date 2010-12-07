@@ -1,9 +1,60 @@
 package mockdown.components
 {
-import org.flexunit.Assert;
+import mockdown.components.properties.BooleanProperty;
+import mockdown.components.properties.NumberProperty;
+import mockdown.components.properties.StringProperty;
+import asunit.framework.Assert;
 
 public class NodeTest
 {
+	//---------------------------------------------------------------------
+	//
+	//  Setup
+	//
+	//---------------------------------------------------------------------
+	
+	private var node:Node;
+	private var component:Component;
+	
+	[Before]
+	public function setup():void
+	{
+		component = new Component();
+		component.addProperty(new StringProperty("stringProperty"));
+		component.addProperty(new NumberProperty("integerProperty", "int"));
+		component.addProperty(new BooleanProperty("booleanProperty"));
+		component.seal();
+		
+		node = new Node(component);
+	}
+	
+	
+	//---------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//---------------------------------------------------------------------
+	
+	[Test]
+	public function constructorShouldSetComponent():void
+	{
+		Assert.assertEquals(component, node.component);
+	}
+
+	[Test(expects="ArgumentError")]
+	public function constructorShouldErrorIfComponentIsNull():void
+	{
+		node = new Node(null);
+	}
+	
+	
+	//---------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//---------------------------------------------------------------------
+
+
 	//---------------------------------------------------------------------
 	//
 	//  Methods
@@ -11,39 +62,40 @@ public class NodeTest
 	//---------------------------------------------------------------------
 	
 	//-----------------------------
-	//  Children
+	//  Proxy
 	//-----------------------------
-
+	
 	[Test]
-	public function shouldAppendChild():void
+	public function shouldAccessAndMutateStringProperty():void
 	{
-		var parent:Node = new Node();
-		var child:Node  = new Node();
-		parent.addChild(child);
-		Assert.assertEquals(parent, child.parent);
-		Assert.assertEquals(1, parent.children.length);
-		Assert.assertEquals(child, parent.children[0]);
+		node.stringProperty = "foo";
+		Assert.assertEquals("foo", node.stringProperty);
 	}
-
+	
 	[Test]
-	public function shouldRemoveChild():void
+	public function shouldAccessAndMutateNumberProperty():void
 	{
-		var parent:Node = new Node();
-		var child:Node  = new Node();
-		parent.addChild(child);
-		parent.removeChild(child);
-		Assert.assertNull(child.parent);
-		Assert.assertEquals(0, parent.children.length);
+		node.integerProperty = "12";
+		Assert.assertEquals(12, node.integerProperty);
 	}
-
+	
 	[Test]
-	public function shouldRemoveAllChildren():void
+	public function shouldAccessAndMutateBooleanProperty():void
 	{
-		var parent:Node = new Node();
-		parent.addChild(new Node());
-		parent.addChild(new Node());
-		parent.removeAllChildren();
-		Assert.assertEquals(0, parent.children.length);
+		node.booleanProperty = "true";
+		Assert.assertTrue(node.booleanProperty);
+	}
+	
+	[Test(expects="ReferenceError")]
+	public function shouldThrowErrorWhenSettingUndefinedProperty():void
+	{
+		node.no_such_property = "12";
+	}
+	
+	[Test(expects="ReferenceError")]
+	public function shouldThrowErrorWhenAccessingUndefinedProperty():void
+	{
+		var x:String = node.no_such_property;
 	}
 }
 }
