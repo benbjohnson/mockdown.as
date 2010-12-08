@@ -2,6 +2,7 @@ package mockdown.components
 {
 import mockdown.components.Component;
 import mockdown.components.properties.ComponentProperty;
+import mockdown.components.properties.FunctionProperty;
 
 import flash.utils.Proxy;
 import flash.utils.flash_proxy;
@@ -104,6 +105,38 @@ public dynamic class Node extends Proxy
 		}
 
 		return __values__[property.name];
+	}
+
+	/** @private */
+	flash_proxy override function callProperty(name:*, ...rest):*
+	{
+		var property:ComponentProperty = component.getProperty(name.toString());
+
+		// Throw error if property doesn't exist
+		if(!property) {
+			throw new ReferenceError("Function does not exist on node: " + name);
+		}
+		// Throw error if property is not a function
+		if(!(property is FunctionProperty)) {
+			throw new ReferenceError("Property is not a function on node: " + name);
+		}
+		
+		// Execute the function on the node
+		var func:Function = (property as FunctionProperty).functionReference;
+		return func.apply(this, rest);
+	}
+
+
+	//---------------------------------
+	//	Utility
+	//---------------------------------
+	
+	/**
+	 *	Returns a string representation of the component.
+	 */
+	public function toString():String
+	{
+		return "[[" + component.name + "]]";
 	}
 }
 }

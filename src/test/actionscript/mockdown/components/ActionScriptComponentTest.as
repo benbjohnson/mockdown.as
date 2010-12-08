@@ -130,36 +130,18 @@ public class ActionScriptComponentTest
 	
 
 	[Test]
-	public function constructorShouldAssignMeasureFunction():void
+	public function constructorShouldCreateFunction():void
 	{
 		component = new ActionScriptComponent(null, TestComponent);
-		Assert.assertEquals((new TestComponent()).measure(), component.measureFunction());
-	}
-
-	[Test]
-	public function constructorShouldAssignLayoutFunction():void
-	{
-		component = new ActionScriptComponent(null, TestComponent);
-		Assert.assertEquals((new TestComponent()).layout(), component.layoutFunction());
-	}
-
-	[Test]
-	public function constructorShouldAssignRenderFunction():void
-	{
-		component = new ActionScriptComponent(null, TestComponent);
-		Assert.assertEquals((new TestComponent()).render(), component.renderFunction());
+		var property:FunctionProperty = component.getProperty("functionProperty") as FunctionProperty;
+		Assert.assertEquals("function", property.type);
+		Assert.assertEquals("foo!", property.functionReference());
 	}
 
 	[Test(expects="flash.errors.IllegalOperationError")]
-	public function constructorShouldThrowErrorWhenAssigningNonFunctionsToMethods():void
+	public function constructorShouldThrowErrorWhenAssigningNonFunctionsToFunctions():void
 	{
-		new ActionScriptComponent(null, ComponentWithInvalidMethodType);
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function constructorShouldThrowErrorWhenAssigningInvalidMethodName():void
-	{
-		new ActionScriptComponent(null, ComponentWithInvalidMethodName);
+		new ActionScriptComponent(null, ComponentWithInvalidFunctionType);
 	}
 
 
@@ -196,14 +178,8 @@ class TestComponent extends Component
 	[Property]
 	public var booleanProperty:Boolean;
 
-	[Method]
-	public var measure:Function = function():String{return "measure!"};
-
-	[Method]
-	public var layout:Function = function():String{return "layout!"};
-
-	[Method]
-	public var render:Function = function():String{return "render!"};
+	[Function]
+	public var functionProperty:Function = function():String{return "foo!"};
 }
 
 class ComponentWithInvalidPropertyType extends Component
@@ -212,14 +188,14 @@ class ComponentWithInvalidPropertyType extends Component
 	public var stringProperty:Object;
 }
 
-class ComponentWithInvalidMethodType extends Component
+class ComponentWithInvalidFunctionType extends Component
 {
-	[Method]
+	[Function]
 	public var layout:String;
 }
 
-class ComponentWithInvalidMethodName extends Component
+class ComponentWithInvalidFunctionName extends Component
 {
-	[Method]
-	public var no_such_method:Function;
+	[Function]
+	public var no_such_function:Function;
 }

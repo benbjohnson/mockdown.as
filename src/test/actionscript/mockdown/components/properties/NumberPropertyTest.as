@@ -72,6 +72,7 @@ public class NumberPropertyTest
 		property.seal();
 		property.type = "int";
 	}
+	
 	[Test]
 	public function shouldImplicitlyNotAllowNegativesForUInt():void
 	{

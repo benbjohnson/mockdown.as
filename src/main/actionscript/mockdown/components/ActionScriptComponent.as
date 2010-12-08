@@ -3,6 +3,7 @@ package mockdown.components
 import mockdown.components.loaders.ComponentLoader;
 import mockdown.components.properties.BooleanProperty;
 import mockdown.components.properties.ComponentProperty;
+import mockdown.components.properties.FunctionProperty;
 import mockdown.components.properties.NumberProperty;
 import mockdown.components.properties.StringProperty;
 
@@ -72,49 +73,6 @@ public class ActionScriptComponent extends Component
 
 	
 	//---------------------------------
-	//	Measure function
-	//---------------------------------
-
-	private var _measureFunction:Function;
-	
-	/**
-	 *	The method used to measure a component.
-	 */
-	public function get measureFunction():Function
-	{
-		return _measureFunction;
-	}
-
-	//---------------------------------
-	//	Layout function
-	//---------------------------------
-
-	private var _layoutFunction:Function;
-	
-	/**
-	 *	The method used to layout a component.
-	 */
-	public function get layoutFunction():Function
-	{
-		return _layoutFunction;
-	}
-
-	//---------------------------------
-	//	Render function
-	//---------------------------------
-
-	private var _renderFunction:Function;
-	
-	/**
-	 *	The method used to render a component to a render object.
-	 */
-	public function get renderFunction():Function
-	{
-		return _renderFunction;
-	}
-
-
-	//---------------------------------
 	//	Class
 	//---------------------------------
 	
@@ -150,27 +108,21 @@ public class ActionScriptComponent extends Component
 			var type:String = variableXml.@type;
 			var meta:Object = getMetaData(variableXml);
 			
-			trace("VAR: " + name + " : " + type);
 			// Add a property
 			if(meta.Property) {
 				meta.Property.type ||= type.toLowerCase();
 				var property:ComponentProperty = createComponentProperty(name, meta.Property);
 				addProperty(property);
 			}
-			// Add a method
-			else if(meta.Method) {
-				var method:Object = meta.Method;
+			// Add a function
+			else if(meta.Function) {
 				if(type != "Function") {
-					throw new IllegalOperationError("A Method must be defined as a Function");
+					throw new IllegalOperationError("A Function property must be defined as a Function in ActionScript");
 				}
 				
-				var func:Function = instance[name] as Function;
-				switch(name) {
-					case 'measure': _measureFunction = func; break;
-					case 'layout':  _layoutFunction = func;  break;
-					case 'render':  _renderFunction = func;  break;
-					default: throw new IllegalOperationError("Not a valid method: " + method.name);
-				}
+				meta.Function.functionReference = instance[name] as Function;
+				var functionProperty:FunctionProperty = FunctionProperty.create(name, "function", meta.Function);
+				addProperty(functionProperty);
 			}
 		}
 	}
