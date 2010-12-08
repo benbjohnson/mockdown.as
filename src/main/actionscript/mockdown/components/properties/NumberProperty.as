@@ -22,6 +22,28 @@ public class NumberProperty extends ComponentProperty
 {
 	//--------------------------------------------------------------------------
 	//
+	//	Static Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *	Creates a number property from a hash of options.
+	 */
+	static public function create(name:String, type:String, options:Object):NumberProperty
+	{
+		var property:NumberProperty = new NumberProperty(name, type);
+		if(options.allowNegative) {
+			property.allowNegative = (options.allowNegative == "true");
+		}
+		if(options.percentField) {
+			property.percentField = options.percentField;
+		}
+		return property;
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	//
 	//	Constructor
 	//
 	//--------------------------------------------------------------------------

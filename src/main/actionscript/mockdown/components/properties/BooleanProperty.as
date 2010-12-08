@@ -12,6 +12,21 @@ public class BooleanProperty extends ComponentProperty
 {
 	//--------------------------------------------------------------------------
 	//
+	//	Static Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *	Creates a number property from a hash of options.
+	 */
+	static public function create(name:String, type:String, options:Object):BooleanProperty
+	{
+		return new BooleanProperty(name);
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	//
 	//	Constructor
 	//
 	//--------------------------------------------------------------------------

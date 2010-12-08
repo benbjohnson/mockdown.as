@@ -9,8 +9,9 @@ public class ComponentsSuite
 	public var s0:ComponentLoadersSuite;
 	public var s1:ComponentPropertiesSuite;
 
-	public var t0:ComponentTest;
-	public var t1:NodeTest;
+	public var t0:ActionScriptComponentTest;
+	public var t1:ComponentTest;
+	public var t2:NodeTest;
 
 	/*
 	public var t0:ColumnTest;

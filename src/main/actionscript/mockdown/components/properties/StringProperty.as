@@ -12,6 +12,21 @@ public class StringProperty extends ComponentProperty
 {
 	//--------------------------------------------------------------------------
 	//
+	//	Static Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *	Creates a number property from a hash of options.
+	 */
+	static public function create(name:String, type:String, options:Object):StringProperty
+	{
+		return new StringProperty(name);
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	//
 	//	Constructor
 	//
 	//--------------------------------------------------------------------------
