@@ -17,6 +17,7 @@ public class TestRunner extends Sprite
 	{
 		var core:TextCore = new TextCore();
 		core.textPrinter.hideLocalPaths = true;
+		core.textPrinter.traceOnComplete = false;
 		core.start(MockdownSuite, null, this);
 	}
 }

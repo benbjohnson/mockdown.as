@@ -68,6 +68,7 @@ public class NodeTest
 	[Test]
 	public function shouldAccessAndMutateStringProperty():void
 	{
+		trace("--> shouldAccessAndMutateStringProperty");
 		node.stringProperty = "foo";
 		Assert.assertEquals("foo", node.stringProperty);
 	}
@@ -96,6 +97,45 @@ public class NodeTest
 	public function shouldThrowErrorWhenAccessingUndefinedProperty():void
 	{
 		var x:String = node.no_such_property;
+	}
+
+
+	//-----------------------------
+	//  Children
+	//-----------------------------
+
+	[Test]
+	public function shouldAddChild():void
+	{
+		var child:Node = new Node(component);
+		node.addChild(child);
+		Assert.assertEquals(child, node.children[0]);
+	}
+
+	[Test]
+	public function shouldSetParentWhenAddingChild():void
+	{
+		var child:Node = new Node(component);
+		node.addChild(child);
+		Assert.assertEquals(node, child.parent);
+	}
+
+	[Test]
+	public function shouldRemoveChild():void
+	{
+		var child:Node = new Node(component);
+		node.addChild(child);
+		node.removeChild(child);
+		Assert.assertEquals(0, node.children.length);
+	}
+
+	[Test]
+	public function shouldUnsetParentWhenRemovingChild():void
+	{
+		var child:Node = new Node(component);
+		node.addChild(child);
+		node.removeChild(child);
+		Assert.assertNull(child.parent);
 	}
 }
 }

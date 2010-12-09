@@ -69,6 +69,14 @@ public class ActionScriptComponentTest
 	}
 
 	[Test]
+	public function constructorShouldImplicitlyCreateStringProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:StringProperty = component.getProperty("implicitStringProperty") as StringProperty;
+		Assert.assertNotNull(property);
+	}
+
+	[Test]
 	public function constructorShouldCreateIntProperty():void
 	{
 		component = new ActionScriptComponent(null, TestComponent);
@@ -79,6 +87,14 @@ public class ActionScriptComponentTest
 	}
 
 	[Test]
+	public function constructorShouldImplicitlyCreateIntProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:NumberProperty = component.getProperty("implicitIntProperty") as NumberProperty;
+		Assert.assertEquals("int", property.type);
+	}
+
+	[Test]
 	public function constructorShouldCreateUIntProperty():void
 	{
 		component = new ActionScriptComponent(null, TestComponent);
@@ -86,6 +102,14 @@ public class ActionScriptComponentTest
 		Assert.assertEquals("uint", property.type);
 		Assert.assertEquals("uintProperty", property.name);
 		Assert.assertFalse(property.allowNegative);
+	}
+
+	[Test]
+	public function constructorShouldImplicitlyCreateUIntProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:NumberProperty = component.getProperty("implicitUIntProperty") as NumberProperty;
+		Assert.assertEquals("uint", property.type);
 	}
 
 	[Test]
@@ -115,10 +139,34 @@ public class ActionScriptComponentTest
 	}
 
 	[Test]
+	public function constructorShouldCreateDefaultValueProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:NumberProperty = component.getProperty("defaultValueProperty") as NumberProperty;
+		Assert.assertEquals(12, property.defaultValue);
+	}
+
+	[Test]
+	public function constructorShouldCreateNonNullableProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:NumberProperty = component.getProperty("nonNullableProperty") as NumberProperty;
+		Assert.assertFalse(property.nullable);
+	}
+
+	[Test]
 	public function constructorShouldCreateBooleanProperty():void
 	{
 		component = new ActionScriptComponent(null, TestComponent);
 		var property:BooleanProperty = component.getProperty("booleanProperty") as BooleanProperty;
+		Assert.assertEquals("boolean", property.type);
+	}
+
+	[Test]
+	public function constructorShouldImplicitlyCreateBooleanProperty():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:BooleanProperty = component.getProperty("implicitBooleanProperty") as BooleanProperty;
 		Assert.assertEquals("boolean", property.type);
 	}
 
@@ -136,6 +184,15 @@ public class ActionScriptComponentTest
 		var property:FunctionProperty = component.getProperty("functionProperty") as FunctionProperty;
 		Assert.assertEquals("function", property.type);
 		Assert.assertEquals("foo!", property.functionReference());
+	}
+
+	[Test]
+	public function constructorShouldImplicitlyCreateFunction():void
+	{
+		component = new ActionScriptComponent(null, TestComponent);
+		var property:FunctionProperty = component.getProperty("implicitFunctionProperty") as FunctionProperty;
+		Assert.assertEquals("function", property.type);
+		Assert.assertEquals("bar!", property.functionReference());
 	}
 
 	[Test(expects="flash.errors.IllegalOperationError")]
@@ -157,14 +214,20 @@ public class ActionScriptComponentTest
 import mockdown.components.Component;
 class TestComponent extends Component
 {
-	[Property]
-	public var stringProperty:String;
+	[Property(type="string")]
+	public var stringProperty:*;
 
-	[Property]
-	public var intProperty:int;
+	public var implicitStringProperty:String;
 
-	[Property]
-	public var uintProperty:uint;
+	[Property(type="int")]
+	public var intProperty:*;
+
+	public var implicitIntProperty:int;
+
+	[Property(type="uint")]
+	public var uintProperty:*;
+
+	public var implicitUIntProperty:uint;
 
 	[Property(allowNegative="false")]
 	public var nonNegativeProperty:int;
@@ -172,14 +235,24 @@ class TestComponent extends Component
 	[Property(percentField="decimalProperty")]
 	public var percentFieldProperty:int;
 
+	[Property(defaultValue="12")]
+	public var defaultValueProperty:uint;
+
+	[Property(nullable="false")]
+	public var nonNullableProperty:uint;
+
 	[Property(type="decimal")]
 	public var decimalProperty:*;
 
-	[Property]
-	public var booleanProperty:Boolean;
+	[Property(type="boolean")]
+	public var booleanProperty:*;
+
+	public var implicitBooleanProperty:Boolean;
 
 	[Function]
 	public var functionProperty:Function = function():String{return "foo!"};
+
+	public var implicitFunctionProperty:Function = function():String{return "bar!"};
 }
 
 class ComponentWithInvalidPropertyType extends Component

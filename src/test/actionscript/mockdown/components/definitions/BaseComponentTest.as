@@ -138,5 +138,59 @@ public class BaseComponentTest
 		node.measure();
 		Assert.assertEquals(50, node.pixelHeight);
 	}
+
+
+	//---------------------------------
+	//	Children
+	//---------------------------------
+
+	[Test]
+	public function shouldMeasureChildren():void
+	{
+		var child:Node = new Node(component);
+		child.width = "100";
+		node.addChild(child);
+		node.measure();
+		Assert.assertEquals(100, child.pixelWidth);
+	}
+	
+
+	//---------------------------------
+	//	Implicit measurement
+	//---------------------------------
+
+	[Test]
+	public function shouldImplicitlyMeasureWidth():void
+	{
+		var c0:Node = new Node(component);
+		var c1:Node = new Node(component);
+		c0.width = "20";
+		c1.width = "80";
+		node.addChild(c0);
+		node.addChild(c1);
+		
+		node.paddingLeft = "1";
+		node.paddingRight = "2";
+		node.measure();
+		
+		Assert.assertEquals(83, node.pixelWidth);
+	}
+
+	[Test]
+	public function shouldImplicitlyMeasureHeight():void
+	{
+		var c0:Node = new Node(component);
+		var c1:Node = new Node(component);
+		c0.height = "20";
+		c1.height = "80";
+		node.addChild(c0);
+		node.addChild(c1);
+		
+		node.paddingTop = "1";
+		node.paddingBottom = "2";
+		node.measure();
+		
+		Assert.assertEquals(83, node.pixelHeight);
+	}
 }
 }

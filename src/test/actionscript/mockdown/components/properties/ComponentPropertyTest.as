@@ -121,6 +121,43 @@ public class ComponentPropertyTest
 		property.type = "foo";
 	}
 
+	//---------------------------------
+	//	Default value
+	//---------------------------------
+
+	[Test]
+	public function shouldSetDefaultValue():void
+	{
+		property.defaultValue = "foo";
+		Assert.assertEquals("foo", property.defaultValue);
+	}
+
+	[Test(expects="flash.errors.IllegalOperationError")]
+	public function shouldThrowErrorSettingDefaultValueWhenSealed():void
+	{
+		property.seal();
+		property.defaultValue = "foo";
+	}
+
+
+	//---------------------------------
+	//	Nullable
+	//---------------------------------
+
+	[Test]
+	public function shouldSetNullable():void
+	{
+		property.nullable = false;
+		Assert.assertFalse(property.nullable);
+	}
+
+	[Test(expects="flash.errors.IllegalOperationError")]
+	public function shouldThrowErrorSettingNullableWhenSealed():void
+	{
+		property.seal();
+		property.nullable = true;
+	}
+
 	
 	//---------------------------------------------------------------------
 	//

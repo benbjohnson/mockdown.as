@@ -21,7 +21,13 @@ public class StringProperty extends ComponentProperty
 	 */
 	static public function create(name:String, type:String, options:Object):StringProperty
 	{
-		return new StringProperty(name);
+		var property:StringProperty = new StringProperty(name);
+
+		if(options.defaultValue) {
+			property.defaultValue = property.parse(options.defaultValue);
+		}
+
+		return property;
 	}
 	
 	
@@ -69,8 +75,8 @@ public class StringProperty extends ComponentProperty
 	/** @private */
 	override public function parse(value:*):*
 	{
-		if(value == null) {
-			return null;
+		if(value == null || value == undefined) {
+			return (nullable ? null : "");
 		}
 
 		return value.toString();

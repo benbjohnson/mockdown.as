@@ -117,6 +117,49 @@ public class ComponentProperty
 	}
 
 
+	//---------------------------------
+	//	Default value
+	//---------------------------------
+	
+	private var _defaultValue:*;
+	
+	/**
+	 *	The value to return if a property hasn't been set
+	 */
+	public function get defaultValue():String
+	{
+		return _defaultValue;
+	}
+
+	public function set defaultValue(value:String):void
+	{
+		verifyUnsealed();		
+		_defaultValue = value;
+	}
+
+
+	//---------------------------------
+	//	Nullable
+	//---------------------------------
+	
+	private var _nullable:Boolean = true;
+	
+	/**
+	 *	A flag stating if the property can be set to null. If false, then value
+	 *	will convert null into a default value for the given type.
+	 */
+	public function get nullable():Boolean
+	{
+		return _nullable;
+	}
+
+	public function set nullable(value:Boolean):void
+	{
+		verifyUnsealed();		
+		_nullable = value;
+	}
+
+
 	//--------------------------------------------------------------------------
 	//
 	//	Methods

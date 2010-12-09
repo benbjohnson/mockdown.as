@@ -4,6 +4,7 @@ import mockdown.components.Component;
 import mockdown.components.properties.ComponentProperty;
 import mockdown.components.properties.FunctionProperty;
 
+import flash.errors.IllegalOperationError;
 import flash.utils.Proxy;
 import flash.utils.flash_proxy;
 
@@ -36,6 +37,8 @@ public dynamic class Node extends Proxy
 		}
 		
 		_component = component;
+		
+		initialize();
 	}
 
 
@@ -67,6 +70,29 @@ public dynamic class Node extends Proxy
 	}
 
 
+	//---------------------------------
+	//	Parent
+	//---------------------------------
+	
+	/**
+	 *	The parent node in the document object model.
+	 */
+	public var parent:Node;
+
+
+	//---------------------------------
+	//	Children
+	//---------------------------------
+	
+	private var _children:Array = [];
+	
+	/**
+	 *	The child nodes attached to this node.
+	 */
+	public function get children():Array
+	{
+		return _children.slice();
+	}
 
 
 	//--------------------------------------------------------------------------
@@ -74,6 +100,29 @@ public dynamic class Node extends Proxy
 	//	Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	//---------------------------------
+	//	Initialization
+	//---------------------------------
+	
+	private function initialize():void
+	{
+		// Set default values
+		var properties:Array = component.properties;
+		for each(var property:ComponentProperty in properties) {
+			// This won't work for functions
+			if(property.type != "function") {
+				// If there is a default value, use it.
+				if(property.defaultValue != null) {
+					__values__[property.name] = property.defaultValue;
+				}
+				// If null is not allow, parse null to get the correct value
+				else {
+					__values__[property.name] = property.parse(null);
+				}
+			}
+		}
+	}
 	
 	//---------------------------------
 	//	Proxy
@@ -104,6 +153,7 @@ public dynamic class Node extends Proxy
 			throw new ReferenceError("Property does not exist on node: " + name);
 		}
 
+		// Return property value
 		return __values__[property.name];
 	}
 
@@ -123,7 +173,55 @@ public dynamic class Node extends Proxy
 		
 		// Execute the function on the node
 		var func:Function = (property as FunctionProperty).functionReference;
+		
+		// Throw an error if there's no function on this property
+		if(func == null) {
+			throw new IllegalOperationError("No function is attached to property: " + name + ". Make sure you have appended a semi-colon at the end of your function definition.");
+		}
+		
 		return func.apply(this, rest);
+	}
+
+
+	//---------------------------------
+	//	Children
+	//---------------------------------
+	
+	/**
+	 *	Appends a node to the list of children.
+	 *	
+	 *	@param child  The node to append.
+	 */
+	public function addChild(child:Node):void
+	{
+		if(child != null) {
+			child.parent = this;
+			_children.push(child);
+		}
+	}
+	
+	/**
+	 *	Removes a node from the list of children.
+	 *	
+	 *	@param child  The node to remove.
+	 */
+	public function removeChild(child:Node):void
+	{
+		if(child != null && children.indexOf(child) != -1) {
+			child.parent = null;
+			_children.splice(children.indexOf(child), 1);
+		}
+	}
+
+	/**
+	 *	Removes all children from a node.
+	 */
+	public function removeAllChildren():void
+	{
+		var children:Array = this.children;
+		for each(var child:Node in children) {
+			removeChild(child);
+		}
 	}
 
 

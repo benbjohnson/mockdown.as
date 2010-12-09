@@ -1,5 +1,6 @@
 package mockdown.components.definitions
 {
+import mockdown.components.Node;
 import mockdown.display.IRenderObject;
 import mockdown.utils.MathUtil;
 
@@ -8,7 +9,7 @@ import flash.errors.IllegalOperationError;
 /**
  *	This class uses ActionScript to define the 
  */
-public class BaseComponent
+public dynamic class BaseComponent
 {
 	//--------------------------------------------------------------------------
 	//
@@ -35,13 +36,11 @@ public class BaseComponent
 	//	Position
 	//---------------------------------
 	
-	[Property]
 	/**
 	 *	The absolute position from the left of the parent container.
 	 */
 	public var x:int;
 	
-	[Property]
 	/**
 	 *	The absolute position from the top of the parent container.
 	 */
@@ -52,25 +51,21 @@ public class BaseComponent
 	//	Position
 	//---------------------------------
 
-	[Property]
 	/**
 	 *	The top offset from the parent node.
 	 */
 	public var top:int;
 
-	[Property]
 	/**
 	 *	The bottom offset from the parent node.
 	 */
 	public var bottom:int;
 
-	[Property]
 	/**
 	 *	The left offset from the parent node.
 	 */
 	public var left:int;
 
-	[Property]
 	/**
 	 *	The right offset from the parent node.
 	 */
@@ -81,13 +76,13 @@ public class BaseComponent
 	//	Dimension
 	//---------------------------------
 
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The explicit width of the node, in pixels.
 	 */
 	public var pixelWidth:uint;
 	
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The explicit height of the node, in pixels.
 	 */
@@ -105,25 +100,21 @@ public class BaseComponent
 	 */
 	public var height:*;
 
-	[Property]
 	/**
 	 *	The minimium width of the node.
 	 */
 	public var minWidth:uint;
 	
-	[Property]
 	/**
 	 *	The minimum height of the node.
 	 */
 	public var minHeight:uint;
 
-	[Property]
 	/**
 	 *	The maximum width of the node.
 	 */
 	public var maxWidth:uint;
 	
-	[Property]
 	/**
 	 *	The maximum height of the node.
 	 */
@@ -134,25 +125,25 @@ public class BaseComponent
 	//	Padding
 	//---------------------------------
 
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The amount to pad children from the top of the container.
 	 */
 	public var paddingTop:uint;
 
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The amount to pad children from the bottom of the container.
 	 */
 	public var paddingBottom:uint;
 
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The amount to pad children from the left of the container.
 	 */
 	public var paddingLeft:uint;
 
-	[Property]
+	[Property(nullable="false")]
 	/**
 	 *	The amount to pad children from the right of the container.
 	 */
@@ -169,7 +160,6 @@ public class BaseComponent
 	//	Measurement
 	//---------------------------------
 	
-	[Function]
 	/**
 	 *	Determines the final pixel dimensions for the node. This is calculated
 	 *	for all nodes once before rendering to screen.
@@ -180,13 +170,11 @@ public class BaseComponent
 		pixelWidth  = 0;
 		pixelHeight = 0;
 		
-		trace("node: " + this);
 		measureExplicit();
-		// measureChildren();
-		// measureImplicit();
+		measureChildren();
+		measureImplicit();
 	};
 
-	[Function]
 	/**
 	 *	Attempts to explicitly measures the node.
 	 */
@@ -203,65 +191,58 @@ public class BaseComponent
 		}
 	};
 	
-	//[Function]
 	/**
 	 *	Calls <code>measure()</code> on each visual child.
 	 */
-	/*
-	public var measureChildren = function():void
+	public var measureChildren:Function = function():void
 	{
-		for each(var child:Node in children) {
+		for each(var child:Node in this.children) {
 			child.measure();
 		}
-	}
-	*/
+	};
 	
-	// [Function]
 	/**
 	 *	Attempts to measure the node as the largest dimensions of its children.
 	 */
-	/*
-	public var measureImplicit = function():void
+	public var measureImplicit:Function = function():void
 	{
 		var child:Node;
 		
 		// Measure width
-		if(StringUtil.isEmpty(width)) {
+		if(width == null) {
 			// Sum child widths
 			var pixelWidth:uint = 0;
-			for each(child in children) {
+			for each(child in this.children) {
 				pixelWidth = Math.max(pixelWidth, child.pixelWidth);
 			}
 			
 			// Add padding
-			pixelWidth = pixelWidth + pixelPaddingLeft + pixelPaddingRight;
+			pixelWidth = pixelWidth + paddingLeft + paddingRight;
 			
 			// Restrict width to min/max
-			this.pixelWidth = MathUtil.restrictUInt(pixelWidth, pixelMinWidth, pixelMaxWidth);
+			this.pixelWidth = MathUtil.restrictUInt(pixelWidth, minWidth, maxWidth);
 		}
 		
 		// Measure height
-		if(StringUtil.isEmpty(height)) {
+		if(height == null) {
 			// Sum child heights
 			var pixelHeight:uint = 0;
-			for each(child in visualChildren) {
+			for each(child in this.children) {
 				pixelHeight = Math.max(pixelHeight, child.pixelHeight);
 			}
 
 			// Add padding
-			pixelHeight = pixelHeight + pixelPaddingTop + pixelPaddingBottom;
+			pixelHeight = pixelHeight + paddingTop + paddingBottom;
 			
 			// Restrict height to min/max
-			this.pixelHeight = MathUtil.restrictUInt(pixelHeight, pixelMinHeight, pixelMaxHeight);
+			this.pixelHeight = MathUtil.restrictUInt(pixelHeight, minHeight, maxHeight);
 		}
-	}
-	*/
+	};
 
 	//---------------------------------
 	//	Rendering
 	//---------------------------------
 
-	[Function]
 	/**
 	 *	Renders the node visually to the screen.
 	 */

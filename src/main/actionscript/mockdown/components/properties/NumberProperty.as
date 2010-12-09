@@ -38,6 +38,12 @@ public class NumberProperty extends ComponentProperty
 		if(options.percentField) {
 			property.percentField = options.percentField;
 		}
+		if(options.defaultValue) {
+			property.defaultValue = property.parse(options.defaultValue);
+		}
+		if(options.nullable != null) {
+			property.nullable = (options.nullable == "true");
+		}
 		return property;
 	}
 	
@@ -180,7 +186,7 @@ public class NumberProperty extends ComponentProperty
 		}
 		// Objects and nulls are null
 		else {
-			return null;
+			return (nullable ? null : 0);
 		}
 	}
 	

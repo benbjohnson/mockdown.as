@@ -108,6 +108,16 @@ public class ActionScriptComponent extends Component
 			var type:String = variableXml.@type;
 			var meta:Object = getMetaData(variableXml);
 			
+			// Implicitly determine type if nothing is defined
+			if(!meta.Property && !meta.Function) {
+				if(type == "Function") {
+					meta.Function = {};
+				}
+				else {
+					meta.Property = {type:type.toLowerCase()};
+				}
+			}
+			
 			// Add a property
 			if(meta.Property) {
 				meta.Property.type ||= type.toLowerCase();
@@ -134,7 +144,7 @@ public class ActionScriptComponent extends Component
 			var name:String = metadataXml.@name;
 			var args:Object = {};
 			for each(var argXml:XML in metadataXml.arg) {
-				args[argXml.@key] = argXml.@value;
+				args[argXml.@key] = argXml.@value.toString();
 			}
 			data[name] = args;
 		}

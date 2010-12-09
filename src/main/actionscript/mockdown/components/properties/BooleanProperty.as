@@ -21,7 +21,16 @@ public class BooleanProperty extends ComponentProperty
 	 */
 	static public function create(name:String, type:String, options:Object):BooleanProperty
 	{
-		return new BooleanProperty(name);
+		var property:BooleanProperty = new BooleanProperty(name);
+
+		if(options.defaultValue) {
+			property.defaultValue = property.parse(options.defaultValue);
+		}
+		if(options.nullable) {
+			property.nullable = (options.nullable == "true");
+		}
+
+		return property;
 	}
 	
 	
@@ -69,8 +78,8 @@ public class BooleanProperty extends ComponentProperty
 	/** @private */
 	override public function parse(value:*):*
 	{
-		if(value == null) {
-			return null;
+		if(value == null || value == undefined) {
+			return (nullable ? null : false);
 		}
 		else if(value is Boolean) {
 			return value;
