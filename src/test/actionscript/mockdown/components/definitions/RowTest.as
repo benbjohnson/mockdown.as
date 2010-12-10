@@ -1,8 +1,10 @@
-package mockdown.components
+package mockdown.components.definitions
 {
+import mockdown.components.ActionScriptComponent;
+import mockdown.components.Node;
 import mockdown.utils.NodeTestUtil;
 
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 public class RowTest
 {
@@ -12,12 +14,19 @@ public class RowTest
 	//
 	//---------------------------------------------------------------------
 	
-	private var root:Row;
+	private var root:Node;
 	private var nodes:Object;
+	private var components:Object;
 	
 	[Before]
 	public function setup():void
 	{
+		components = {
+			node: new ActionScriptComponent("node", BaseComponent),
+			row:  new ActionScriptComponent("row", Row)
+		};
+		components.row.parent = components.node;
+		
 		nodes = {};
 	}
 	
@@ -30,9 +39,9 @@ public class RowTest
 	//	Node Test Helpers
 	//---------------------------------
 	
-	private function n(id:String, clazz:Class, properties:Object, ...children):*
+	private function n(id:String, component:String, properties:Object, ...children):*
 	{
-		return NodeTestUtil.create(nodes, id, clazz, properties, children);
+		return NodeTestUtil.create(nodes, id, components[component], properties, children);
 	}
 
 	private function assertSize(id:String, w:uint, h:uint):void
@@ -58,10 +67,10 @@ public class RowTest
 	[Test]
 	public function shouldCalculateTotalPercentWidth():void
 	{
-		root = n(null, Row, {},
-			n(null, VisualNode, {width:"10%"}),
-			n(null, VisualNode, {width:"80"}),
-			n(null, VisualNode, {width:"30%"})
+		root = n(null, "row", {},
+			n(null, "node", {width:"10%"}),
+			n(null, "node", {width:"80"}),
+			n(null, "node", {width:"30%"})
 		);
 		Assert.assertEquals(40, root.getTotalChildPercentWidth());
 	}
@@ -69,10 +78,10 @@ public class RowTest
 	[Test]
 	public function shouldCalculateTotalExplicitWidth():void
 	{
-		root = n(null, Row, {},
-			n(null, VisualNode, {width:"10"}),
-			n(null, VisualNode, {width:"80"}),
-			n(null, VisualNode, {width:"30%"})
+		root = n(null, "row", {},
+			n(null, "node", {width:"10"}),
+			n(null, "node", {width:"80"}),
+			n(null, "node", {width:"30%"})
 		);
 		Assert.assertEquals(90, root.getTotalChildExplicitWidth());
 	}
@@ -86,10 +95,10 @@ public class RowTest
 	[Test]
 	public function shouldMeasureImplicit():void
 	{
-		root = n("root", Row, {paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"40"}),
-			n("b", VisualNode, {width:"20", height:"50"}),
-			n("c", VisualNode, {width:"30", height:"60"})
+		root = n("root", "row", {paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"40"}),
+			n("b", "node", {width:"20", height:"50"}),
+			n("c", "node", {width:"30", height:"60"})
 		);
 		root.measure();
 
@@ -106,11 +115,11 @@ public class RowTest
 	[Test]
 	public function shouldLayoutPercentChildren():void
 	{
-		root = n("root", Row, {width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"20%", height:"100%"}),
-			n("b", VisualNode, {width:"30%", height:"20%"}),
-			n("c", VisualNode, {width:"50", height:"20"}),
-			n("d", VisualNode, {width:"80", height:"60"})
+		root = n("root", "row", {width:"200", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"20%", height:"100%"}),
+			n("b", "node", {width:"30%", height:"20%"}),
+			n("c", "node", {width:"50", height:"20"}),
+			n("d", "node", {width:"80", height:"60"})
 		);
 		root.measure();
 		root.layout();
@@ -129,9 +138,9 @@ public class RowTest
 	[Test]
 	public function shouldAlignLeft():void
 	{
-		root = n("root", Row, {align:"left", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {align:"left", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
@@ -144,9 +153,9 @@ public class RowTest
 	[Test]
 	public function shouldAlignCenter():void
 	{
-		root = n("root", Row, {align:"center", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {align:"center", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
@@ -159,9 +168,9 @@ public class RowTest
 	[Test]
 	public function shouldAlignRight():void
 	{
-		root = n("root", Row, {align:"right", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {align:"right", width:"200", height:"100", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
@@ -178,9 +187,9 @@ public class RowTest
 	[Test]
 	public function shouldVAlignTop():void
 	{
-		root = n("root", Row, {valign:"top", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {valign:"top", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
@@ -193,9 +202,9 @@ public class RowTest
 	[Test]
 	public function shouldVAlignMiddle():void
 	{
-		root = n("root", Row, {valign:"middle", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {valign:"middle", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
@@ -208,9 +217,9 @@ public class RowTest
 	[Test]
 	public function shouldVAlignBottom():void
 	{
-		root = n("root", Row, {valign:"bottom", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
-			n("a", VisualNode, {width:"10", height:"20"}),
-			n("b", VisualNode, {width:"30", height:"40"})
+		root = n("root", "row", {valign:"bottom", width:"100", height:"200", paddingTop:"1", paddingBottom:"2", paddingLeft:"3", paddingRight:"4", gap:4},
+			n("a", "node", {width:"10", height:"20"}),
+			n("b", "node", {width:"30", height:"40"})
 		);
 		root.measure();
 		root.layout();
