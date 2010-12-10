@@ -166,6 +166,10 @@ public class ComponentProperty
 	//
 	//--------------------------------------------------------------------------
 	
+	//---------------------------------
+	//	Parsing
+	//---------------------------------
+
 	/**
 	 *	Parses a string value and assigns it to the property
 	 *
@@ -176,6 +180,38 @@ public class ComponentProperty
 	public function parse(value:*):*
 	{
 		throw new IllegalOperationError("You must use a subclass of ComponentProperty to parse values");
+	}
+
+
+	//---------------------------------
+	//	Alternate property
+	//---------------------------------
+
+	/**
+	 *	Retrieves the alternate property to use for a given value.
+	 *
+	 *	@param value  The value.
+	 *	
+	 *	@return       A different field to assign the value to if applicable.
+	 *	              Otherwise, null.
+	 */
+	public function getAlternatePropertyName(value:*):String
+	{
+		return null;
+	}
+
+	/**
+	 *	Retrieves the value to assign to the alternate property if an alternate
+	 *	property is specified.
+	 *
+	 *	@param value  The value.
+	 *	
+	 *	@return       A modified value if used on an alternate field. Otherwise
+	 *	              it returns the original value.
+	 */
+	public function getAlternatePropertyValue(value:*):*
+	{
+		return value;
 	}
 
 

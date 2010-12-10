@@ -87,6 +87,10 @@ public class NumberPropertyTest
 	//
 	//---------------------------------------------------------------------
 
+	//---------------------------------
+	//	Parse
+	//---------------------------------
+
 	[Test]
 	public function shouldParseStringIntoInteger():void
 	{
@@ -151,5 +155,25 @@ public class NumberPropertyTest
 		property.type = "int";
 		Assert.assertNull(property.parse(null));
 	}
+
+
+	//---------------------------------
+	//	Alternate property
+	//---------------------------------
+	
+	[Test]
+	public function shouldRetrievePercentFieldForPercentValues():void
+	{
+		property.percentField = "foo";
+		Assert.assertEquals("foo", property.getAlternatePropertyName("20%"));
+	}
+	
+	[Test]
+	public function shouldRetrieveNoAltPropertyForNonPercentValues():void
+	{
+		property.percentField = "foo";
+		Assert.assertNull(property.getAlternatePropertyName("20"));
+	}
+	
 }
 }

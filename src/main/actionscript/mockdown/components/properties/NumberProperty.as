@@ -148,6 +148,10 @@ public class NumberProperty extends ComponentProperty
 	//
 	//--------------------------------------------------------------------------
 	
+	//---------------------------------
+	//	Alternate property
+	//---------------------------------
+
 	/** @private */
 	override public function parse(value:*):*
 	{
@@ -190,6 +194,38 @@ public class NumberProperty extends ComponentProperty
 		}
 	}
 	
-	// TODO: Implement alternate field to support percent field
+	//---------------------------------
+	//	Alternate property
+	//---------------------------------
+
+	/** @private */
+	override public function getAlternatePropertyName(value:*):String
+	{
+		// If value is a percent then return the percent field
+		if(value is String && value.search(/%$/) != -1) {
+			// Throw error if no percent field specified
+			if(percentField == null) {
+				throw new IllegalOperationError("Property does not permit percentage values: " + name);
+			}
+			
+			return percentField;
+		}
+		// Otherwise return null to show that no alternate property is used.
+		else {
+			return null;
+		}
+	}
+
+	/** @private */
+	override public function getAlternatePropertyValue(value:*):*
+	{
+		// If value is a percent then chop off the percent sign
+		if(value is String && value.search(/%$/) != -1) {
+			return value.replace(/%$/, "");
+		}
+		else {
+			return value;
+		}
+	}
 }
 }

@@ -1,8 +1,9 @@
 package mockdown.utils
 {
-import mockdown.components.VisualNode;
+import mockdown.components.Component;
+import mockdown.components.Node;
 
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 /**
  * 	This class contains helper test methods for node classes.
@@ -19,10 +20,10 @@ public class NodeTestUtil
 	 *	Creates a visual node with given properties. This method allows for
 	 *	nested chaining to create trees.
 	 */
-	static public function create(nodes:Object, id:String, clazz:Class, properties:Object, children:Array):*
+	static public function create(nodes:Object, id:String, component:Component, properties:Object, children:Array):*
 	{
 		// Create visual node
-		var node:VisualNode = new clazz();
+		var node:Node = new Node(component);
 
 		// Set properties
 		for(var name:String in properties) {
@@ -30,7 +31,7 @@ public class NodeTestUtil
 		}
 		
 		// Add children
-		for each(var child:VisualNode in children) {
+		for each(var child:Node in children) {
 			node.addChild(child);
 		}
 		
@@ -47,7 +48,7 @@ public class NodeTestUtil
 	 */
 	static public function assertSize(nodes:Object, id:String, w:uint, h:uint):void
 	{
-		var node:VisualNode = nodes[id] as VisualNode;
+		var node:Node = nodes[id] as Node;
 		Assert.assertEquals(id + ".pixelWidth", w, node.pixelWidth);
 		Assert.assertEquals(id + ".pixelHeight", h, node.pixelHeight);
 	}
@@ -57,7 +58,7 @@ public class NodeTestUtil
 	 */
 	static public function assertDimension(nodes:Object, id:String, x:int, y:int, w:uint, h:uint):void
 	{
-		var node:VisualNode = nodes[id] as VisualNode;
+		var node:Node = nodes[id] as Node;
 		Assert.assertEquals(id + ".x", x, node.x);
 		Assert.assertEquals(id + ".y", y, node.y);
 		assertSize(nodes, id, w, h);

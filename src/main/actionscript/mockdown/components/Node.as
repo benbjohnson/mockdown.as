@@ -138,8 +138,16 @@ public dynamic class Node extends Proxy
 			throw new ReferenceError("Property does not exist on node: " + name);
 		}
 
-		// If the property exists, use it to parse the value
-		__values__[property.name] = property.parse(value);
+		// Use alternate property if required
+		var altPropName:String = property.getAlternatePropertyName(value);
+
+		if(altPropName != null) {
+			this[altPropName] = property.getAlternatePropertyValue(value);
+		}
+		// Otherwise just assign it as normal
+		else {
+			__values__[property.name] = property.parse(value);
+		}
 	}
 
 
@@ -154,7 +162,13 @@ public dynamic class Node extends Proxy
 		}
 
 		// Return property value
-		return __values__[property.name];
+		var value:* = __values__[property.name];
+		if(value == undefined) {
+			return null;
+		}
+		else {
+			return value;
+		}
 	}
 
 	/** @private */

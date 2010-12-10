@@ -147,6 +147,7 @@ public class BaseComponentTest
 	[Test]
 	public function shouldMeasureChildren():void
 	{
+		trace("--> sMC");
 		var child:Node = new Node(component);
 		child.width = "100";
 		node.addChild(child);

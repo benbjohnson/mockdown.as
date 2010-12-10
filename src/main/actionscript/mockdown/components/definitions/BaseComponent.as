@@ -22,7 +22,6 @@ public dynamic class BaseComponent
 	 */
 	public function BaseComponent()
 	{
-		// throw new IllegalOperationError("This class is a component definition and cannot be instantiated");
 	}
 
 
@@ -36,11 +35,13 @@ public dynamic class BaseComponent
 	//	Position
 	//---------------------------------
 	
+	[Property(nullable="false")]
 	/**
 	 *	The absolute position from the left of the parent container.
 	 */
 	public var x:int;
 	
+	[Property(nullable="false")]
 	/**
 	 *	The absolute position from the top of the parent container.
 	 */
@@ -88,17 +89,27 @@ public dynamic class BaseComponent
 	 */
 	public var pixelHeight:uint;
 
-	[Property(type="uint")]
+	[Property(type="uint", percentField="percentWidth")]
 	/**
 	 *	The width of the node.
 	 */
 	public var width:*;
 	
-	[Property(type="uint")]
+	[Property(type="uint", percentField="percentHeight")]
 	/**
 	 *	The height of the node.
 	 */
 	public var height:*;
+
+	/**
+	 *	The percentage width of the node.
+	 */
+	public var percentWidth:uint;
+	
+	/**
+	 *	The percentage height of the node.
+	 */
+	public var percentHeight:uint;
 
 	/**
 	 *	The minimium width of the node.
@@ -166,14 +177,20 @@ public dynamic class BaseComponent
 	 */
 	public var measure:Function = function():void
 	{
-		// Reset width and height
-		pixelWidth  = 0;
-		pixelHeight = 0;
-		
+		reset();
 		measureExplicit();
 		measureChildren();
 		measureImplicit();
 	};
+
+	/**
+	 *	Resets the pixel dimensions of the component.
+	 */
+	public var reset:Function = function():void
+	{
+		pixelWidth  = 0;
+		pixelHeight = 0;
+	}
 
 	/**
 	 *	Attempts to explicitly measures the node.
