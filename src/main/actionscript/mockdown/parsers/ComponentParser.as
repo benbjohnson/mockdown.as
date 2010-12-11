@@ -8,8 +8,6 @@ import mockdown.components.properties.ComponentProperty;
 import mockdown.components.properties.NumberProperty;
 import mockdown.components.properties.StringProperty;
 import mockdown.errors.BlockParseError;
-import mockdown.parsers.block.IBlockParser;
-import mockdown.parsers.property.IPropertyParser;
 
 /**
  *	This class represents a parser for a Mockdown document.
