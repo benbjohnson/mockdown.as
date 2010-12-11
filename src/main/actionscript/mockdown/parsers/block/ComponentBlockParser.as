@@ -1,20 +1,14 @@
 package mockdown.parsers.block
 {
 import mockdown.components.Node;
-import mockdown.components.Text;
 import mockdown.core.Document;
 import mockdown.errors.BlockParseError;
 import mockdown.errors.ParseError;
-import mockdown.managers.NodeManager;
-import mockdown.parsers.property.IPropertyParser;
-import mockdown.utils.FileUtil;
-
-import flash.errors.IllegalOperationError;
 
 /**
- *	This class parses blocks into components.
+ *	This class parses blocks into node descriptors.
  */
-public class ComponentBlockParser implements IBlockParser
+public class NodeBlockParser implements IBlockParser
 {
 	//--------------------------------------------------------------------------
 	//
@@ -25,36 +19,12 @@ public class ComponentBlockParser implements IBlockParser
 	/**
 	 *	Constructor.
 	 */
-	public function ComponentBlockParser()
+	public function NodeBlockParser()
 	{
 		super()
-		
-		addPropertyParser(new StringPropertyParser());
-		addPropertyParser(new NumberPropertyParser());
-		addPropertyParser(new BooleanPropertyParser());
 	}
 
 
-	//--------------------------------------------------------------------------
-	//
-	//	Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//---------------------------------
-	//	Property parsers
-	//---------------------------------
-
-	private var _propertyParsers:Array = [];
-	
-	/**
-	 *  A list of parsers used to parse property values.
-	 */
-	public function get propertyParsers():Array
-	{
-		return _propertyParsers.slice();
-	}
-	
 
 	//--------------------------------------------------------------------------
 	//
@@ -63,55 +33,17 @@ public class ComponentBlockParser implements IBlockParser
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
-	//	Property parser management
-	//---------------------------------
-
-	/**
-	 *	Adds a property parser.
-	 *
-	 *	@param parser  The property parser.
-	 */
-	public function addPropertyParser(parser:IPropertyParser):void
-	{
-		if(propertyParsers.indexOf(parser) == -1) {
-			propertyParsers.push(parser);
-		}
-	}
-
-	/**
-	 *	Removes a property parser.
-	 *
-	 *	@param parser  The property parser.
-	 */
-	public function removePropertyParser(parser:IPropertyParser):void
-	{
-		var index:int = propertyParsers.indexOf(parser);
-		if(index != -1) {
-			propertyParsers.splice(index, 1);
-		}
-	}
-
-
-	//---------------------------------
 	//	Parsing
 	//---------------------------------
 
 	/**
-	 *	@copy IBlockParser#isSingleLineBlock()
-	 */
-	public function isSingleLineBlock(block:Block):Node
-	{
-		return (block.content && block.content.charAt(0) == "%");
-	}
-
-	/**
 	 *	@copy IBlockParser#parse()
 	 */
-	public function parse(block:Block):Node
+	public function parse(block:Block, component:Component, parent:Node):Boolean
 	{
 		// Exit if first character is not a percent sign
 		if(!block.content || block.content.charAt(0) != "%") {
-			return null;
+			return false;
 		}
 		
 		var node:Node;
@@ -193,26 +125,6 @@ public class ComponentBlockParser implements IBlockParser
 		return node;
 	}
 
-
-	/**
-	 *	Parses a key/value pair and assigns the value to a property on the
-	 *	data object.
-	 *
-	 *	@param node      The node instance being parsed.
-	 *	@param data      The data object.
-	 *	@param property  The name of the property.
-	 *	@param value     The string value.
-	 */
-	protected function parseProperty(node:Node, data:Object,
-									 property:String, value:String):void
-	{   
-		// Retrieve type information for node
-		//var type:Type = Type.forInstance(node);
-		
-		// TODO: Verify property exists & retrieve meta data
-		// TODO: Select property parser based on data type
-		// TODO: Parse and assign value
-	}
 
 	/**
 	 *	Parses a markdown block into a text node.

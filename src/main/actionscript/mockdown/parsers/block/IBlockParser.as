@@ -17,8 +17,8 @@ public interface IBlockParser
 	/**
 	 *	The document parser that invoked this block parser.
 	 */
-	//public function get documentParser():DocumentParser;
-	//public function set documentParser(value:DocumentParser):void;
+	public function get documentParser():DocumentParser;
+	public function set documentParser(value:DocumentParser):void;
 	
 	                                                             
 	//--------------------------------------------------------------------------
@@ -38,15 +38,17 @@ public interface IBlockParser
 	 *                to the content of this block. False if the next line
 	 *	              should be read to possibly append.
 	 */
-	function isSingleLineBlock(block:Block):Boolean;
+	// function isSingleLineBlock(block:Block):Boolean;
 
 	/**
-	 *	Parses a block into a node object.
+	 *	Parses a block and alters the component or parent node as needed.
 	 *
-	 *	@param block  The block to parse.
+	 *	@param block      The block to parse.
+	 *	@param component  The component definition that this block belongs to.
+	 *	@param parent     The node that represents the parent node that was parsed.
 	 *
-	 *	@return       A node generated from parsing the block.
+	 *	@return           A flag stating if the block could be parsed.
 	 */
-	function parse(block:Block):Node;
+	function parse(block:Block, component:Component, parent:Node):void;
 }
 }

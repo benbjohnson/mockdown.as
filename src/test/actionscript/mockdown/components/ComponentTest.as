@@ -110,6 +110,25 @@ public class ComponentTest
 		c0.parent = c2;
 	}
 
+	//---------------------------------
+	//	Descriptor
+	//---------------------------------
+
+	[Test]
+	public function shouldSetDescriptor():void
+	{
+		var descriptor:NodeDescriptor = new NodeDescriptor();
+		component.descriptor = descriptor;
+		Assert.assertEquals(descriptor, component.descriptor);
+	}
+
+	[Test(expects="flash.errors.IllegalOperationError")]
+	public function shouldThrowErrorSettingDescriptorWhenSealed():void
+	{
+		component.seal();
+		component.descriptor = new NodeDescriptor();
+	}
+	
 
 	//---------------------------------------------------------------------
 	//
@@ -185,4 +204,5 @@ class TestComponentLoader implements ComponentLoader
 {
 	public function find(name:String):Component {return null;};
 	public function newInstance(name:String):Node {return null;};
+	public function addLibrary(name:String):void {};
 }

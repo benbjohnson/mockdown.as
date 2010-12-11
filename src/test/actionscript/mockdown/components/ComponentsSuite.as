@@ -14,6 +14,7 @@ public class ComponentsSuite
 	public var t0:ActionScriptComponentTest;
 	public var t1:ComponentTest;
 	public var t2:NodeTest;
+	public var t3:NodeDescriptorTest;
 
 	/*
 	public var t0:ColumnTest;

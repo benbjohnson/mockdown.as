@@ -3,6 +3,8 @@ package mockdown.components.loaders
 import mockdown.components.Component;
 import mockdown.components.Node;
 
+import flash.errors.IllegalOperationError;
+
 /**
  *	This is an abstract base class of the component loader.
  */
@@ -78,6 +80,14 @@ public class BaseComponentLoader implements ComponentLoader
 		else {
 			return null;
 		}
+	}
+
+	/**
+	 *	@copy ComponentLoader#addLibrary()
+	 */
+	public function addLibrary(name:String):void
+	{
+		throw new IllegalOperationError("This loader does not support adding libraries");
 	}
 }
 }

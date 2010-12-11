@@ -1,6 +1,6 @@
 package mockdown.parsers
 {
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 public class BlockTest
 {

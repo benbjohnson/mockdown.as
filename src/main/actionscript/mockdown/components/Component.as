@@ -111,6 +111,39 @@ public class Component
 
 
 	//---------------------------------
+	//	Descriptor
+	//---------------------------------
+	
+	private var _descriptor:NodeDescriptor;
+	
+	/**
+	 *	An object that describes how the node tree should be constructed within
+	 *	this component.
+	 */
+	public function get descriptor():NodeDescriptor
+	{
+		return _descriptor;
+	}
+
+	public function set descriptor(value:NodeDescriptor):void
+	{
+		verifyUnsealed();
+
+		// Remove link to old descriptor
+		if(descriptor) {
+			descriptor.component = null;
+		}
+
+		_descriptor = value;
+
+		// Link to new descriptor
+		if(descriptor) {
+			descriptor.component = this;
+		}
+	}
+	
+	
+	//---------------------------------
 	//	Properties
 	//---------------------------------
 	
