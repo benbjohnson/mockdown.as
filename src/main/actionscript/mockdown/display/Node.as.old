@@ -2,7 +2,7 @@ package mockdown.display
 {
 import mockdown.components.Component;
 import mockdown.core.Document;
-import mockdown.parsers.Block;
+import mockdown.components.parsers.Block;
 
 import flash.events.EventDispatcher;
 

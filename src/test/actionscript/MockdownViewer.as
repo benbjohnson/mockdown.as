@@ -4,7 +4,7 @@ import mockdown.components.Node;
 import mockdown.components.VisualNode;
 import mockdown.display.flash.FlashRenderer;
 import mockdown.display.flash.FlashRenderObject;
-import mockdown.parsers.MockdownParser;
+import mockdown.components.parsers.MockdownParser;
 
 import flash.desktop.NativeApplication;
 import flash.display.StageAlign;

@@ -1,6 +1,6 @@
 package mockdown.errors
 {
-import mockdown.parsers.Block;
+import mockdown.components.parsers.Block;
 
 /**
  *	This class represents an error that has occurred during parsing of a block.

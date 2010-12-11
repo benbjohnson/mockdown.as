@@ -1,6 +1,7 @@
 package mockdown.components
 {
 import mockdown.components.definitions.ComponentDefinitionsSuite;
+import mockdown.components.parsers.ComponentParsersSuite;
 import mockdown.components.loaders.ComponentLoadersSuite;
 import mockdown.components.properties.ComponentPropertiesSuite;
 
@@ -8,8 +9,9 @@ import mockdown.components.properties.ComponentPropertiesSuite;
 public class ComponentsSuite
 {
 	public var s0:ComponentLoadersSuite;
-	public var s1:ComponentPropertiesSuite;
-	public var s2:ComponentDefinitionsSuite;
+	public var s1:ComponentParsersSuite;
+	public var s2:ComponentPropertiesSuite;
+	public var s3:ComponentDefinitionsSuite;
 
 	public var t0:ActionScriptComponentTest;
 	public var t1:ComponentTest;
