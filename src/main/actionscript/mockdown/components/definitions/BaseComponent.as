@@ -201,10 +201,10 @@ public dynamic class BaseComponent
 		
 		// Keep dimension within min/max range
 		if(width != null) {
-			pixelWidth  = MathUtil.restrictUInt(width, minWidth, maxWidth);
+			pixelWidth  = MathUtil.restrict(width, minWidth, maxWidth);
 		}
 		if(height != null) {
-			pixelHeight = MathUtil.restrictUInt(height, minHeight, maxHeight);
+			pixelHeight = MathUtil.restrict(height, minHeight, maxHeight);
 		}
 	};
 	
@@ -237,7 +237,7 @@ public dynamic class BaseComponent
 			pixelWidth = pixelWidth + paddingLeft + paddingRight;
 			
 			// Restrict width to min/max
-			this.pixelWidth = MathUtil.restrictUInt(pixelWidth, minWidth, maxWidth);
+			this.pixelWidth = MathUtil.restrict(pixelWidth, minWidth, maxWidth);
 		}
 		
 		// Measure height
@@ -252,7 +252,7 @@ public dynamic class BaseComponent
 			pixelHeight = pixelHeight + paddingTop + paddingBottom;
 			
 			// Restrict height to min/max
-			this.pixelHeight = MathUtil.restrictUInt(pixelHeight, minHeight, maxHeight);
+			this.pixelHeight = MathUtil.restrict(pixelHeight, minHeight, maxHeight);
 		}
 	};
 

@@ -133,6 +133,35 @@ public class NodeDescriptor
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
+	//	Factory
+	//---------------------------------
+
+	/**
+	 *	A factory method that creates a node based on the properties on this
+	 *	descriptor. This method works recursively with any child descriptors.
+	 *
+	 *	@return  A node as described by this descriptor.
+	 */
+	public function newInstance():Node
+	{
+		var node:Node = new Node(component);
+
+		// Set properties
+		for(var propName:String in values) {
+			node[propName] = values[propName];
+		}
+		
+		// Create child nodes
+		var children:Array = this.children;
+		for each(var child:NodeDescriptor in children) {
+			node.addChild(child.newInstance());
+		}
+
+		return node;
+	}
+
+
+	//---------------------------------
 	//	Child management
 	//---------------------------------
 

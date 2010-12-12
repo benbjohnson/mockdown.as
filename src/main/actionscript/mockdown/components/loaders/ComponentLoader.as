@@ -24,16 +24,6 @@ public interface ComponentLoader
 	function find(name:String):Component;
 	
 	/**
-	 *	Finds and instantiates a component into a node.
-	 *
-	 *	@param name  The name of the component.
-	 *
-	 *	@return      An instance of a component if found. Otherwise, null.
-	 */
-	function newInstance(name:String):Node;
-
-	
-	/**
 	 *	Appends a path for a library to the end of the load path.
 	 *
 	 *	@param name  The name of the library.

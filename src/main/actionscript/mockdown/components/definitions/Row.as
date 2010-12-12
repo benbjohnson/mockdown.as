@@ -1,7 +1,5 @@
 package mockdown.components.definitions
 {
-import mockdown.utils.StringUtil;
-
 /**
  *	This class represents a container that horizontally lays out its children.
  */

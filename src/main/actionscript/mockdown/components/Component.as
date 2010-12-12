@@ -187,6 +187,32 @@ public class Component
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
+	//	Factory
+	//---------------------------------
+
+	/**
+	 *	Creates an instance of this component as a node.
+	 *
+	 *	@return  A node instance of this component.
+	 */
+	public function newInstance():Node
+	{
+		var node:Node;
+		
+		// If we have a descriptor, use it
+		if(descriptor) {
+			node = descriptor.newInstance();
+		}
+		// Otherwise just create a node
+		else {
+			node = new Node(this);
+		}
+		
+		return node;
+	}
+	
+
+	//---------------------------------
 	//	Property management
 	//---------------------------------
 

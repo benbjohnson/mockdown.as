@@ -1,6 +1,6 @@
 package mockdown.utils
 {
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 public class MathUtilTest
 {
@@ -17,19 +17,19 @@ public class MathUtilTest
 	[Test]
 	public function shouldRestrictMinValue():void
 	{
-		Assert.assertEquals(12, MathUtil.restrictUInt(5, 12, 20));
+		Assert.assertEquals(12, MathUtil.restrict(5, 12, 20));
 	}
 
 	[Test]
 	public function shouldRestrictMaxValue():void
 	{
-		Assert.assertEquals(50, MathUtil.restrictUInt(100, 12, 50));
+		Assert.assertEquals(50, MathUtil.restrict(100, 12, 50));
 	}
 
 	[Test]
 	public function shouldNotRestrictMaxValueWhenZero():void
 	{
-		Assert.assertEquals(200, MathUtil.restrictUInt(200, 12, 0));
+		Assert.assertEquals(200, MathUtil.restrict(200, 12, 0));
 	}
 }
 }

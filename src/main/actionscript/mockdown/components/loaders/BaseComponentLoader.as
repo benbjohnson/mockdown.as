@@ -69,20 +69,6 @@ public class BaseComponentLoader implements ComponentLoader
 	}
 	
 	/**
-	 *	@copy ComponentLoader#newInstance()
-	 */
-	public function newInstance(name:String):Node
-	{
-		var component:Component = find(name);
-		if(component) {
-			return new Node(component);
-		}
-		else {
-			return null;
-		}
-	}
-
-	/**
 	 *	@copy ComponentLoader#addLibrary()
 	 */
 	public function addLibrary(name:String):void

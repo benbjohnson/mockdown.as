@@ -1,6 +1,6 @@
 package mockdown.filesystem
 {
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 public class MemoryFileTest
 {

@@ -20,19 +20,19 @@ public class MathUtil
 	 * 
 	 *	@param value  The value to restrict.
 	 *	@param min    The minimum value to allow.
-	 *	@param max    The maximum value to allow. If 0 then it is unrestricted.
+	 *	@param max    The maximum value to allow.
 	 *
 	 *	@returns      If <code>value</code> is below <code>min</code> then
 	 *                <code>min</code> is returned. If <code>value</code> is
 	 *                below <code>min</code> then <code>min</code> is returned.
 	 *                Otherwise <code>value</code> is returned.
 	 */			
-	static public function restrictUInt(value:uint, min:uint, max:uint):uint
+	static public function restrict(value:Number, min:*, max:*):Number
 	{
-		if(value < min) {
+		if(min != null && value < min) {
 			return min;
 		}
-		else if(max > 0 && value > max) {
+		else if(max != null && value > max) {
 			return max;
 		}
 		else {

@@ -86,6 +86,65 @@ public class NodeDescriptorTest
 	//---------------------------------------------------------------------
 	
 	//---------------------------------
+	//	Factory
+	//---------------------------------
+
+	[Test]
+	public function shouldCreateNode():void
+	{
+		var component:Component = new Component();
+		descriptor.component = component;
+		var node:Node = descriptor.newInstance();
+		Assert.assertEquals(component, node.component);
+	}
+
+	[Test]
+	public function shouldCreateNodeWithProperty():void
+	{
+		var component:Component = new Component();
+		component.addProperty(new StringProperty("foo"));
+		descriptor.component = component;
+		descriptor.setPropertyValue("foo", "bar");
+		var node:Node = descriptor.newInstance();
+		Assert.assertEquals("bar", node.foo);
+	}
+
+	[Test]
+	public function shouldCreateNodeTree():void
+	{
+		// Create components
+		var c0:Component = new Component();
+		var c1:Component = new Component();
+
+		// Describe node structure
+		var a:NodeDescriptor  = new NodeDescriptor();
+		var aa:NodeDescriptor = new NodeDescriptor();
+		var b:NodeDescriptor  = new NodeDescriptor();
+
+		descriptor.addChild(a);
+		descriptor.addChild(b);
+		a.addChild(aa);
+
+		// Set components to descriptors
+		descriptor.component = aa.component = c0;
+		a.component = b.component = c1;
+
+		// Instantiate node
+		var node:Node = descriptor.newInstance();
+		
+		// Assert!
+		Assert.assertEquals(c0, node.component);
+		Assert.assertEquals(2, node.children.length);
+		Assert.assertEquals(c1, node.children[0].component);
+		Assert.assertEquals(1, node.children[0].children.length);
+		Assert.assertEquals(c0, node.children[0].children[0].component);
+		Assert.assertEquals(0, node.children[0].children[0].children.length);
+		Assert.assertEquals(c1, node.children[1].component);
+		Assert.assertEquals(0, node.children[1].children.length);
+	}
+
+
+	//---------------------------------
 	//	Child management
 	//---------------------------------
 

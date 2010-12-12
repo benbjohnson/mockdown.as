@@ -3,7 +3,7 @@ package mockdown.display
 import mockdown.components.VisualNode;
 import mockdown.utils.NodeTestUtil;
 
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 public class RendererTest
 {

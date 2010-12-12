@@ -7,7 +7,7 @@ import flash.errors.IllegalOperationError;
  *	be used as a simulated file system for system components or for remote 
  *	file systems that have been loaded in their entirety.
  */
-public class MemoryFile implements IFile
+public class MemoryFile implements File
 {
 	//--------------------------------------------------------------------------
 	//
@@ -74,17 +74,17 @@ public class MemoryFile implements IFile
 	//	Parent
 	//---------------------------------
 
-	private var _parent:IFile;
+	private var _parent:File;
 	
 	/**
-	 *	@copy IFile#parent
+	 *	@copy File#parent
 	 */
-	public function get parent():IFile
+	public function get parent():File
 	{
 		return _parent;
 	}
 
-	public function set parent(value:IFile):void
+	public function set parent(value:File):void
 	{
 		_parent = value;
 	}
@@ -95,9 +95,9 @@ public class MemoryFile implements IFile
 	//---------------------------------
 
 	/**
-	 *	@copy IFile#root
+	 *	@copy File#root
 	 */
-	public function get root():IFile
+	public function get root():File
 	{
 		if(parent) {
 			return parent.root;
@@ -113,7 +113,7 @@ public class MemoryFile implements IFile
 	//---------------------------------
 
 	/**
-	 *	@copy IFile#path
+	 *	@copy File#path
 	 */
 	public function get path():String
 	{
@@ -133,7 +133,7 @@ public class MemoryFile implements IFile
 	//---------------------------------
 
 	/**
-	 *	@copy IFile#isDirectory
+	 *	@copy File#isDirectory
 	 */
 	public function get isDirectory():Boolean
 	{
@@ -147,7 +147,7 @@ public class MemoryFile implements IFile
 	private var _files:Array = [];
 	
 	/**
-	 *	@copy IFile#files
+	 *	@copy File#files
 	 */
 	public function get files():Array
 	{
@@ -167,9 +167,9 @@ public class MemoryFile implements IFile
 	//---------------------------------
 
 	/**
-	 *	@copy IFile#resolvePath()
+	 *	@copy File#resolvePath()
 	 */
-	public function resolvePath(path:String):IFile
+	public function resolvePath(path:String):File
 	{
 		if(!path) {
 			return null;
@@ -179,7 +179,7 @@ public class MemoryFile implements IFile
 		var dirs:Array = path.split("/");
 		var filename:String = dirs.shift();
 		
-		for each(var file:IFile in _files) {
+		for each(var file:File in _files) {
 			if(file.name == filename) {
 				// If we are at the end of the directories then return the file
 				if(dirs.length == 0) {

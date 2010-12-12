@@ -2,7 +2,7 @@ package mockdown.filesystem
 {
 import flash.filesystem.File;
 
-import org.flexunit.Assert;
+import asunit.framework.Assert;
 
 import mockdown.utils.FileUtil;
 
@@ -14,7 +14,7 @@ public class LocalFileTest
 	//
 	//---------------------------------------------------------------------
 
-	private var testDirectory:File = File.applicationStorageDirectory.resolvePath("test");
+	private var testDirectory:File = flash.filesystem.File.applicationStorageDirectory.resolvePath("test");
 	private var root:LocalFile;
 	private var foo:LocalFile;
 	private var bar:LocalFile;
@@ -50,13 +50,13 @@ public class LocalFileTest
 	[Test]
 	public function constructorShouldAllowFileReference():void
 	{
-		Assert.assertEquals(testDirectory, (new LocalFile(testDirectory)).file);
+		Assert.assertEquals(testDirectory, (new LocalFile(testDirectory)).nativeFile);
 	}
 
 	[Test]
 	public function constructorShouldAllowPath():void
 	{
-		Assert.assertEquals(testDirectory.nativePath, (new LocalFile(testDirectory.nativePath)).file.nativePath);
+		Assert.assertEquals(testDirectory.nativePath, (new LocalFile(testDirectory.nativePath)).nativePath);
 	}
 
 	[Test(expects="ArgumentError")]
@@ -116,13 +116,13 @@ public class LocalFileTest
 	[Test]
 	public function shouldResolveImmediatePath():void
 	{
-		Assert.assertEquals(foo.file.nativePath, (root.resolvePath("foo") as LocalFile).file.nativePath);
+		Assert.assertEquals(foo.nativePath, (root.resolvePath("foo") as LocalFile).nativePath);
 	}
 
 	[Test]
 	public function shouldResolveNestedPath():void
 	{
-		Assert.assertEquals(baz.file.nativePath, (root.resolvePath("foo/bar/baz") as LocalFile).file.nativePath);
+		Assert.assertEquals(baz.nativePath, (root.resolvePath("foo/bar/baz") as LocalFile).nativePath);
 		Assert.assertEquals("/foo/bar/baz", root.resolvePath("foo/bar/baz").path);
 	}
 
