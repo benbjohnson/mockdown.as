@@ -1,6 +1,6 @@
 package mockdown.display
 {
-import mockdown.components.VisualNode;
+import mockdown.components.Node;
 
 /**
  *	This class recursively renders a tree of nodes onto a view.
@@ -47,7 +47,7 @@ public class Renderer
 	 *
 	 *	@return  The output of the rendering.
 	 */
-	public function render(node:VisualNode):IRenderObject
+	public function render(node:Node):IRenderObject
 	{
 		// Throw error if render object class is missing.
 		if(renderObjectClass == null) {
@@ -68,7 +68,7 @@ public class Renderer
 		node.render(object);
 		
 		// Render children
-		for each(var child:VisualNode in node.visualChildren) {
+		for each(var child:Node in node.children) {
 			object.addRenderChild(render(child));
 		}
 		

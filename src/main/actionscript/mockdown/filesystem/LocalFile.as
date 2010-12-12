@@ -11,7 +11,7 @@ import flash.utils.ByteArray;
  *	This class represents a file or directory that exists on the file system.
  *	This class requires Adobe AIR so it is not included in non-AIR binaries.
  */
-public class LocalFile implements mockdown.filesystem.File
+public class LocalFile extends Object implements mockdown.filesystem.File
 {
 	//--------------------------------------------------------------------------
 	//
@@ -249,6 +249,17 @@ public class LocalFile implements mockdown.filesystem.File
 		resolvedFile.parent = dir;
 		
 		return resolvedFile;
+	}
+
+
+	//---------------------------------
+	//	To string
+	//---------------------------------
+	
+	/** @private */
+	public function toString():String
+	{
+		return "[LocalFile " + nativePath + "]";
 	}
 }
 }

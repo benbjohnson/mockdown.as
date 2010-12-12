@@ -3,7 +3,7 @@ package mockdown.components.definitions
 /**
  *	This class represents a container that vertically lays out its children.
  */
-public class Column extends BaseComponent
+public dynamic class Column
 {
 	//--------------------------------------------------------------------------
 	//
@@ -17,8 +17,6 @@ public class Column extends BaseComponent
 	public function Column()
 	{
 		super();
-		
-		measureImplicit = column_measureImplicit;
 	}
 
 
@@ -68,7 +66,7 @@ public class Column extends BaseComponent
 	/**
 	 *	Calculates the dimension of this node as the sum of its children
 	 */
-	public var column_measureImplicit:Function = function():void
+	public var measureImplicit:Function = function():void
 	{
 		var child:*;
 		

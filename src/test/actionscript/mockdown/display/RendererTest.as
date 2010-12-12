@@ -1,6 +1,7 @@
 package mockdown.display
 {
-import mockdown.components.VisualNode;
+import mockdown.components.Component;
+import mockdown.components.Node;
 import mockdown.utils.NodeTestUtil;
 
 import asunit.framework.Assert;
@@ -31,7 +32,7 @@ public class RendererTest
 	[Test(expects="ArgumentError")]
 	public function shouldErrorIfNoRenderObjectClassSpecified():void
 	{
-		renderer.render(new VisualNode());
+		renderer.render(new Node(new Component()));
 	}
 	
 	[Test]

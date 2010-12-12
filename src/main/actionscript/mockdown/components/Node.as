@@ -135,7 +135,7 @@ public dynamic class Node extends Proxy
 
 		// Throw error if property doesn't exist
 		if(!property) {
-			throw new ReferenceError("Property does not exist on node: " + name);
+			throw new ReferenceError("Property does not exist on " + component.name + ": " + name);
 		}
 
 		// Use alternate property if required

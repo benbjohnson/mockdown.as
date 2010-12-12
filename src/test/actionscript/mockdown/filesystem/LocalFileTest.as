@@ -14,7 +14,7 @@ public class LocalFileTest
 	//
 	//---------------------------------------------------------------------
 
-	private var testDirectory:File = flash.filesystem.File.applicationStorageDirectory.resolvePath("test");
+	private var testDirectory:flash.filesystem.File = flash.filesystem.File.applicationStorageDirectory.resolvePath("test");
 	private var root:LocalFile;
 	private var foo:LocalFile;
 	private var bar:LocalFile;

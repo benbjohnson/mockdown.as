@@ -303,7 +303,7 @@ public class NodeDescriptor
 		// Seal each child recursively
 		var children:Array = this.children;
 		for each(var child:NodeDescriptor in children) {
-			children.seal();
+			child.seal();
 		}
 	}
 

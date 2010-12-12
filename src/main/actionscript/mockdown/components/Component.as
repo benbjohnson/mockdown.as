@@ -20,10 +20,11 @@ public class Component
 	/**
 	 *	Constructor.
 	 */
-	public function Component(name:String=null)
+	public function Component(name:String=null, parent:Component=null)
 	{
 		super();
-		this.name = name;
+		this.name   = name;
+		this.parent = parent;
 	}
 	
 	
@@ -158,9 +159,17 @@ public class Component
 	public function get properties():Array
 	{
 		var arr:Array = [];
+		
+		// Convert lookup to a list of properties
 		for each(var property:ComponentProperty in _properties) {
 			arr.push(property);
 		}
+		
+		// Prepend parent properties
+		if(parent) {
+			arr = parent.properties.concat(arr);
+		}
+		
 		return arr;
 	}
 
@@ -235,7 +244,10 @@ public class Component
 		}
 		// Validate that property hasn't already been added
 		if(getProperty(property.name) != null) {
-			throw new ArgumentError("Property already added with the same name: " + property.name);
+			// Allow functions to be overridden
+			if(getProperty(property.name).type != "function") {
+				throw new ArgumentError("Property already added with the same name: " + property.name);
+			}
 		}
 		
 		property.component = this;
@@ -267,7 +279,20 @@ public class Component
 	 */
 	public function getProperty(name:String):ComponentProperty
 	{
-		return _properties[name] as ComponentProperty;
+		var property:ComponentProperty = _properties[name] as ComponentProperty;
+		
+		// Retrieve property from this component
+		if(property) {
+			return property;
+		}
+		// If it's not found then search parent properties
+		else if(parent) {
+			return parent.getProperty(name);
+		}
+		// If it's not found return null
+		else {
+			return null;
+		}
 	}
 
 
@@ -287,6 +312,11 @@ public class Component
 		var properties:Array = this.properties;
 		for each(var property:ComponentProperty in properties) {
 			property.seal();
+		}
+		
+		// Seal descriptor
+		if(descriptor) {
+			descriptor.seal();
 		}
 	}
 

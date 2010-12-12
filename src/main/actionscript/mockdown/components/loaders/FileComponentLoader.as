@@ -1,7 +1,11 @@
 package mockdown.components.loaders
 {
 import mockdown.components.Component;
+import mockdown.components.parsers.ComponentParser;
 import mockdown.errors.LibraryNotFoundError;
+import mockdown.filesystem.File;
+
+import flash.errors.IllegalOperationError;
 
 /**
  *	This class loads components from mockdown files found within the load path.
@@ -41,6 +45,11 @@ public class FileComponentLoader extends BaseComponentLoader
 	public var paths:Array = [];
 
 	/**
+	 *	A list of extensions to append to the component name when searching.
+	 */
+	public var extensions:Array = ["mkd", "mkx"];
+
+	/**
 	 *	The library path for the current project.
 	 */
 	public var libraryPath:File;
@@ -72,10 +81,20 @@ public class FileComponentLoader extends BaseComponentLoader
 		for each(var path:File in paths) {
 			var file:File = path.resolvePath(name);
 			
+			// Attempt multiple extensions
+			if(!file) {
+				for each(var extension:String in extensions) {
+					file = path.resolvePath(name + "." + extension);
+					if(file) {
+						break;
+					}
+				}
+			}
+			
 			if(file) {
 				// Throw an error if we retrieve a directory
 				if(file.isDirectory) {
-					throw new IllegalOperationError("File is a directory: " + file.
+					throw new IllegalOperationError("File is a directory: " + file);
 				}
 				// Otherwise parse the file
 				else {

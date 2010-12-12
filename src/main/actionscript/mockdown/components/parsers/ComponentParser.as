@@ -87,7 +87,9 @@ public class ComponentParser
 		
 		// Parse root node
 		if(blocks.length == 1) {
-			component.descriptor = parseNode(blocks[0] as Block);
+			var descriptor:NodeDescriptor = parseNode(blocks[0] as Block);
+			component.parent = descriptor.component;
+			component.descriptor = descriptor;
 		}
 		// Throw error if we have more than one root nodes
 		if(blocks.length > 1) {

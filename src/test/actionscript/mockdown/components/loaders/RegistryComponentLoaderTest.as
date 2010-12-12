@@ -36,6 +36,14 @@ public class RegistryComponentLoaderTest
 	}
 
 	[Test]
+	public function shouldSealRegisteredComponent():void
+	{
+		var component:Component = new Component("test");
+		loader.register(component);
+		Assert.assertTrue(component.sealed);
+	}
+
+	[Test]
 	public function shouldReturnNullWhenFindingUnRegisteredComponent():void
 	{
 		Assert.assertNull(loader.find("no_such_component"));

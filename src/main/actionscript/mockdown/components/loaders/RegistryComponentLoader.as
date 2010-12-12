@@ -54,6 +54,7 @@ public class RegistryComponentLoader extends BaseComponentLoader
 		if(component) {
 			component.loader = this;
 			components[component.name] = component;
+			component.seal();
 		}
 	}
 

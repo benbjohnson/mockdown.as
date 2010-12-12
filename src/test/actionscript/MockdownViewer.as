@@ -1,10 +1,13 @@
 package
 {
+import mockdown.components.Component;
 import mockdown.components.Node;
-import mockdown.components.VisualNode;
+import mockdown.components.loaders.ComponentLoader;
+import mockdown.components.loaders.FileComponentLoader;
+import mockdown.components.loaders.SystemComponentLoader;
 import mockdown.display.flash.FlashRenderer;
 import mockdown.display.flash.FlashRenderObject;
-import mockdown.components.parsers.MockdownParser;
+import mockdown.filesystem.LocalFile;
 
 import flash.desktop.NativeApplication;
 import flash.display.StageAlign;
@@ -36,6 +39,10 @@ public class MockdownViewer extends Sprite
 		stage.scaleMode = StageScaleMode.NO_SCALE
 		stage.align = StageAlign.TOP_LEFT;
 		
+		// Setup system loader
+		systemLoader = new SystemComponentLoader();
+		
+		// Render on invocation
 		NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE,
 			function(event:InvokeEvent):void{
 				// Read command line arguments at startup
@@ -64,6 +71,11 @@ public class MockdownViewer extends Sprite
 	 */
 	private var output:FlashRenderObject;
 
+	/**
+	 *	The system loader.
+	 */
+	private var systemLoader:ComponentLoader;
+
 
 	//--------------------------------------------------------------------------
 	//
@@ -78,14 +90,13 @@ public class MockdownViewer extends Sprite
 	{
 		var t0:Date = new Date();
 		
-		graphics.clear();
-		
 		// Remove previous output
 		if(output && contains(output)) {
 			removeChild(output);
 		}
-
+		
 		// Exit if missing the file
+		graphics.clear();
 		if(!filename) {
 			graphics.lineStyle(0x000000, 1);
 			graphics.moveTo(0, 0);
@@ -96,10 +107,17 @@ public class MockdownViewer extends Sprite
 		}
 		
 		// Parse
-		var parser:MockdownParser = new MockdownParser();
-		parser.paths = [File.applicationDirectory.nativePath];
-		var node:VisualNode = parser.parse(filename) as VisualNode;
+		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
+		loader.paths = [new LocalFile(File.applicationDirectory)];
+		var component:Component = loader.find(filename);
 		
+		if(!component) {
+			trace("No component found: " + filename);
+			return;
+		}
+		
+		var node:Node = component.newInstance();
+
 		// Render
 		var renderer:FlashRenderer = new FlashRenderer();
 		output = renderer.render(node) as FlashRenderObject;

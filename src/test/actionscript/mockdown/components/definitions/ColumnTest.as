@@ -1,6 +1,7 @@
 package mockdown.components.definitions
 {
 import mockdown.components.ActionScriptComponent;
+import mockdown.components.Component;
 import mockdown.components.Node;
 import mockdown.utils.NodeTestUtil;
 
@@ -21,11 +22,11 @@ public class ColumnTest
 	[Before]
 	public function setup():void
 	{
+		var base:Component = new ActionScriptComponent("node", BaseComponent);
 		components = {
-			node: new ActionScriptComponent("node", BaseComponent),
-			col:  new ActionScriptComponent("col", Column)
+			node: base,
+			col:  new ActionScriptComponent("col", Column, base)
 		};
-		components.col.parent = components.node;
 		
 		nodes = {};
 	}
@@ -53,6 +54,19 @@ public class ColumnTest
 	{
 		NodeTestUtil.assertDimension(nodes, id, x, y, w, h);
 	}
+
+	//---------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//---------------------------------------------------------------------
+
+	[Test]
+	public function shouldHaveBaseProperties():void
+	{
+		Assert.assertNotNull(components.col.getProperty("width"));
+	}
+	
 
 	//---------------------------------------------------------------------
 	//

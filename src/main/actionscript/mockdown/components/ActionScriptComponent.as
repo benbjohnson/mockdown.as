@@ -40,9 +40,9 @@ public class ActionScriptComponent extends Component
 	/**
 	 *	Constructor.
 	 */
-	public function ActionScriptComponent(name:String, clazz:Class)
+	public function ActionScriptComponent(name:String, clazz:Class, parent:Component=null)
 	{
-		super(name);
+		super(name, parent);
 		
 		// Require class reference
 		if(clazz == null) {
@@ -101,7 +101,7 @@ public class ActionScriptComponent extends Component
 	protected function initialize():void
 	{
 		var typeXml:XML = describeType(clazz);
-
+		
 		// Loop over properties and extract component properties & methods
 		for each(var variableXml:XML in typeXml..variable) {
 			var name:String = variableXml.@name;

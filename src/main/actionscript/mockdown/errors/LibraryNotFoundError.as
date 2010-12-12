@@ -15,13 +15,13 @@ public class LibraryNotFoundError extends Error
 	/**
 	 *	Constructor.
 	 *
-	 *	@param name     The name of the library that is missing.
-	 *	@param message  A string associated with the error object.
+	 *	@param libraryName  The name of the library that is missing.
+	 *	@param message      A string associated with the error object.
 	 */
-	public function ParseError(name:String, message:String="")
+	public function LibraryNotFoundError(libraryName:String, message:String="")
 	{
 		super(message);
-		this.name = name;
+		this.libraryName = libraryName;
 	}
 
 
@@ -34,6 +34,6 @@ public class LibraryNotFoundError extends Error
 	/**
 	 *	The name of the missing library.
 	 */
-	public var name:String;
+	public var libraryName:String;
 }
 }
