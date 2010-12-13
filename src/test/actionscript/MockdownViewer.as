@@ -109,6 +109,7 @@ public class MockdownViewer extends Sprite
 		// Parse
 		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
 		loader.paths = [new LocalFile(File.applicationDirectory)];
+
 		var component:Component = loader.find(filename);
 		
 		if(!component) {
