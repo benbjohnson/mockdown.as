@@ -3,7 +3,7 @@ package mockdown.components
 /**
  *	This class represents a container that horizontally lays out its children.
  */
-public dynamic class Row extends Component
+public dynamic class Row extends LayoutContainer
 {
 	//--------------------------------------------------------------------------
 	//
@@ -19,39 +19,6 @@ public dynamic class Row extends Component
 		super();
 	}
 
-
-	//--------------------------------------------------------------------------
-	//
-	//	Properties
-	//
-	//--------------------------------------------------------------------------
-
-	//---------------------------------
-	//	Gap
-	//---------------------------------
-
-	/**
-	 *	The gap between children, in pixels.
-	 */
-	public var gap:int;
-	
-	
-	//---------------------------------
-	//	Alignment
-	//---------------------------------
-
-	/**
-	 *	The horizontal alignment of the column children. Possible values are
-	 *	<code>left<code>, <code>center<code> or <code>right</code>.
-	 */
-	public var align:String;
-
-	/**
-	 *	The vertical alignment of the column children. Possible values are
-	 *	<code>top<code>, <code>middle<code> or <code>bottom</code>.
-	 */
-	public var valign:String;
-	
 
 	//--------------------------------------------------------------------------
 	//
