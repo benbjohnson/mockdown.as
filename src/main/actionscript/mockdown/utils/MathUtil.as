@@ -27,12 +27,12 @@ public class MathUtil
 	 *                below <code>min</code> then <code>min</code> is returned.
 	 *                Otherwise <code>value</code> is returned.
 	 */			
-	static public function restrict(value:Number, min:*, max:*):Number
+	static public function restrict(value:Number, min:Number, max:Number):Number
 	{
-		if(min != null && value < min) {
+		if(!isNaN(min) && value < min) {
 			return min;
 		}
-		else if(max != null && value > max) {
+		else if(!isNaN(max) && value > max) {
 			return max;
 		}
 		else {

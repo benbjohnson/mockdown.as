@@ -27,9 +27,15 @@ public class MathUtilTest
 	}
 
 	[Test]
-	public function shouldNotRestrictMaxValueWhenZero():void
+	public function shouldNotRestrictMaxValueWhenNaN():void
 	{
-		Assert.assertEquals(200, MathUtil.restrict(200, 12, 0));
+		Assert.assertEquals(200, MathUtil.restrict(200, 12, NaN));
+	}
+
+	[Test]
+	public function shouldNotRestrictMinValueWhenNaN():void
+	{
+		Assert.assertEquals(-20, MathUtil.restrict(-20, NaN, 100));
 	}
 }
 }

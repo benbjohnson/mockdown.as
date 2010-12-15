@@ -1,7 +1,0 @@
-%col
-  Welcome to Nevada!
-
-  ## Las Vegas
-
-  Please spend all your
-  money here.

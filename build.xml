@@ -16,17 +16,12 @@
 
 	<!-- Task Definitions -->
 	<taskdef resource="flexTasks.tasks" classpath="${etc.dir}/flexTasks.jar" />
-	<taskdef resource="flexUnitTasks.tasks" classpath="${etc.dir}/flexUnitTasks-4.0.0.jar" />
 
 	<!-- Target: Initialization -->
 	<target name="init">
 		<!-- TestRunner dependencies -->
 		<mkdir dir="${target.dir}/test"/>
 		<copy file="${src.dir}/test/resources/TestRunner-app.xml" tofile="${target.dir}/test/TestRunner-app.xml" overwrite="true"/>
-		<copy file="${src.dir}/test/resources/MockdownViewer-app.xml" tofile="${target.dir}/test/MockdownViewer-app.xml" overwrite="true"/>
-		<copy todir="${target.dir}/test/mockups" overwrite="true">
-			<fileset dir="${src.dir}/test/resources/mockups"/>
-		</copy>
 	</target>
 
 	<!-- Target: Build SWC -->
@@ -40,23 +35,9 @@
 		</java>
 	</target>
 	
-	<!-- Target: MockdownViewer -->
-	<!-- mxmlc +configname=air -load-config+=src/test/resources/MockdownViewer-config.xml src/test/actionscript/MockdownViewer.as -->
-	<target name="build-viewer" depends="init">
-		<!-- TestRunner -->
-		<java jar="${mxmlc.jar}" fork="true" failonerror="true">
-			<jvmarg value="-Xmx1024M"/>
-			<jvmarg value="-Xms512M"/>
-			<arg value="+flexlib=${FLEX_HOME}/frameworks"/>
-			<arg value="+configname=air"/>
-			<arg value="-load-config+=${src.dir}/test/resources/MockdownViewer-config.xml"/>
-			<arg value="${src.dir}/test/actionscript/MockdownViewer.as"/>
-		</java>
-	</target>
-
 	<!-- Target: Test -->
 	<!-- mxmlc +configname=air -load-config+=src/test/resources/TestRunner-config.xml src/test/actionscript/TestRunner.as -->
-	<target name="test-build" depends="init">
+	<target name="build-testrunner" depends="init">
 		<!-- TestRunner -->
 		<java jar="${mxmlc.jar}" fork="true" failonerror="true">
 			<jvmarg value="-Xmx1024M"/>
@@ -67,28 +48,6 @@
 			<arg value="${src.dir}/test/actionscript/TestRunner.as"/>
 		</java>
 	</target>
-	
-	<target name="test-run">
-		<flexunit
-			player="air"
-			swf="${target.dir}/test/TestRunner.swf"
-			toDir="${target.dir}/test"
-			haltonfailure="false" verbose="true"
-			localTrusted="true"
-			headless="true"
-		/>
-	</target>
-
-	<target name="test-report" depends="test-run">
-		<junitreport todir="${target.dir}/test">
-			<fileset dir="${target.dir}/test">
-				<include name="TEST-*.xml" />
-			</fileset>
-			<report format="frames" todir="${target.dir}/test/html" />
-		</junitreport>
-	</target>
-
-	<target name="test" depends="test-build,test-run,test-report"/>
 
 
 	<!-- Target: Documentation -->
@@ -97,22 +56,22 @@
 
 		<!-- Find classes -->
 		<path id="files">
-			<fileset dir="${src.dir}/main/flex">
+			<fileset dir="${src.dir}/main/actionscript">
 				<include name="**/**"/>
 			</fileset>
 		</path>
 		<pathconvert property="classes" pathsep=" " dirsep="." refid="files">
-			<map from="${src.dir}/main/flex/" to=""/>
+			<map from="${src.dir}/main/actionscript/" to=""/>
 			<mapper>
 				<chainedmapper><globmapper from="*.as" to="*"/></chainedmapper>
 			</mapper>
 		</pathconvert>
 
 		<exec executable="${FLEX_HOME}/bin/asdoc" failonerror="true">
-			<arg line="-source-path+=${src.dir}/main/flex"/>
+			<arg line="-source-path+=${src.dir}/main/actionscript"/>
 			<arg line="-doc-classes ${classes}"/>
 			<arg line="-window-title 'Mockdown'"/>
-			<arg line="-output ${doc.dir}/flex"/>
+			<arg line="-output ${doc.dir}"/>
 			<arg line="-package mockdown.core 'abc'"/>
 		</exec>
 	</target>

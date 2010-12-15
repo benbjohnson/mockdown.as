@@ -1,13 +1,11 @@
 package mockdown.components
 {
-import mockdown.components.loaders.ComponentLoader;
-import mockdown.components.properties.ComponentProperty;
+import mockdown.utils.MathUtil;
 
 import flash.errors.IllegalOperationError;
 
 /**
- *	Instances of this class are used to define a class system within the
- *	mockdown system.
+ *	This class represents a visual component on a mockup.
  */
 public class Component
 {
@@ -20,11 +18,9 @@ public class Component
 	/**
 	 *	Constructor.
 	 */
-	public function Component(name:String=null, parent:Component=null)
+	public function Component()
 	{
 		super();
-		this.name   = name;
-		this.parent = parent;
 	}
 	
 	
@@ -33,160 +29,150 @@ public class Component
 	//	Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//---------------------------------
-	//	Component loader
-	//---------------------------------
-	
-	private var _loader:ComponentLoader;
-	
-	/**
-	 *	The component loader that loaded this component. A loader can only be
-	 *	assigned to a component once.
-	 */
-	public function get loader():ComponentLoader
-	{
-		return _loader;
-	}
 
-	public function set loader(value:ComponentLoader):void
-	{
-		verifyUnsealed();
-		_loader = value;
-	}
-	
-	
-	//---------------------------------
-	//	Name
-	//---------------------------------
-	
-	private var _name:String;
-	
-	/**
-	 *	The name of the component.
-	 */
-	public function get name():String
-	{
-		return _name;
-	}
-
-	public function set name(value:String):void
-	{
-		verifyUnsealed();
-		_name = value;
-	}
-	
-	
 	//---------------------------------
 	//	Parent
 	//---------------------------------
 	
-	private var _parent:Component;
+	/**
+	 *	The parent component in the display tree hierarchy.
+	 */
+	public var parent:Component;
+
+	//---------------------------------
+	//	Children
+	//---------------------------------
+	
+	private var _children:Array = [];
 	
 	/**
-	 *	Defines the parent class for this component. A component inherits the
-	 *	properties and structure of its parent component.
+	 *	A list of child components attached to this component in the display
+	 *	tree.
 	 */
-	public function get parent():Component
+	public function get children():Array
 	{
-		return _parent;
+		return _children.slice();
 	}
-
-	public function set parent(value:Component):void
-	{
-		verifyUnsealed();
-		
-		// Make sure this component is not a parent of a parent
-		if(value) {
-			var p:Component = value;
-			while(p) {
-				if(p == this) {
-					throw new IllegalOperationError("Cannot create circular parent hierarchy");
-				}
-				p = p.parent;
-			}
-		}
-		
-		_parent = value;
-	}
-
+	
 
 	//---------------------------------
-	//	Descriptor
-	//---------------------------------
-	
-	private var _descriptor:NodeDescriptor;
-	
-	/**
-	 *	An object that describes how the node tree should be constructed within
-	 *	this component.
-	 */
-	public function get descriptor():NodeDescriptor
-	{
-		return _descriptor;
-	}
-
-	public function set descriptor(value:NodeDescriptor):void
-	{
-		verifyUnsealed();
-
-		// Remove link to old descriptor
-		if(descriptor) {
-			descriptor.component = null;
-		}
-
-		_descriptor = value;
-
-		// Link to new descriptor
-		if(descriptor) {
-			descriptor.component = this;
-		}
-	}
-	
-	
-	//---------------------------------
-	//	Properties
+	//	Position
 	//---------------------------------
 	
 	/**
-	 *	A lookup of properties defined by this component.
+	 *	The absolute position from the left of the parent container.
 	 */
-	private var _properties:Object = {};
-
+	public var x:int;
+	
 	/**
-	 *	A list of all properties on the component.
+	 *	The absolute position from the top of the parent container.
 	 */
-	public function get properties():Array
-	{
-		var arr:Array = [];
-		
-		// Convert lookup to a list of properties
-		for each(var property:ComponentProperty in _properties) {
-			arr.push(property);
-		}
-		
-		// Prepend parent properties
-		if(parent) {
-			arr = parent.properties.concat(arr);
-		}
-		
-		return arr;
-	}
+	public var y:int;
 
 
 	//---------------------------------
-	//	Sealed
+	//	Position
 	//---------------------------------
+
+	/**
+	 *	The top offset from the parent component.
+	 */
+	public var top:Number;
+
+	/**
+	 *	The bottom offset from the parent component.
+	 */
+	public var bottom:Number;
+
+	/**
+	 *	The left offset from the parent component.
+	 */
+	public var left:Number;
+
+	/**
+	 *	The right offset from the parent component.
+	 */
+	public var right:Number;
 	
-	private var _sealed:Boolean = false;
+	
+	//---------------------------------
+	//	Dimension
+	//---------------------------------
+
+	/**
+	 *	The explicit width of the component, in pixels.
+	 */
+	public var pixelWidth:uint;
 	
 	/**
-	 *	A flag stating if the component definition can be changed.
+	 *	The explicit height of the component, in pixels.
 	 */
-	public function get sealed():Boolean
-	{
-		return _sealed;
-	}
+	public var pixelHeight:uint;
+
+	/**
+	 *	The width of the component.
+	 */
+	public var width:Number;
+	
+	/**
+	 *	The height of the component.
+	 */
+	public var height:Number;
+
+	/**
+	 *	The percentage width of the component.
+	 */
+	public var percentWidth:Number;
+	
+	/**
+	 *	The percentage height of the component.
+	 */
+	public var percentHeight:Number;
+
+	/**
+	 *	The minimium width of the component.
+	 */
+	public var minWidth:Number;
+	
+	/**
+	 *	The minimum height of the component.
+	 */
+	public var minHeight:Number;
+
+	/**
+	 *	The maximum width of the component.
+	 */
+	public var maxWidth:Number;
+	
+	/**
+	 *	The maximum height of the component.
+	 */
+	public var maxHeight:Number;
+
+
+	//---------------------------------
+	//	Padding
+	//---------------------------------
+
+	/**
+	 *	The amount to pad children from the top of the container.
+	 */
+	public var paddingTop:uint;
+
+	/**
+	 *	The amount to pad children from the bottom of the container.
+	 */
+	public var paddingBottom:uint;
+
+	/**
+	 *	The amount to pad children from the left of the container.
+	 */
+	public var paddingLeft:uint;
+
+	/**
+	 *	The amount to pad children from the right of the container.
+	 */
+	public var paddingRight:uint;
 
 
 	//--------------------------------------------------------------------------
@@ -196,139 +182,158 @@ public class Component
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
-	//	Factory
+	//	Children
 	//---------------------------------
-
+	
 	/**
-	 *	Creates an instance of this component as a node.
-	 *
-	 *	@return  A node instance of this component.
+	 *	Appends a component to the list of children.
+	 *	
+	 *	@param child  The component to append.
 	 */
-	public function newInstance():Node
+	public function addChild(child:Component):void
 	{
-		var node:Node;
-		
-		// If we have a descriptor, use it
-		if(descriptor) {
-			node = descriptor.newInstance();
+		if(child != null && _children.indexOf(child) == -1) {
+			child.parent = this;
+			_children.push(child);
 		}
-		// Otherwise just create a node
-		else {
-			node = new Node(this);
-		}
-		
-		return node;
 	}
 	
-
-	//---------------------------------
-	//	Property management
-	//---------------------------------
+	/**
+	 *	Removes a component from the list of children.
+	 *	
+	 *	@param child  The component to remove.
+	 */
+	public function removeChild(child:Component):void
+	{
+		if(child != null && _children.indexOf(child) != -1) {
+			child.parent = null;
+			_children.splice(_children.indexOf(child), 1);
+		}
+	}
 
 	/**
-	 *	Defines a property on this component.
-	 *
-	 *	@param property  The property to add.
+	 *	Removes all children from a component.
 	 */
-	public function addProperty(property:ComponentProperty):void
+	public function removeAllChildren():void
 	{
-		verifyUnsealed();
+		var children:Array = this.children;
+		for each(var child:Component in children) {
+			removeChild(child);
+		}
+	}
+
+
+	//---------------------------------
+	//	Measurement
+	//---------------------------------
+	
+	/**
+	 *	Resets the pixel dimensions of the component and its children.
+	 */
+	public function reset():void
+	{
+		// Reset dimensions
+		pixelWidth  = 0;
+		pixelHeight = 0;
 		
-		// Verify not null
-		if(!property) {
-			throw new ArgumentError("Cannot add null property");
+		// Reset child pixel dimensions
+		for each(var child:Component in _children) {
+			child.reset();
 		}
-		// Verify property has a name
-		if(property.name == null || property.name == "") {
-			throw new ArgumentError("Cannot add property with a null or blank name");
+	}
+
+	/**
+	 *	Determines the final pixel dimensions for the component. This is
+	 *	calculated for all components once before rendering to screen.
+	 */
+	public function measure():void
+	{
+		measureExplicit();
+		measureChildren();
+		measureImplicit();
+	}
+
+	/**
+	 *	Attempts to explicitly measures the component.
+	 */
+	public function measureExplicit():void
+	{
+		var num:Number;
+		
+		// Keep dimension within min/max range
+		if(!isNaN(width)) {
+			pixelWidth  = MathUtil.restrict(width, minWidth, maxWidth);
 		}
-		// Validate that property hasn't already been added
-		if(getProperty(property.name) != null) {
-			// Allow functions to be overridden
-			if(getProperty(property.name).type != "function") {
-				throw new ArgumentError("Property already added with the same name: " + property.name);
+		if(!isNaN(height)) {
+			pixelHeight = MathUtil.restrict(height, minHeight, maxHeight);
+		}
+	}
+	
+	/**
+	 *	Calls <code>measure()</code> on each visual child.
+	 */
+	public function measureChildren():void
+	{
+		for each(var child:Component in _children) {
+			child.measure();
+		}
+	}
+	
+	/**
+	 *	Attempts to measure the component as the largest dimensions of its children.
+	 */
+	public function measureImplicit():void
+	{
+		var child:Component;
+		
+		// Measure width
+		if(isNaN(width)) {
+			// Sum child widths
+			var pixelWidth:uint = 0;
+			for each(child in _children) {
+				pixelWidth = Math.max(pixelWidth, child.pixelWidth);
 			}
+			
+			// Add padding
+			pixelWidth = pixelWidth + paddingLeft + paddingRight;
+			
+			// Restrict width to min/max
+			this.pixelWidth = MathUtil.restrict(pixelWidth, minWidth, maxWidth);
 		}
 		
-		property.component = this;
-		_properties[property.name] = property;
-	}
+		// Measure height
+		if(isNaN(height)) {
+			// Sum child heights
+			var pixelHeight:uint = 0;
+			for each(child in _children) {
+				pixelHeight = Math.max(pixelHeight, child.pixelHeight);
+			}
 
-	/**
-	 *	Removes a property on this component.
-	 *
-	 *	@param property  The property to remove.
-	 */
-	public function removeProperty(property:ComponentProperty):void
-	{
-		verifyUnsealed();
-		
-		if(property) {
-			_properties[property.name] = null;
-			delete _properties[property.name];
-			property.component = null;
+			// Add padding
+			pixelHeight = pixelHeight + paddingTop + paddingBottom;
+			
+			// Restrict height to min/max
+			this.pixelHeight = MathUtil.restrict(pixelHeight, minHeight, maxHeight);
 		}
 	}
-
-	/**
-	 *	Retrieves the definition of a property on the component by name.
-	 *
-	 *	@param name  The name of the property.
-	 *
-	 *	@return      The property with the given name if found. Otherwise, null.
-	 */
-	public function getProperty(name:String):ComponentProperty
-	{
-		var property:ComponentProperty = _properties[name] as ComponentProperty;
-		
-		// Retrieve property from this component
-		if(property) {
-			return property;
-		}
-		// If it's not found then search parent properties
-		else if(parent) {
-			return parent.getProperty(name);
-		}
-		// If it's not found return null
-		else {
-			return null;
-		}
-	}
-
 
 	//---------------------------------
-	//	Seal
+	//	Rendering
 	//---------------------------------
 
 	/**
-	 *	Restricts the component from changing any properties. Once a component
-	 *	is sealed, it cannot be unsealed.
+	 *	Renders the component visually to the screen.
 	 */
-	public function seal():void
+	/*
+	public function render(display:IRenderObject):void
 	{
-		_sealed = true;
-
-		// Seal each property
-		var properties:Array = this.properties;
-		for each(var property:ComponentProperty in properties) {
-			property.seal();
-		}
+		display.move(x, y);
+		display.resize(pixelWidth, pixelHeight);
 		
-		// Seal descriptor
-		if(descriptor) {
-			descriptor.seal();
-		}
+		//display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), Stroke.BLACK, new SolidColorFill(0, 20));
+		//display.drawLine(0, 0, pixelWidth, pixelHeight, Stroke.BLACK);
+		//display.drawLine(0, pixelHeight, pixelWidth, 0, Stroke.BLACK);
 	}
-
-	/**
-	 *	Checks if a property has been sealed yet and throws an error if it has.
-	 */
-	protected function verifyUnsealed():void
-	{
-		// Do not allow changes if sealed
-		if(sealed) {
-			throw new IllegalOperationError("Cannot change settings on a component after it is sealed.")
-		}
-	}
+	*/
 }
 }

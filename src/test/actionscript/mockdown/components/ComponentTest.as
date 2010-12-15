@@ -1,208 +1,242 @@
 package mockdown.components
 {
-import mockdown.components.properties.ComponentProperty;
-
 import asunit.framework.Assert;
 
 public class ComponentTest
 {
-	//---------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 	//
-	//  Setup
+	//	Setup
 	//
-	//---------------------------------------------------------------------
-	
+	//--------------------------------------------------------------------------
+
 	private var component:Component;
+	private var parent:Component;
+	private var child:Component;
 	
 	[Before]
 	public function setup():void
 	{
 		component = new Component();
+
+		parent = new Component();
+		child  = new Component();
+		parent.addChild(child);
 	}
 	
-	
-	//---------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------
 	//
-	//  Constructor
-	//
-	//---------------------------------------------------------------------
-	
-	[Test]
-	public function constructorShouldSetName():void
-	{
-		component = new Component("foo");
-		Assert.assertEquals("foo", component.name);
-	}
-	
-
-	//---------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//---------------------------------------------------------------------
-	
-	//---------------------------------
-	//	Loader
-	//---------------------------------
-
-	[Test]
-	public function shouldSetLoader():void
-	{
-		var loader:TestComponentLoader = new TestComponentLoader();
-		component.loader = loader;
-		Assert.assertEquals(loader, component.loader);
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorSettingLoaderWhenSealed():void
-	{
-		component.seal();
-		component.loader = new TestComponentLoader();
-	}
-	
-	//---------------------------------
-	//	Name
-	//---------------------------------
-
-	[Test]
-	public function shouldSetName():void
-	{
-		component.name = "foo";
-		Assert.assertEquals("foo", component.name);
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorSettingNameWhenSealed():void
-	{
-		component.seal();
-		component.name = "foo";
-	}
-	
-
-	//---------------------------------
-	//	Parent
-	//---------------------------------
-
-	[Test]
-	public function shouldSetParent():void
-	{
-		var parent:Component = new Component();
-		component.parent = parent;
-		Assert.assertEquals(parent, component.parent);
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorSettingParentWhenSealed():void
-	{
-		component.seal();
-		component.parent = new Component();
-	}
-	
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorWhenCreatingCircularParentHiearchy():void
-	{
-		var c0:Component = new Component();
-		var c1:Component = new Component();
-		var c2:Component = new Component();
-		
-		c2.parent = c1;
-		c1.parent = c0;
-		c0.parent = c2;
-	}
-
-	//---------------------------------
-	//	Descriptor
-	//---------------------------------
-
-	[Test]
-	public function shouldSetDescriptor():void
-	{
-		var descriptor:NodeDescriptor = new NodeDescriptor();
-		component.descriptor = descriptor;
-		Assert.assertEquals(descriptor, component.descriptor);
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorSettingDescriptorWhenSealed():void
-	{
-		component.seal();
-		component.descriptor = new NodeDescriptor();
-	}
-	
-
-	//---------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//---------------------------------------------------------------------
-	
-	//---------------------------------
 	//	Properties
-	//---------------------------------
+	//
+	//--------------------------------------------------------------------------
+
+
+	//--------------------------------------------------------------------------
+	//
+	//	Methods
+	//
+	//--------------------------------------------------------------------------
+
+	//-----------------------------
+	//  Children
+	//-----------------------------
 
 	[Test]
-	public function shouldAddProperty():void
+	public function shouldAddChild():void
 	{
-		var property:ComponentProperty = new ComponentProperty("foo");
-		component.addProperty(property);
-		Assert.assertEquals(property, component.getProperty("foo"));
-	}
-
-	[Test(expects="ArgumentError")]
-	public function shouldThrowErrorWhenAddingNullProperty():void
-	{
-		component.addProperty(null);
-	}
-
-	[Test(expects="ArgumentError")]
-	public function shouldThrowErrorWhenAddingPropertyWithNullName():void
-	{
-		component.addProperty(new ComponentProperty());
-	}
-
-	[Test(expects="ArgumentError")]
-	public function shouldThrowErrorWhenOverriddingExistingProperty():void
-	{
-		component.addProperty(new ComponentProperty("foo"));
-		component.addProperty(new ComponentProperty("foo"));
-	}
-
-	[Test(expects="flash.errors.IllegalOperationError")]
-	public function shouldThrowErrorWhenAddingPropertyToSealedComponent():void
-	{
-		component.seal();
-		component.addProperty(new ComponentProperty("foo"));
+		var child:Component = new Component();
+		component.addChild(child);
+		Assert.assertEquals(child, component.children[0]);
 	}
 
 	[Test]
-	public function shouldRemoveProperty():void
+	public function shouldNotAddChildTwice():void
 	{
-		var property:ComponentProperty = new ComponentProperty("foo");
-		component.addProperty(property);
-		component.removeProperty(property);
-		Assert.assertNull(component.getProperty("foo"));
+		var child:Component = new Component();
+		component.addChild(child);
+		component.addChild(child);
+		Assert.assertEquals(1, component.children.length);
+	}
+
+	[Test]
+	public function shouldSetParentWhenAddingChild():void
+	{
+		var child:Component = new Component();
+		component.addChild(child);
+		Assert.assertEquals(component, child.parent);
+	}
+
+	[Test]
+	public function shouldRemoveChild():void
+	{
+		var child:Component = new Component();
+		component.addChild(child);
+		component.removeChild(child);
+		Assert.assertEquals(0, component.children.length);
+	}
+
+	[Test]
+	public function shouldUnsetParentWhenRemovingChild():void
+	{
+		var child:Component = new Component();
+		component.addChild(child);
+		component.removeChild(child);
+		Assert.assertNull(child.parent);
 	}
 
 
-	//---------------------------------
-	//	Seal
-	//---------------------------------
+	//-----------------------------
+	//  Reset
+	//-----------------------------
 
 	[Test]
-	public function shouldSeal():void
+	public function shouldResetPixelWidth():void
 	{
-		component.seal();
-		Assert.assertTrue(component.sealed);
+		component.pixelWidth = 100;
+		component.reset();
+		Assert.assertEquals(0, component.pixelWidth);
+	}
+
+	[Test]
+	public function shouldResetPixelHeight():void
+	{
+		component.pixelHeight = 100;
+		component.reset();
+		Assert.assertEquals(0, component.pixelHeight);
+	}
+
+	[Test]
+	public function shouldResetChildWidth():void
+	{
+		child.pixelWidth = 100;
+		parent.reset();
+		Assert.assertEquals(0, child.pixelWidth);
+	}
+
+	[Test]
+	public function shouldResetChildHeight():void
+	{
+		child.pixelHeight = 100;
+		parent.reset();
+		Assert.assertEquals(0, child.pixelHeight);
+	}
+
+
+
+	//-----------------------------
+	//  Measurement (Explicit)
+	//-----------------------------
+
+	[Test]
+	public function shouldMeasureExplicitWidth():void
+	{
+		component.width = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelWidth);
+	}
+
+	[Test]
+	public function shouldMeasureExplicitHeight():void
+	{
+		component.height = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelHeight);
+	}
+
+
+	//-----------------------------
+	//  Measurement (Min/Max)
+	//-----------------------------
+
+	[Test]
+	public function shouldRestrictWidthByMinWidth():void
+	{
+		component.width    = 50;
+		component.minWidth = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelWidth);
+	}
+
+	[Test]
+	public function shouldRestrictHeihtByMinHeight():void
+	{
+		component.height    = 50;
+		component.minHeight = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelHeight);
+	}
+
+	[Test]
+	public function shouldRestrictWidthByMaxWidth():void
+	{
+		component.width    = 150;
+		component.maxWidth = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelWidth);
+	}
+
+	[Test]
+	public function shouldRestrictWidthByMaxHeight():void
+	{
+		component.height    = 150;
+		component.maxHeight = 100;
+		component.measure();
+		Assert.assertEquals(100, component.pixelHeight);
+	}
+
+
+	//-----------------------------
+	//  Measurement (Children)
+	//-----------------------------
+
+	[Test]
+	public function shouldMeasureChildren():void
+	{
+		child.width  = 100;
+		child.height = 200;
+		parent.measure();
+		Assert.assertEquals(100, child.pixelWidth);
+		Assert.assertEquals(200, child.pixelHeight);
+	}
+
+
+	//-----------------------------
+	//  Measurement (Implicit)
+	//-----------------------------
+
+	[Test]
+	public function shouldMeasureImplicitWidth():void
+	{
+		var c0:Component, c1:Component;
+		component.addChild(c0 = new Component());
+		component.addChild(c1 = new Component());
+		
+		c0.width = 100;
+		c1.width = 200;
+		
+		component.paddingLeft  = 1;
+		component.paddingRight = 2;
+		component.measure();
+
+		Assert.assertEquals(203, component.pixelWidth);
+	}
+
+	[Test]
+	public function shouldMeasureImplicitHeight():void
+	{
+		var c0:Component, c1:Component;
+		component.addChild(c0 = new Component());
+		component.addChild(c1 = new Component());
+		
+		c0.height = 100;
+		c1.height = 200;
+		
+		component.paddingTop  = 1;
+		component.paddingBottom = 2;
+		component.measure();
+
+		Assert.assertEquals(203, component.pixelHeight);
 	}
 }
-}
-
-import mockdown.components.loaders.ComponentLoader;
-import mockdown.components.Component;
-import mockdown.components.Node;
-class TestComponentLoader implements ComponentLoader
-{
-	public function find(name:String):Component {return null;};
-	public function newInstance(name:String):Node {return null;};
-	public function addLibrary(name:String):void {};
 }
