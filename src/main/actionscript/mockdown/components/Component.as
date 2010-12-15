@@ -7,7 +7,7 @@ import flash.errors.IllegalOperationError;
 /**
  *	This class represents a visual component on a mockup.
  */
-public class Component
+public dynamic class Component
 {
 	//--------------------------------------------------------------------------
 	//
@@ -43,7 +43,7 @@ public class Component
 	//	Children
 	//---------------------------------
 	
-	private var _children:Array = [];
+	protected var _children:Array = [];
 	
 	/**
 	 *	A list of child components attached to this component in the display
@@ -256,7 +256,7 @@ public class Component
 	/**
 	 *	Attempts to explicitly measures the component.
 	 */
-	public function measureExplicit():void
+	protected function measureExplicit():void
 	{
 		var num:Number;
 		
@@ -272,7 +272,7 @@ public class Component
 	/**
 	 *	Calls <code>measure()</code> on each visual child.
 	 */
-	public function measureChildren():void
+	protected function measureChildren():void
 	{
 		for each(var child:Component in _children) {
 			child.measure();
@@ -282,7 +282,7 @@ public class Component
 	/**
 	 *	Attempts to measure the component as the largest dimensions of its children.
 	 */
-	public function measureImplicit():void
+	protected function measureImplicit():void
 	{
 		var child:Component;
 		
@@ -316,6 +316,20 @@ public class Component
 			this.pixelHeight = MathUtil.restrict(pixelHeight, minHeight, maxHeight);
 		}
 	}
+
+
+	//---------------------------------
+	//	Layout
+	//---------------------------------
+
+	/**
+	 *	Lays out the component and its children after the size of all componets
+	 *	has been computed.
+	 */
+	public function layout():void
+	{
+	}
+
 
 	//---------------------------------
 	//	Rendering
