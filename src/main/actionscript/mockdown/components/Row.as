@@ -31,7 +31,7 @@ public dynamic class Row extends LayoutContainer
 	//---------------------------------
 	
 	/**
-	 *	Calculates the dimension of this node as the sum of its children
+	 *	Calculates the dimension of this component as the sum of its children
 	 */
 	override protected function measureImplicit():void
 	{

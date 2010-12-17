@@ -79,14 +79,14 @@ public class RegistryComponentLoader extends BaseComponentLoader
 	 */
 	override public function find(name:String):*
 	{
-		// Find component if registered
-		if(components[name] != null) {
-			return components[name];
+		// Search through the parent loaders
+		var type:* = super.find(name);
+		if(type != null) {
+			return type;
 		}
-		// Otherwise try to search through the parent loaders
-		else {
-			return super.find(name);
-		}
+		
+		// If not found, find component if registered
+		return components[name];
 	}
 }
 }
