@@ -9,6 +9,8 @@ import mockdown.test.*;
 
 import asunit.framework.Assert;
 
+import flash.utils.describeType;
+
 public class ComponentParserTest
 {
 	//---------------------------------------------------------------------
