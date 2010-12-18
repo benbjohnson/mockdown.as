@@ -116,7 +116,7 @@ public class TypeTest
 	[Test]
 	public function shouldSetDefaultValue():void
 	{
-		Assert.assertEquals("foo", meta.defaultValueVariable.defaultValue);
+		Assert.assertEquals(100, meta.defaultValueVariable.defaultValue);
 	}
 
 
@@ -128,6 +128,59 @@ public class TypeTest
 	public function shouldSetPercentField():void
 	{
 		Assert.assertEquals("bar", meta.percentFieldVariable.percentField);
+	}
+
+
+	//---------------------------------
+	//	Parse
+	//---------------------------------
+
+	[Test]
+	public function shouldParseString():void
+	{
+		Assert.assertEquals("foo", Type.parse("foo", "string"));
+	}
+
+	[Test]
+	public function shouldParseBooleanTrue():void
+	{
+		Assert.assertTrue(true, Type.parse("true", "boolean"));
+	}
+
+	[Test]
+	public function shouldParseBooleanFalse():void
+	{
+		Assert.assertFalse(Type.parse("false", "boolean"));
+	}
+
+	[Test]
+	public function shouldParseInt():void
+	{
+		Assert.assertEquals(12, Type.parse("12", "int"));
+	}
+
+	[Test]
+	public function shouldParseUInt():void
+	{
+		Assert.assertEquals(100, Type.parse("100", "uint"));
+	}
+	
+	[Test]
+	public function shouldParseNegativeToUInt():void
+	{
+		Assert.assertEquals(0, Type.parse("-12", "uint"));
+	}
+
+	[Test]
+	public function shouldParseDecimal():void
+	{
+		Assert.assertEquals(20.1, Type.parse("20.1", "decimal"));
+	}
+
+	[Test]
+	public function shouldParseNaNToDecimal():void
+	{
+		Assert.assertNull(Type.parse("not_a_number", "decimal"));
 	}
 }
 }
@@ -146,8 +199,8 @@ class TestClass
 	[Property(type="uint")]
 	public var implicitUIntVariable:*;
 
-	[Property(defaultValue="foo")]
-	public var defaultValueVariable:String;
+	[Property(defaultValue="100")]
+	public var defaultValueVariable:int;
 
 	[Property(percentField="bar")]
 	public var percentFieldVariable:String;

@@ -16,6 +16,57 @@ public class Type
 	//
 	//--------------------------------------------------------------------------
 
+	//---------------------------------
+	//	Data types
+	//---------------------------------
+
+	/**
+	 *	The string data type.
+	 */
+	static public const STRING:String = "string";
+	
+	/**
+	 *	The boolean data type.
+	 */
+	static public const BOOLEAN:String = "boolean";
+	
+	/**
+	 *	The integer data type.
+	 */
+	static public const INT:String = "int";
+	
+	/**
+	 *	The unsigned integer data type.
+	 */
+	static public const UINT:String = "uint";
+	
+	/**
+	 *	The decimal data type.
+	 */
+	static public const DECIMAL:String = "decimal";
+	
+
+	/**
+	 *	The available data types.
+	 */
+	static public const DATA_TYPES:Object = [STRING, BOOLEAN, DECIMAL, INT, UINT];
+
+	/**
+	 *	The conversion lookup of ActionScript types to Mockdown types.
+	 */
+	static public const ACTION_SCRIPT_DATA_TYPES:Object = {
+		"String":STRING,
+		"Boolean":BOOLEAN,
+		"Number":DECIMAL,
+		"int":INT,
+		"uint":UINT
+	};
+	
+
+	//---------------------------------
+	//	Access types
+	//---------------------------------
+
 	/**
 	 *	A flag stating that the access of a property is readable.
 	 */
@@ -27,22 +78,6 @@ public class Type
 	static public const WRITABLE:int = 2;
 
 
-	/**
-	 *	The available data types.
-	 */
-	static public const DATA_TYPES:Object = ["string", "boolean", "decimal", "int", "uint"];
-
-	/**
-	 *	The conversion lookup of ActionScript types to Mockdown types.
-	 */
-	static public const ACTION_SCRIPT_DATA_TYPES:Object = {
-		"String":"string",
-		"Boolean":"boolean",
-		"Number":"decimal",
-		"int":"int",
-		"uint":"uint"
-	};
-	
 
 	//--------------------------------------------------------------------------
 	//
@@ -144,7 +179,7 @@ public class Type
 		if(meta.Property) {
 			// Default value
 			if(meta.Property.defaultValue) {
-				property.defaultValue = meta.Property.defaultValue;
+				property.defaultValue = parse(meta.Property.defaultValue, property.type);
 			}
 
 			// Percent field
@@ -176,6 +211,50 @@ public class Type
 			}
 		}
 		return meta;
+	}
+
+
+	//---------------------------------
+	//	Parse
+	//---------------------------------
+
+	/**
+	 *	Parses a value based on a given data type.
+	 *
+	 *	@param value  The value to parse.
+	 *	@param type   The data type to parse into.
+	 *
+	 *	@return       A parsed value in the given data type.
+	 */
+	static public function parse(value:String, type:String="string"):*
+	{
+		// Parse string
+		if(type == STRING) {
+			return value;
+		}
+		// Parse boolean
+		else if(type == BOOLEAN) {
+			return (value == "true");
+		}
+		// Parse decimal
+		else if(type == DECIMAL) {
+			var num:Number = parseFloat(value)
+			return (isNaN(num) ? null : num)
+		}
+		// Parse integer types
+		else if(type == INT) {
+			return int(parseInt(value));
+		}
+		// Parse integer types
+		else if(type == UINT) {
+			return Math.max(0, parseInt(value));
+		}
+		// If type is not found, throw error
+		else {
+			throw new ArgumentError("Invalid type: " + type);
+		}
+		
+		return null;
 	}
 }
 }
