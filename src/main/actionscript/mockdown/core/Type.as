@@ -229,7 +229,7 @@ public class Type
 	static public function parse(value:String, type:String="string"):*
 	{
 		// Parse string
-		if(type == STRING) {
+		if(type == STRING || type == null) {
 			return value;
 		}
 		// Parse boolean

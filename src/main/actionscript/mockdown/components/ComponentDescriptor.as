@@ -1,5 +1,7 @@
 package mockdown.components
 {
+import mockdown.core.Type;
+
 import flash.errors.IllegalOperationError;
 
 /**
@@ -54,13 +56,25 @@ public class ComponentDescriptor
 
 
 	//---------------------------------
+	//	Meta
+	//---------------------------------
+	
+	/**
+	 *	The meta data for this descriptor.
+	 *
+	 *	@see mockdown.core.Type
+	 */
+	public var meta:Object;
+
+
+	//---------------------------------
 	//	Parent
 	//---------------------------------
 	
 	private var _parent:*;
 	
 	/**
-	 *	
+	 *	The parent class or descriptor that this descriptor is based on.
 	 */
 	public function get parent():*
 	{
@@ -83,6 +97,15 @@ public class ComponentDescriptor
 				}
 				p = p.parent as ComponentDescriptor;
 			}
+		}
+		
+		// Retrieve meta data based on parent if it's a class
+		if(value is Class) {
+			meta = Type.describe(value as Class);
+		}
+		// Otherwise copy meta from parent
+		else if(value is ComponentDescriptor) {
+			meta = value.meta;
 		}
 		
 		_parent = value;

@@ -54,11 +54,27 @@ public class ComponentDescriptorTest
 	}
 
 	[Test]
+	public function shouldSetMetaWhenParentIsClass():void
+	{
+		descriptor.parent = Row;
+		Assert.assertNotNull(descriptor.meta);
+	}
+
+	[Test]
 	public function shouldSetParentToDescriptor():void
 	{
 		var parent:ComponentDescriptor = new ComponentDescriptor();
 		descriptor.parent = parent;
 		Assert.assertEquals(parent, descriptor.parent);
+	}
+
+	[Test]
+	public function shouldCopyMetaFromParentDescriptor():void
+	{
+		var parent:ComponentDescriptor = new ComponentDescriptor();
+		parent.meta = {};
+		descriptor.parent = parent;
+		Assert.assertEquals(parent.meta, descriptor.meta);
 	}
 
 	[Test]

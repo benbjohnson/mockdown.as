@@ -91,6 +91,58 @@ public class ComponentParserTest
 		});
 	}
 
+	//-----------------------------
+	//  Parse (Properties)
+	//-----------------------------
+
+	[Test]
+	public function shouldParseStringVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test stringVariable=foo");
+		Assert.assertEquals("foo", descriptor.values.stringVariable);
+	}
+
+	[Test]
+	public function shouldParseBooleanTrueVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test booleanVariable=true");
+		Assert.assertEquals(true, descriptor.values.booleanVariable);
+	}
+
+	[Test]
+	public function shouldParseBooleanFalseVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test booleanVariable=false");
+		Assert.assertEquals(false, descriptor.values.booleanVariable);
+	}
+
+	[Test]
+	public function shouldParseIntVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test intVariable=12");
+		Assert.assertEquals(12, descriptor.values.intVariable);
+	}
+
+	[Test]
+	public function shouldParseUIntVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test uintVariable=12");
+		Assert.assertEquals(12, descriptor.values.uintVariable);
+	}
+
+	[Test]
+	public function shouldParseDecimalVariable():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test decimalVariable=100.23");
+		Assert.assertEquals(100.23, descriptor.values.decimalVariable);
+	}
+
 	[Test]
 	public function shouldParseUnquotedProperty():void
 	{
@@ -119,8 +171,17 @@ public class ComponentParserTest
 	public function shouldThrowErrorWhenMissingPropertyKey():void
 	{
 		loader.expects("find").withArgs("col").willReturn(Column);
-		assertThrowsWithMessage(BlockParseError, "Expected: key name", function():void{
+		assertThrowsWithMessage(BlockParseError, "Expected key name", function():void{
 			parser.parse("%col =bar");
+		});
+	}
+
+	[Test]
+	public function shouldThrowErrorWhenMissingProperty():void
+	{
+		loader.expects("find").withArgs("col").willReturn(Column);
+		assertThrowsWithMessage(BlockParseError, "Property doesn't exist: foo", function():void{
+			parser.parse("%col foo=bar");
 		});
 	}
 }
@@ -136,7 +197,8 @@ public class ComponentParserTest
 import mockdown.components.*;
 import mockdown.components.loaders.*;
 import org.mock4as.Mock;
-class MockComponentLoader extends Mock implements ComponentLoader {
+class MockComponentLoader extends Mock implements ComponentLoader
+{
 	public function find(name:String):* {
 		record("find", name);
 		return expectedReturnFor("find");
@@ -148,4 +210,20 @@ class MockComponentLoader extends Mock implements ComponentLoader {
 	public function addLibrary(name:String):void {
 		record("addLibrary", name);
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+//
+//  Misc
+//
+//-----------------------------------------------------------------------------
+
+class TestComponent extends Component
+{
+	public var stringVariable:String;
+	public var booleanVariable:Boolean;
+	public var intVariable:int;
+	public var uintVariable:uint;
+	public var decimalVariable:Number;
 }

@@ -3,10 +3,12 @@ package mockdown.components.parsers
 import mockdown.components.Component;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.loaders.ComponentLoader;
+import mockdown.core.Type;
 import mockdown.errors.BlockParseError;
 import mockdown.parsers.Block;
 import mockdown.parsers.Lexer;
 import mockdown.parsers.WhitespaceParser;
+import mockdown.utils.ObjectUtil;
 
 /**
  *	This class represents a parser for a Mockdown document.
@@ -61,15 +63,17 @@ public class ComponentParser
 	{
 		var root:Block = createBlockTree(content);
 		
-		// Parse pragmas at the root
-		// parsePragmas(root);
+		// Parse imports from the root
+		// parseImports(root);
 		
 		// Find first component definition and parse descriptors from there
 		var blocks:Array = root.children.filter(function(item:Block,...args):Boolean{return item.content.charAt(0) == "%"});
 		
 		// Parse root component
 		if(blocks.length == 1) {
-			return parseComponent(blocks[0] as Block);
+			var descriptor:ComponentDescriptor = parseComponent(blocks[0] as Block);
+			descriptor.meta = ObjectUtil.copy(descriptor.meta);
+			return descriptor;
 		}
 		// Throw error if we have no root component
 		else if(blocks.length == 0) {
@@ -132,6 +136,12 @@ public class ComponentParser
 		while(!lexer.eof) {
 			var key:String = lexer.match(/^\w+/);
 			if(key) {
+				// Throw error if property doesn't exist
+				var property:Object = descriptor.meta[key];
+				if(property == null) {
+					throw new BlockParseError(block, "Property doesn't exist: " + key);
+				}
+				
 				// If a colon is next, retrieve the value
 				var value:String;
 				if(!lexer.match(/=/)) {
@@ -155,13 +165,13 @@ public class ComponentParser
 				}
 				
 				// Assign to data object
-				descriptor.values[key] = value;
+				descriptor.values[key] = Type.parse(value, property.type);
 			}
 			else {
 				// If we have no key and have not reached eof then we are
 				// missing the key.
 				if(!lexer.eof) {
-					throw new BlockParseError(block, "Expected: key name");
+					throw new BlockParseError(block, "Expected key name");
 				}
 			}
 			
