@@ -4,6 +4,7 @@ import mockdown.components.Column;
 import mockdown.components.Component;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.Row;
+import mockdown.components.loaders.MockComponentLoader;
 import mockdown.errors.BlockParseError;
 import mockdown.test.*;
 
@@ -11,7 +12,7 @@ import asunit.framework.Assert;
 
 import flash.utils.describeType;
 
-public class ComponentParserTest
+public class DefaultComponentParserTest
 {
 	//---------------------------------------------------------------------
 	//
@@ -19,13 +20,13 @@ public class ComponentParserTest
 	//
 	//---------------------------------------------------------------------
 	
-	private var parser:ComponentParser;
+	private var parser:DefaultComponentParser;
 	private var loader:MockComponentLoader;
 	
 	[Before]
 	public function setup():void
 	{
-		parser = new ComponentParser();
+		parser = new DefaultComponentParser();
 
 		loader = new MockComponentLoader();
 		parser.loader = loader;
@@ -190,35 +191,11 @@ public class ComponentParserTest
 
 //-----------------------------------------------------------------------------
 //
-//  Mocks
+//  Internal Classes
 //
 //-----------------------------------------------------------------------------
 
-import mockdown.components.*;
-import mockdown.components.loaders.*;
-import org.mock4as.Mock;
-class MockComponentLoader extends Mock implements ComponentLoader
-{
-	public function find(name:String):* {
-		record("find", name);
-		return expectedReturnFor("find");
-	}
-	public function newInstance(name:String):Component {
-		record("newInstance", name);
-		return expectedReturnFor("newInstance") as Component;
-	}
-	public function addLibrary(name:String):void {
-		record("addLibrary", name);
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-//
-//  Misc
-//
-//-----------------------------------------------------------------------------
-
+import mockdown.components.Component;
 class TestComponent extends Component
 {
 	public var stringVariable:String;
