@@ -2,6 +2,7 @@ package mockdown.components.loaders
 {
 import mockdown.components.Component;
 import mockdown.components.parsers.ComponentParser;
+import mockdown.components.parsers.DefaultComponentParser;
 import mockdown.errors.LibraryNotFoundError;
 import mockdown.filesystem.File;
 
@@ -24,7 +25,6 @@ public class FileComponentLoader extends BaseComponentLoader
 	public function FileComponentLoader(parent:ComponentLoader=null)
 	{
 		super(parent);
-		parser = new ComponentParser();
 	}
 
 
@@ -35,9 +35,9 @@ public class FileComponentLoader extends BaseComponentLoader
 	//--------------------------------------------------------------------------
 	
 	/**
-	 *	The parser used by the loader.
+	 *	The component parser.
 	 */
-	private var parser:ComponentParser;
+	public var parser:ComponentParser = new DefaultComponentParser();
 
 	/**
 	 *	The load path for finding component file definitions.
@@ -87,7 +87,7 @@ public class FileComponentLoader extends BaseComponentLoader
 		// Setup load paths
 		var paths:Array = this.paths.slice();
 		if(libraryPath) {
-			loader.paths.push(libraryPath);
+			paths.push(libraryPath);
 		}
 		
 		// Search load path to find a file with the given name.
@@ -107,7 +107,7 @@ public class FileComponentLoader extends BaseComponentLoader
 			if(file) {
 				// Throw an error if we retrieve a directory
 				if(file.isDirectory) {
-					throw new IllegalOperationError("File is a directory: " + file);
+					throw new IllegalOperationError("File is a directory: " + name);
 				}
 				// Otherwise parse the file
 				else {
@@ -115,11 +115,8 @@ public class FileComponentLoader extends BaseComponentLoader
 					var loader:FileComponentLoader = clone();
 					loader.paths = [file.parent];
 
-					// Create a parser to parse the component definition
-					var parser:ComponentParser = new ComponentParser();
-					parser.loader = loader;
-					
 					// Parse file into component definition
+					parser.loader = loader;
 					return parser.parse(file.content);
 				}
 			}
@@ -140,22 +137,23 @@ public class FileComponentLoader extends BaseComponentLoader
 		}
 		// Throw error if a system library path is not defined
 		if(!systemLibraryPath) {
-			throw new IllegalOperationError("System library path has not been defined");
+			throw new IllegalOperationError("System library path has not been defined for this loader");
 		}
 		// Do not allow parent file access when loading libraries
 		if(name.indexOf("..") != -1) {
-			throw new IllegalOperationError("Library name cannot contain '..'");
+			throw new IllegalOperationError("Library name cannot contain: '..'");
 		}
 		
 		// Attempt to find component library in system path
 		var path:File = systemLibraryPath.resolvePath(name);
 		
+		// Throw error if path doesn't exist
 		if(!path) {
 			throw new LibraryNotFoundError(name, "Library not found: " + name);
 		}
 		
-		
-		// TODO: Add tests for library loading!!!!
+		// Append library to paths
+		paths.push(path);
 	}
 	
 	/**
