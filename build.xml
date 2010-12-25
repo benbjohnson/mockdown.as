@@ -22,6 +22,7 @@
 		<!-- TestRunner dependencies -->
 		<mkdir dir="${target.dir}/test"/>
 		<copy file="${src.dir}/test/resources/TestRunner-app.xml" tofile="${target.dir}/test/TestRunner-app.xml" overwrite="true"/>
+		<copy file="${src.dir}/test/resources/MockdownViewer-app.xml" tofile="${target.dir}/test/MockdownViewer-app.xml" overwrite="true"/>
 	</target>
 
 	<!-- Target: Build SWC -->
@@ -46,6 +47,20 @@
 			<arg value="+configname=air"/>
 			<arg value="-load-config+=${src.dir}/test/resources/TestRunner-config.xml"/>
 			<arg value="${src.dir}/test/actionscript/TestRunner.as"/>
+		</java>
+	</target>
+
+	<!-- Target: MockdownViewer -->
+	<!-- mxmlc +configname=air -load-config+=src/test/resources/MockdownViewer-config.xml src/test/actionscript/MockdownViewer.as -->
+	<target name="build-viewer" depends="init">
+		<!-- TestRunner -->
+		<java jar="${mxmlc.jar}" fork="true" failonerror="true">
+			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-Xms512M"/>
+			<arg value="+flexlib=${FLEX_HOME}/frameworks"/>
+			<arg value="+configname=air"/>
+			<arg value="-load-config+=${src.dir}/test/resources/MockdownViewer-config.xml"/>
+			<arg value="${src.dir}/test/actionscript/MockdownViewer.as"/>
 		</java>
 	</target>
 

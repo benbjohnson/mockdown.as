@@ -1,5 +1,9 @@
 package mockdown.components
 {
+import mockdown.display.RenderObject;
+import mockdown.display.Stroke;
+import mockdown.display.SolidColorFill;
+import mockdown.geom.Rectangle;
 import mockdown.utils.MathUtil;
 
 import flash.errors.IllegalOperationError;
@@ -338,16 +342,14 @@ public dynamic class Component
 	/**
 	 *	Renders the component visually to the screen.
 	 */
-	/*
-	public function render(display:IRenderObject):void
+	public function render(display:RenderObject):void
 	{
 		display.move(x, y);
 		display.resize(pixelWidth, pixelHeight);
 		
-		//display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), Stroke.BLACK, new SolidColorFill(0, 20));
-		//display.drawLine(0, 0, pixelWidth, pixelHeight, Stroke.BLACK);
-		//display.drawLine(0, pixelHeight, pixelWidth, 0, Stroke.BLACK);
+		display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), Stroke.BLACK, new SolidColorFill(0, 20));
+		display.drawLine(0, 0, pixelWidth, pixelHeight, Stroke.BLACK);
+		display.drawLine(0, pixelHeight, pixelWidth, 0, Stroke.BLACK);
 	}
-	*/
 }
 }

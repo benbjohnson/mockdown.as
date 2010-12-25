@@ -33,14 +33,14 @@ public class MockdownViewer extends Sprite
 	public function MockdownViewer()
 	{
 		super();
-		
+
 		// Setup stage
 		stage.scaleMode = StageScaleMode.NO_SCALE
 		stage.align = StageAlign.TOP_LEFT;
 		
 		// Setup system loader
 		systemLoader = new SystemComponentLoader();
-		
+
 		// Render on invocation
 		NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE,
 			function(event:InvokeEvent):void{
@@ -97,6 +97,7 @@ public class MockdownViewer extends Sprite
 		// Exit if missing the file
 		graphics.clear();
 		if(!filename) {
+			trace("Missing filename");
 			graphics.lineStyle(0x000000, 1);
 			graphics.moveTo(0, 0);
 			graphics.lineTo(width, height);
@@ -109,7 +110,9 @@ public class MockdownViewer extends Sprite
 		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
 		loader.paths = [new LocalFile(File.applicationDirectory)];
 
+		trace("load");
 		var component:Component = loader.newInstance(filename);
+		trace("component: " + component);
 		
 		if(!component) {
 			trace("No component found: " + filename);

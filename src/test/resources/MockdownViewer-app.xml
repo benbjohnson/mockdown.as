@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/2.0">
+    <id>MockdownViewer</id>
+    <version>1.0</version>
+    <filename>MockdownViewer</filename>
+    <name>MockdownViewer</name>
+    <initialWindow>
+        <title>MockdownViewer</title>
+        <content>MockdownViewer.swf</content>
+        <systemChrome>standard</systemChrome>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <minimizable>true</minimizable>
+        <maximizable>true</maximizable>
+        <resizable>true</resizable>
+        <x>0</x>
+        <y>0</y>
+        <width>0</width>
+        <height>0</height>
+    </initialWindow> 
+    <installFolder>MockdownViewer</installFolder>
+    <programMenuFolder>MockdownViewer</programMenuFolder>
+    <customUpdateUI>false</customUpdateUI>
+    <allowBrowserInvocation>false</allowBrowserInvocation>
+</application>
