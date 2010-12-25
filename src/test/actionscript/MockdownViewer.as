@@ -110,10 +110,7 @@ public class MockdownViewer extends Sprite
 		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
 		loader.paths = [new LocalFile(File.applicationDirectory)];
 
-		trace("load");
 		var component:Component = loader.newInstance(filename);
-		trace("component: " + component);
-		
 		if(!component) {
 			trace("No component found: " + filename);
 			return;

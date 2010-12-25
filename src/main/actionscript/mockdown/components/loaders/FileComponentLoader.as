@@ -75,8 +75,6 @@ public class FileComponentLoader extends BaseComponentLoader
 	 */
 	override public function find(name:String):*
 	{
-		trace("find(" + name + ")");
-		
 		// Search parent loaders first
 		var type:* = super.find(name);
 		if(type != null) {
@@ -106,7 +104,6 @@ public class FileComponentLoader extends BaseComponentLoader
 				}
 			}
 			
-			trace("  file: " + file);
 			if(file) {
 				// Throw an error if we retrieve a directory
 				if(file.isDirectory) {

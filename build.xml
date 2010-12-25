@@ -10,12 +10,12 @@
     <property name="version" value="0.6.2"/>
 
 	<property name="doc.dir" value="${basedir}/doc"/>
-	<property name="etc.dir" value="${basedir}/etc"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="target.dir" value="${basedir}/target"/>
 
 	<!-- Task Definitions -->
-	<taskdef resource="flexTasks.tasks" classpath="${etc.dir}/flexTasks.jar" />
+	<taskdef resource="flexTasks.tasks" classpath="${lib.dir}/flexTasks.jar" />
 
 	<!-- Target: Initialization -->
 	<target name="init">
