@@ -176,6 +176,14 @@ public class DefaultComponentParserTest
 			parser.parse("%col =bar");
 		});
 	}
+	
+	[Test]
+	public function shouldParsePercentWidth():void
+	{
+		loader.expects("find").withArgs("test").willReturn(TestComponent);
+		var descriptor:ComponentDescriptor = parser.parse("%test width=20%");
+		Assert.assertEquals(20, descriptor.values.percentWidth);
+	}
 
 	[Test]
 	public function shouldThrowErrorWhenMissingProperty():void

@@ -178,8 +178,14 @@ public class DefaultComponentParser implements ComponentParser
 					throw new BlockParseError(block, "Missing value");
 				}
 				
+				// Assign to percent field if applicable
+				if(property.percentField && value.search(/%$/) != -1) {
+					property = descriptor.meta[property.percentField];
+					value = value.replace(/%$/, "");
+				}
+				
 				// Assign to data object
-				descriptor.values[key] = Type.parse(value, property.type);
+				descriptor.values[property.name] = Type.parse(value, property.type);
 			}
 			else {
 				// If we have no key and have not reached eof then we are

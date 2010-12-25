@@ -63,13 +63,26 @@ public class Renderer
 		component.measure();
 		component.layout();
 		
+		return renderComponent(component);
+	}
+
+	/**
+	 *	Recursively performs a render on a component tree.
+	 */
+	protected function renderComponent(component:Component):RenderObject
+	{
+		// If no component is provided then return no output
+		if(component == null) {
+			return null;
+		}
+		
 		// Render the component
 		var object:RenderObject = new renderObjectClass();
 		component.render(object);
 		
 		// Render children
 		for each(var child:Component in component.children) {
-			object.addRenderChild(render(child));
+			object.addRenderChild(renderComponent(child));
 		}
 		
 		return object;

@@ -113,11 +113,13 @@ public dynamic class Component
 	 */
 	public var pixelHeight:uint;
 
+	[Property(percentField="percentWidth")]
 	/**
 	 *	The width of the component.
 	 */
 	public var width:Number;
 	
+	[Property(percentField="percentHeight")]
 	/**
 	 *	The height of the component.
 	 */
@@ -344,6 +346,8 @@ public dynamic class Component
 	 */
 	public function render(display:RenderObject):void
 	{
+		trace("render: " + this + " : " + pixelWidth + ", " + pixelHeight);
+		
 		display.move(x, y);
 		display.resize(pixelWidth, pixelHeight);
 		

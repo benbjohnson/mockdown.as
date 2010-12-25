@@ -130,8 +130,7 @@ public class MockdownViewer extends Sprite
 		// Set title
 		stage.nativeWindow.title = filename;
 
-		var t1:Date = new Date();
-		trace("time: " + (t1.valueOf()-t0.valueOf()));
+		trace("time: " + ((new Date()).valueOf()-t0.valueOf()));
 	}
 
 
@@ -143,7 +142,7 @@ public class MockdownViewer extends Sprite
 	
 	private function onClick(event:MouseEvent):void
 	{
-		render();
+		// render();
 	}
 }
 }

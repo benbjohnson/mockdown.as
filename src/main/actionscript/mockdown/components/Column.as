@@ -85,6 +85,7 @@ public dynamic class Column extends LayoutContainer
 	{
 		layoutPercentChildren();
 		layoutChildPositions();
+		super.layout();
 	}
 	
 	/**

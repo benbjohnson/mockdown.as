@@ -51,5 +51,32 @@ public dynamic class LayoutContainer extends Component
 	 *	<code>top<code>, <code>middle<code> or <code>bottom</code>.
 	 */
 	public var valign:String;
+
+
+	//--------------------------------------------------------------------------
+	//
+	//	Methods
+	//
+	//--------------------------------------------------------------------------
+
+	//---------------------------------
+	//	Layout
+	//---------------------------------
+
+	/** @private */
+	override public function layout():void
+	{
+		layoutChildren();
+	}
+
+	/**
+	 *	Calls layout for each child.
+	 */
+	protected function layoutChildren():void
+	{
+		for each(var child:Component in _children) {
+			child.layout();
+		}
+	}
 }
 }
