@@ -8,7 +8,10 @@ import mockdown.display.GradientFill;
 import mockdown.geom.Point;
 import mockdown.geom.Rectangle;
 
+import flash.display.CapsStyle;
 import flash.display.Graphics;
+import flash.display.JointStyle;
+import flash.display.LineScaleMode;
 import flash.display.Sprite;
 import flash.geom.Matrix;
 
@@ -56,8 +59,9 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	 */
 	public function resize(width:uint, height:uint):void
 	{
-		//this.width  = width;
-		//this.height = height;
+		graphics.beginFill(0, 0);
+		graphics.drawRect(0, 0, width, height);
+		graphics.endFill();
 	}
 
 
@@ -71,8 +75,10 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	public function drawLine(x1:int, y1:int, x2:int, y2:int, stroke:Stroke):void
 	{
 		setStrokeStyle(stroke);
-		graphics.moveTo(x1, y1);
-		graphics.lineTo(x2, y2);
+		if(stroke) {
+			graphics.moveTo(x1, y1);
+			graphics.lineTo(x2, y2);
+		}
 	}
 
 	/**
@@ -80,9 +86,25 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	 */
 	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void
 	{
+		// Ignore if no stroke or fill is provided
+		if(!stroke && !fill) {
+			return;
+		}
+
 		setStrokeStyle(stroke);
 		setFillStyle(rect, fill);
-		graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+		
+		// Inset rectangle based on stroke thickness
+		var thickness:uint = (stroke ? stroke.thickness : 0);
+		
+		// Determine dimensions
+		var rx:int = rect.x+(thickness/2);
+		var ry:int = rect.y+(thickness/2);
+		var rw:int = rect.width-thickness;
+		var rh:int = rect.height-thickness;
+
+		// Draw rectangle
+		graphics.drawRect(rx, ry, rw, rh);
 		graphics.endFill();
 	}
 
@@ -100,7 +122,7 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	private function setStrokeStyle(stroke:Stroke):void
 	{
 		if(stroke) {
-			graphics.lineStyle(stroke.thickness, stroke.color, stroke.alpha/100, true);
+			graphics.lineStyle(stroke.thickness, stroke.color, stroke.alpha/100, true, LineScaleMode.NORMAL, CapsStyle.SQUARE, JointStyle.MITER);
 		}
 		else {
 			graphics.lineStyle(NaN);

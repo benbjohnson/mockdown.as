@@ -346,14 +346,10 @@ public dynamic class Component
 	 */
 	public function render(display:RenderObject):void
 	{
-		trace("render: " + this + " : " + pixelWidth + ", " + pixelHeight);
-		
+		//trace("render: " + this + " : " + pixelWidth + ", " + pixelHeight);
+		display.clear();
 		display.move(x, y);
 		display.resize(pixelWidth, pixelHeight);
-		
-		display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), Stroke.BLACK, new SolidColorFill(0, 20));
-		display.drawLine(0, 0, pixelWidth, pixelHeight, Stroke.BLACK);
-		display.drawLine(0, pixelHeight, pixelWidth, 0, Stroke.BLACK);
 	}
 }
 }

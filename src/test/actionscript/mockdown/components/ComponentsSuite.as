@@ -11,7 +11,8 @@ public class ComponentsSuite
 
 	public var t0:ComponentTest;
 	public var t1:ColumnTest;
-	public var t2:RowTest;
-	public var t3:ComponentDescriptorTest;
+	public var t2:LayoutContainerTest;
+	public var t3:RowTest;
+	public var t4:ComponentDescriptorTest;
 }
 }
