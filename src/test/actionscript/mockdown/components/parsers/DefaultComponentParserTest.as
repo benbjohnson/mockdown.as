@@ -76,20 +76,16 @@ public class DefaultComponentParserTest
 		Assert.assertEquals(Column, descriptor.children[1].children[0].parent);
 	}
 
-	[Test]
+	[Test(expects="mockdown.errors.BlockParseError", message="Expected component name")]
 	public function shouldThrowErrorForMissingComponentName():void
 	{
-		assertThrowsWithMessage(BlockParseError, "Expected component name", function():void{
-			parser.parse("%");
-		});
+		parser.parse("%");
 	}
 
-	[Test]
+	[Test(expects="mockdown.errors.BlockParseError", message="Component not found: foo")]
 	public function shouldThrowErrorForMissingComponent():void
 	{
-		assertThrowsWithMessage(BlockParseError, "Component not found: foo", function():void{
-			parser.parse("%foo");
-		});
+		parser.parse("%foo");
 	}
 
 	//-----------------------------
@@ -168,13 +164,11 @@ public class DefaultComponentParserTest
 		Assert.assertEquals("center", descriptor.values.align);
 	}
 
-	[Test]
+	[Test(expects="mockdown.errors.BlockParseError", message="Expected key name")]
 	public function shouldThrowErrorWhenMissingPropertyKey():void
 	{
 		loader.expects("find").withArgs("col").willReturn(Column);
-		assertThrowsWithMessage(BlockParseError, "Expected key name", function():void{
-			parser.parse("%col =bar");
-		});
+		parser.parse("%col =bar");
 	}
 	
 	[Test]
@@ -185,13 +179,11 @@ public class DefaultComponentParserTest
 		Assert.assertEquals(20, descriptor.values.percentWidth);
 	}
 
-	[Test]
+	[Test(expects="mockdown.errors.BlockParseError", message="Property doesn't exist: foo")]
 	public function shouldThrowErrorWhenMissingProperty():void
 	{
 		loader.expects("find").withArgs("col").willReturn(Column);
-		assertThrowsWithMessage(BlockParseError, "Property doesn't exist: foo", function():void{
-			parser.parse("%col foo=bar");
-		});
+		parser.parse("%col foo=bar");
 	}
 }
 }

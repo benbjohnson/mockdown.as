@@ -48,28 +48,22 @@ public class RegistryComponentLoaderTest
 		Assert.assertEquals(Object, child.find("foo"));
 	}
 
-	[Test]
+	[Test(expects="ArgumentError", message="Name is required when registering a component")]
 	public function shouldThrowErrorWhenRegisteringClassWithMissingName():void
 	{
-		assertThrowsWithMessage(ArgumentError, "Name is required when registering a component", function():void{
-			loader.register(null, Object);
-		});
+		loader.register(null, Object);
 	}
 
-	[Test]
+	[Test(expects="ArgumentError", message="Component type is required when registering a component")]
 	public function shouldThrowErrorWhenRegisteringClassWithMissingType():void
 	{
-		assertThrowsWithMessage(ArgumentError, "Component type is required when registering a component", function():void{
-			loader.register("foo", null);
-		});
+		loader.register("foo", null);
 	}
 
-	[Test]
+	[Test(expects="ArgumentError", message="Component type must be a class")]
 	public function shouldThrowErrorWhenRegisteringClassWithNonClassType():void
 	{
-		assertThrowsWithMessage(ArgumentError, "Component type must be a class", function():void{
-			loader.register("foo", {});
-		});
+		loader.register("foo", {});
 	}
 
 
@@ -89,12 +83,10 @@ public class RegistryComponentLoaderTest
 	//  Library
 	//-----------------------------
 
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="This loader does not support adding libraries")]
 	public function shouldThrowErrorWhenAddingLibrary():void
 	{
-		assertThrowsWithMessage(IllegalOperationError, "This loader does not support adding libraries", function():void{
-			loader.addLibrary("foo");
-		});
+		loader.addLibrary("foo");
 	}
 }
 }

@@ -84,15 +84,13 @@ public class ComponentDescriptorTest
 		Assert.assertNull(descriptor.parent);
 	}
 
-	[Test]
+	[Test(expects="ArgumentError", message="Descriptor parent must be a class or another descriptor")]
 	public function shouldThrowErrorWhenSettingParentToNonClassOrDescriptor():void
 	{
-		assertThrowsWithMessage(ArgumentError, "Descriptor parent must be a class or another descriptor", function():void{
-			descriptor.parent = {};
-		});
+		descriptor.parent = {};
 	}
 
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="Cannot create circular parent descriptor hierarchy")]
 	public function shouldThrowErrorWhenCreatingCircularParentHierarchy():void
 	{
 		var a:ComponentDescriptor = new ComponentDescriptor();
@@ -101,10 +99,7 @@ public class ComponentDescriptorTest
 		
 		a.parent = b;
 		b.parent = c;
-
-		assertThrowsWithMessage(IllegalOperationError, "Cannot create circular parent descriptor hierarchy", function():void{
-			c.parent = a;
-		});
+		c.parent = a;
 	}
 
 
@@ -131,13 +126,11 @@ public class ComponentDescriptorTest
 		Assert.assertTrue(child.newInstance() is Component);
 	}
 
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="Cannot create new instance from descriptor when missing parent")]
 	public function shouldThrowErrorWhenInstantiatingWithoutAParent():void
 	{
 		descriptor.parent = null;
-		assertThrowsWithMessage(IllegalOperationError, "Cannot create new instance from descriptor when missing parent", function():void{
-			descriptor.newInstance();
-		});
+		descriptor.newInstance();
 	}
 
 	[Test]

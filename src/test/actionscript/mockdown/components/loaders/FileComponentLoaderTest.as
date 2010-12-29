@@ -3,7 +3,6 @@ package mockdown.components.loaders
 import mockdown.components.Component;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.parsers.MockComponentParser;
-import mockdown.errors.LibraryNotFoundError;
 import mockdown.filesystem.MockFile;
 import mockdown.test.*;
 
@@ -114,16 +113,14 @@ public class FileComponentLoaderTest
 		Assert.assertTrue(parser.errorMessage(), parser.success());
 	}
 
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="File is a directory: foo")]
 	public function shouldThrowErrorIfPathResolvesToDirectory():void
 	{
 		var file2:MockFile = new MockFile("foo");
 		file2.isDirectory = true;
 		file.expects("resolvePath").withArgs("foo").willReturn(file2);
 		loader.paths = [file];
-		assertThrowsWithMessage(IllegalOperationError, "File is a directory: foo", function():void{
-			loader.find("foo");
-		});
+		loader.find("foo");
 
 		Assert.assertTrue(file.errorMessage(), file.success());
 		Assert.assertTrue(parser.errorMessage(), parser.success());
@@ -144,39 +141,31 @@ public class FileComponentLoaderTest
 		Assert.assertEquals(libraryPath, loader.paths[loader.paths.length-1]);
 	}
 	
-	[Test]
+	[Test(expects="ArgumentError", message="Library name is required")]
 	public function shouldThrowErrorWhenAddingLibraryWithNoName():void
 	{
-		assertThrowsWithMessage(ArgumentError, "Library name is required", function():void{
-			loader.addLibrary(null);
-		});
+		loader.addLibrary(null);
 	}
 
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="System library path has not been defined for this loader")]
 	public function shouldThrowErrorWhenSystemLibraryPathIsUndefined():void
 	{
-		assertThrowsWithMessage(IllegalOperationError, "System library path has not been defined for this loader", function():void{
-			loader.addLibrary("foo");
-		});
+		loader.addLibrary("foo");
 	}
 	
-	[Test]
+	[Test(expects="flash.errors.IllegalOperationError", message="Library name cannot contain: '..'")]
 	public function shouldThrowErrorLibraryNameContainsDoubleDot():void
 	{
 		loader.systemLibraryPath = file;
-		assertThrowsWithMessage(IllegalOperationError, "Library name cannot contain: '..'", function():void{
-			loader.addLibrary("../foo");
-		});
+		loader.addLibrary("../foo");
 	}
 	
-	[Test]
+	[Test(expects="mockdown.errors.LibraryNotFoundError", message="Library not found: foo")]
 	public function shouldThrowErrorWhenLibraryNotFound():void
 	{
 		file.expects("resolvePath").withArgs("foo").willReturn(null);
 		loader.systemLibraryPath = file;
-		assertThrowsWithMessage(LibraryNotFoundError, "Library not found: foo", function():void{
-			loader.addLibrary("foo");
-		});
+		loader.addLibrary("foo");
 	}
 
 
