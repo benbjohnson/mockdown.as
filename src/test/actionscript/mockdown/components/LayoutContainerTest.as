@@ -56,6 +56,60 @@ public class LayoutContainerTest
 
 
 	//---------------------------------
+	//	Border Radius
+	//---------------------------------
+	
+	[Test]
+	public function shouldParseBlankBorderRadius():void
+	{
+		component.borderRadius = "";
+		Assert.assertEquals(0, component.borderTopLeftRadius);
+		Assert.assertEquals(0, component.borderTopRightRadius);
+		Assert.assertEquals(0, component.borderBottomRightRadius);
+		Assert.assertEquals(0, component.borderBottomLeftRadius);
+	}
+
+	[Test]
+	public function shouldParse1ArgBorderRadius():void
+	{
+		component.borderRadius = "1";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(1, component.borderTopRightRadius);
+		Assert.assertEquals(1, component.borderBottomRightRadius);
+		Assert.assertEquals(1, component.borderBottomLeftRadius);
+	}
+	
+	[Test]
+	public function shouldParse2ArgBorderRadius():void
+	{
+		component.borderRadius = "1 2";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(1, component.borderBottomRightRadius);
+		Assert.assertEquals(2, component.borderBottomLeftRadius);
+	}
+	
+	[Test]
+	public function shouldParse3ArgBorderRadius():void
+	{
+		component.borderRadius = "1 2 3";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(3, component.borderBottomRightRadius);
+		Assert.assertEquals(2, component.borderBottomLeftRadius);
+	}
+	
+	[Test]
+	public function shouldParse4ArgBorderRadius():void
+	{
+		component.borderRadius = "1 2 3 4";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(3, component.borderBottomRightRadius);
+		Assert.assertEquals(4, component.borderBottomLeftRadius);
+	}
+
+	//---------------------------------
 	//	Background
 	//---------------------------------
 	

@@ -14,24 +14,12 @@ public class Rectangle
 	/**
 	 *	Constructor.
 	 */
-	public function Rectangle(x:int=0, y:int=0,
-							  width:uint=0, height:uint=0,
-							  borderTopLeftRadius:uint=0,
-							  borderTopRightRadius:uint=0,
-							  borderBottomLeftRadius:uint=0,
-							  borderBottomRightRadius:uint=0,
-							)
+	public function Rectangle(x:int=0, y:int=0, width:uint=0, height:uint=0)
 	{
 		this.x = x;
 		this.y = y;
-
 		this.width  = width;
 		this.height = height;
-
-		this.borderTopLeftRadius     = borderTopLeftRadius;
-		this.borderTopRightRadius    = borderTopRightRadius;
-		this.borderBottomLeftRadius  = borderBottomLeftRadius;
-		this.borderBottomRightRadius = borderBottomRightRadius;
 	}
 
 

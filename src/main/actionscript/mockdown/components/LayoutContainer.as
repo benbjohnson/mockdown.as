@@ -129,6 +129,55 @@ public dynamic class LayoutContainer extends Component
 
 
 	//---------------------------------
+	//	Border
+	//---------------------------------
+
+	/**
+	 *	The radius for the four corners of the border.
+	 */
+	public function get borderRadius():String
+	{
+		var values:Array = [borderTopLeftRadius, borderTopRightRadius,
+							borderBottomRightRadius, borderBottomLeftRadius];
+		
+		return values.join(" ");
+	}
+
+	public function set borderRadius(value:String):void
+	{
+		var values:Array = (value ? value.split(/\s+/) : [0]);
+		borderTopLeftRadius  = (values.length > 0 ? parseInt(values[0]) : 0);
+		borderTopRightRadius = (values.length > 1 ? parseInt(values[1]) : borderTopLeftRadius);
+		borderBottomRightRadius = (values.length > 2 ? parseInt(values[2]) : borderTopLeftRadius);
+		borderBottomLeftRadius = (values.length > 3 ? parseInt(values[3]) : borderTopRightRadius);
+	}
+
+	//---------------------------------
+	//	Border radius styles
+	//---------------------------------
+
+	/**
+	 *	The border radius of the top left corner.
+	 */
+	public var borderTopLeftRadius:uint = 0;
+
+	/**
+	 *	The border radius of the top right corner.
+	 */
+	public var borderTopRightRadius:uint = 0;
+
+	/**
+	 *	The border radius of the bottom left corner.
+	 */
+	public var borderBottomLeftRadius:uint = 0;
+
+	/**
+	 *	The border radius of the bottom right corner.
+	 */
+	public var borderBottomRightRadius:uint = 0;
+
+
+	//---------------------------------
 	//	Background
 	//---------------------------------
 
@@ -315,7 +364,12 @@ public dynamic class LayoutContainer extends Component
 		}
 
 		// Draw the rectangle on the display
-		display.drawRect(new Rectangle(0, 0, pixelWidth, pixelHeight), stroke, fill);
+		var rect:Rectangle = new Rectangle(0, 0, pixelWidth, pixelHeight)
+		rect.borderTopLeftRadius     = borderTopLeftRadius;
+		rect.borderTopRightRadius    = borderTopRightRadius;
+		rect.borderBottomLeftRadius  = borderBottomLeftRadius;
+		rect.borderBottomRightRadius = borderBottomRightRadius;
+		display.drawRect(rect, stroke, fill);
 	}
 }
 }

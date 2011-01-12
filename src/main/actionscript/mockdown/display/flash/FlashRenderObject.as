@@ -103,9 +103,72 @@ public class FlashRenderObject extends Sprite implements RenderObject
 		var rw:int = rect.width-thickness;
 		var rh:int = rect.height-thickness;
 
+		var tl:uint = rect.borderTopLeftRadius;
+		var tr:uint = rect.borderTopRightRadius;
+		var bl:uint = rect.borderBottomLeftRadius;
+		var br:uint = rect.borderBottomRightRadius;
+
 		// Draw rectangle
-		graphics.drawRect(rx, ry, rw, rh);
+		if(tl || tr || bl || br) {
+			drawRoundRect(rx, ry, rw, rh, tl, tr, bl, br);
+		}
+		else {
+			graphics.drawRect(rx, ry, rw, rh);
+		}
 		graphics.endFill();
+	}
+
+	// This method is based on the Flex SDK GraphicUtil.drawRoundRectComplex()
+	// method.
+	private function drawRoundRect(x:int, y:int, width:uint, height:uint,
+								  tl:uint, tr:uint, bl:uint, br:uint):void
+	{
+        var xw:Number = x + width;
+        var yh:Number = y + height;
+        
+        var min:Number = width < height ? width * 2 : height * 2;
+        tl = tl < min ? tl : min;
+        tr = tr < min ? tr : min;
+        bl = bl < min ? bl : min;
+        br = br < min ? br : min;
+        
+        // Math.sin and Math,tan values for optimal performance.
+        // Math.rad = Math.PI / 180 = 0.0174532925199433
+        // r * Math.sin(45 * Math.rad) =  (r * 0.707106781186547);
+        // r * Math.tan(22.5 * Math.rad) = (r * 0.414213562373095);
+        //
+        // We can save further cycles by precalculating
+        // 1.0 - 0.707106781186547 = 0.292893218813453 and
+        // 1.0 - 0.414213562373095 = 0.585786437626905
+        
+        // bottom-right corner
+        var a:Number = br * 0.292893218813453;
+        var s:Number = br * 0.585786437626905;
+        graphics.moveTo(xw, yh - br);
+        graphics.curveTo(xw, yh - s, xw - a, yh - a);
+        graphics.curveTo(xw - s, yh, xw - br, yh);
+        
+        // bottom-left corner
+        a = bl * 0.292893218813453;
+        s = bl * 0.585786437626905;
+        graphics.lineTo(x + bl, yh);
+        graphics.curveTo(x + s, yh, x + a, yh - a);
+        graphics.curveTo(x, yh - s, x, yh - bl);
+        
+        // top-left corner
+        a = tl * 0.292893218813453;
+        s = tl * 0.585786437626905;
+        graphics.lineTo(x, y + tl);
+        graphics.curveTo(x, y + s, x + a, y + a);
+        graphics.curveTo(x + s, y, x + tl, y);
+        
+        // top-right corner
+        a = tr * 0.292893218813453;
+        s = tr * 0.585786437626905;
+        graphics.lineTo(xw - tr, y);
+        graphics.curveTo(xw - s, y, xw - a, y + a);
+        graphics.curveTo(xw, y + s, xw, y + tr);
+        graphics.lineTo(xw, yh - br);
 	}
 
 	/**
