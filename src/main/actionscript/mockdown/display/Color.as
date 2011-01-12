@@ -34,7 +34,18 @@ public class Color
 	 */			
 	static public function fromHex(value:String):uint
 	{
-		return (value ? parseInt(value, 16) : 0);
+		if(value) {
+			// Remove starting hash
+			if(value.charAt(0) == "#") {
+				value = value.substr(1);
+			}
+			
+			// Parse as a hex string
+			return parseInt(value, 16);
+		}
+		else {
+			return 0;
+		}
 	}
 
 

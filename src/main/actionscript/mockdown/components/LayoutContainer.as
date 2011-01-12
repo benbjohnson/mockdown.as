@@ -3,9 +3,12 @@ package mockdown.components
 import mockdown.display.Color;
 import mockdown.display.RenderObject;
 import mockdown.display.Fill;
+import mockdown.display.GradientFill;
 import mockdown.display.Stroke;
 import mockdown.display.SolidColorFill;
 import mockdown.geom.Rectangle;
+
+import flash.errors.IllegalOperationError;
 
 /**
  *	This class represents a container that lays out its children.
@@ -104,6 +107,10 @@ public dynamic class LayoutContainer extends Component
 		}
 	}
 
+	//---------------------------------
+	//	Border styles
+	//---------------------------------
+
 	[Property(type="uint")]
 	/**
 	 *	The color of the border.
@@ -126,7 +133,11 @@ public dynamic class LayoutContainer extends Component
 	//---------------------------------
 
 	/**
-	 *	The background style. This is a string composed of color and alpha.
+	 *	The background style. This style is composed of:
+	 *
+	 *	<pre>
+	 *	COLORS ALPHAS ANGLE GRADIENT-TYPE
+	 *	</pre>
 	 */
 	public function get background():String
 	{
@@ -153,28 +164,105 @@ public dynamic class LayoutContainer extends Component
 		}
 		// Otherwise parse string
 		else {
-			var match:Array = value.match(/^#([A-Fa-f0-9]{6})(?: (\d+)%)?$/);
-			if(!match) {
-				throw new ArgumentError("Invalid background format");
+			// Split into colors and alphas sections
+			var args:Array   = value.split(/\s+/);
+			var colors:Array = args[0].split(/,/);
+			var alphas:Array = (args.length > 1 ? args[1].split(/,/) : []);
+			var gradientType:String = (args.length > 2 ? args[2] : "linear");
+			var angle:uint   = (args.length > 3 ? parseInt(args[3]) : 0);
+			
+			// Parse colors and alphas
+			colors = colors.map(function(item:String,...args):uint{return Color.fromHex(item)});
+			alphas = alphas.map(function(item:String,...args):uint{return parseInt(item)});
+
+			// Default alphas to 100% if not specifid
+			if(alphas.length == 0) {
+				colors.forEach(function(item:Object,...args):void{alphas.push(100)});
 			}
-			else {
-				backgroundColor = parseInt(match[1], 16);
-				backgroundAlpha = (match[2] ? parseInt(match[2]) : 100);
+			// Throw error if we don't have the same number of colors and alphas
+			else if(colors.length != alphas.length) {
+				throw new IllegalOperationError("The number of colors and alphas must match");
 			}
+			
+			// Default alphas if missing
+			for(var i:int=0; i<colors.length; i++) {
+				if(alphas.length == i) {
+					alphas.push(100);
+				}
+				else if(isNaN(alphas[i])) {
+					alphas[i] = 100;
+				}
+			}
+
+			// Assign values
+			backgroundColors = colors;
+			backgroundAlphas = alphas;
+			backgroundGradientType = gradientType;
+			backgroundAngle  = angle;
 		}
 	}
 
 
-	[Property(type="uint")]
+	//---------------------------------
+	//	Solid background styles
+	//---------------------------------
+	
 	/**
 	 *	The color of the background.
 	 */
-	public var backgroundColor:Number;
+	public function get backgroundColor():uint
+	{
+		return backgroundColors[0];
+	}
+
+	public function set backgroundColor(value:uint):void
+	{
+		backgroundColors = [value];
+	}
+
 
 	/**
 	 *	The alpha transparency of the background.
 	 */
-	public var backgroundAlpha:uint = 100;
+	public function get backgroundAlpha():uint
+	{
+		return backgroundAlphas[0];
+	}
+
+	public function set backgroundAlpha(value:uint):void
+	{
+		backgroundAlphas = [value];
+	}
+
+
+	//---------------------------------
+	//	Gradient background styles
+	//---------------------------------
+	
+	[Property(itemType="uint")]
+	/**
+	 *	A list of colors to use for the background. If only one is specified,
+	 *	the background is a solid color. If multiple are specified then a
+	 *	gradient background is produced.
+	 */
+	public var backgroundColors:Array = [];
+
+	[Property(itemType="uint")]
+	/**
+	 *	The alpha transparency of the background.
+	 */
+	public var backgroundAlphas:Array = [100];
+
+	/**
+	 *	The type of gradient to use for the background. Possible values are
+	 *	"linear" or "radial".
+	 */
+	public var backgroundGradientType:String = "linear";
+
+	/**
+	 *	The angle of the background gradient.
+	 */
+	public var backgroundAngle:uint = 0;
 
 
 	//--------------------------------------------------------------------------
@@ -219,8 +307,11 @@ public dynamic class LayoutContainer extends Component
 		if(!isNaN(borderColor)) {
 			stroke = new Stroke(borderColor, borderAlpha, borderThickness);
 		}
-		if(!isNaN(backgroundColor)) {
+		if(backgroundColors.length == 1) {
 			fill = new SolidColorFill(backgroundColor, backgroundAlpha);
+		}
+		else if(backgroundColors.length > 1) {
+			fill = new GradientFill(backgroundGradientType, backgroundColors, backgroundAlphas, backgroundAngle);
 		}
 
 		// Draw the rectangle on the display

@@ -1,7 +1,5 @@
 package mockdown.components
 {
-import mockdown.test.*;
-
 import asunit.framework.Assert;
 
 import flash.errors.IllegalOperationError;

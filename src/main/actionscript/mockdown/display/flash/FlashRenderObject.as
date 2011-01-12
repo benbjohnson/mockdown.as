@@ -150,9 +150,11 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	private function beginGradientFill(rect:Rectangle, fill:GradientFill):void
 	{
 		// Generate matrix for linear gradients
-		var matrix:Matrix;
-		if(fill.type == "linear") {
-		 	matrix = new Matrix();
+		var matrix:Matrix = new Matrix();
+		if(fill.type == "radial") {
+			matrix.createGradientBox(rect.width,  rect.height, 0, 0, 0);
+		}
+		else {
 			matrix.createGradientBox(rect.width,  rect.height, fill.angle * (Math.PI/180));
 		}
 

@@ -21,5 +21,11 @@ public class ColorTest
 	{
 		Assert.assertEquals(16711680, Color.fromHex("FF0000"));
 	}
+
+	[Test]
+	public function shouldConvertHexWithHashToRGB():void
+	{
+		Assert.assertEquals(16711680, Color.fromHex("#FF0000"));
+	}
 }
 }

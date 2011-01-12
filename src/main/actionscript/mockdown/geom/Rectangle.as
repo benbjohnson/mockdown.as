@@ -16,13 +16,22 @@ public class Rectangle
 	 */
 	public function Rectangle(x:int=0, y:int=0,
 							  width:uint=0, height:uint=0,
-							  cornerRadius:uint=0)
+							  borderTopLeftRadius:uint=0,
+							  borderTopRightRadius:uint=0,
+							  borderBottomLeftRadius:uint=0,
+							  borderBottomRightRadius:uint=0,
+							)
 	{
 		this.x = x;
 		this.y = y;
+
 		this.width  = width;
 		this.height = height;
-		this.cornerRadius = cornerRadius;
+
+		this.borderTopLeftRadius     = borderTopLeftRadius;
+		this.borderTopRightRadius    = borderTopRightRadius;
+		this.borderBottomLeftRadius  = borderBottomLeftRadius;
+		this.borderBottomRightRadius = borderBottomRightRadius;
 	}
 
 
@@ -58,12 +67,27 @@ public class Rectangle
 
 
 	//---------------------------------
-	//	Corner radius
+	//	Border radius
 	//---------------------------------
 	
 	/**
-	 *	The corner radius of all corners, in pixels.
+	 *	The border radius of the top left corner.
 	 */
-	public var cornerRadius:uint = 0;
+	public var borderTopLeftRadius:uint = 0;
+	
+	/**
+	 *	The border radius of the top right corner.
+	 */
+	public var borderTopRightRadius:uint = 0;
+	
+	/**
+	 *	The border radius of the bottom left corner.
+	 */
+	public var borderBottomLeftRadius:uint = 0;
+	
+	/**
+	 *	The border radius of the bottom right corner.
+	 */
+	public var borderBottomRightRadius:uint = 0;
 }
 }

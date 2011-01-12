@@ -4,7 +4,6 @@ import mockdown.components.Component;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.parsers.MockComponentParser;
 import mockdown.filesystem.MockFile;
-import mockdown.test.*;
 
 import asunit.framework.Assert;
 
