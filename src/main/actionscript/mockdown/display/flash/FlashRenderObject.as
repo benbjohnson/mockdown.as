@@ -132,15 +132,6 @@ public class FlashRenderObject extends Sprite implements RenderObject
         bl = bl < min ? bl : min;
         br = br < min ? br : min;
         
-        // Math.sin and Math,tan values for optimal performance.
-        // Math.rad = Math.PI / 180 = 0.0174532925199433
-        // r * Math.sin(45 * Math.rad) =  (r * 0.707106781186547);
-        // r * Math.tan(22.5 * Math.rad) = (r * 0.414213562373095);
-        //
-        // We can save further cycles by precalculating
-        // 1.0 - 0.707106781186547 = 0.292893218813453 and
-        // 1.0 - 0.414213562373095 = 0.585786437626905
-        
         // bottom-right corner
         var a:Number = br * 0.292893218813453;
         var s:Number = br * 0.585786437626905;

@@ -4,7 +4,7 @@ import asunit.framework.Assert;
 import org.hamcrest.assertThat;
 import org.hamcrest.collection.*;
 
-public class LayoutContainerTest
+public class StyleComponentTest
 {
 	//---------------------------------------------------------------------
 	//
@@ -12,12 +12,12 @@ public class LayoutContainerTest
 	//
 	//---------------------------------------------------------------------
 	
-	private var component:LayoutContainer;
+	private var component:StyleComponent;
 	
 	[Before]
 	public function setup():void
 	{
-		component = new LayoutContainer();
+		component = new StyleComponent();
 		component.pixelWidth  = 100;
 		component.pixelHeight = 200;
 	}

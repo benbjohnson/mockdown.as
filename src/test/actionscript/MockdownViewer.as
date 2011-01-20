@@ -45,7 +45,8 @@ public class MockdownViewer extends Sprite
 		NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE,
 			function(event:InvokeEvent):void{
 				// Read command line arguments at startup
-				filename = event.arguments[0];
+				projectPath  = event.arguments[0];
+				filename = event.arguments[1];
 				render();
 			}
 		);
@@ -59,6 +60,11 @@ public class MockdownViewer extends Sprite
 	//	Properties
 	//
 	//--------------------------------------------------------------------------
+
+	/**
+	 *	The path to the project.
+	 */
+	public var projectPath:String;
 
 	/**
 	 *	The name of the file to parse.
@@ -108,8 +114,8 @@ public class MockdownViewer extends Sprite
 		
 		// Parse
 		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
-		loader.paths = [new LocalFile(File.applicationDirectory)];
-
+		loader.paths = [new LocalFile(new File(projectPath))];
+		
 		var component:Component = loader.newInstance(filename);
 		if(!component) {
 			trace("No component found: " + filename);
