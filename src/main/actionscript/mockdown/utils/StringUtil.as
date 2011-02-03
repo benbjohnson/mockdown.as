@@ -1,5 +1,7 @@
 package mockdown.utils
 {
+import flash.errors.IllegalOperationError;
+
 /**
  * 	This class contains static methods for manipulating strings.
  */		
