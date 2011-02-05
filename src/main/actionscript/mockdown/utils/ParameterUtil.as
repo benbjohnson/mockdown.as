@@ -81,15 +81,45 @@ public class ParameterUtil
 	
 	static private function parseValue(value:String, type:String):*
 	{
-		switch(type) {
-			case 'int': return parseInt(value); break;
-			case 'decimal': return parseFloat(value); break;
-			case 'string': return value; break;
-			case 'color': return Color.fromHex(value); break;
+		if(type == "int") {
+			if(value.search(/^-?\d+$/) != -1) {
+				return parseInt(value);
+			}
+			else {
+				throw new ArgumentError("Value is not an integer: '" + value + "'");
+			}
 		}
-
-		throw new IllegalOperationError("Invalid parameter format: " + type);
-		return null;
+		else if(type == "decimal") {
+			if(value.search(/^-?\d+(?:\.\d+)?$/) != -1) {
+				return parseFloat(value);
+			}
+			else {
+				throw new ArgumentError("Value is not a decimal: '" + value + "'");
+			}
+		}
+		else if(type == "percent") {
+			if(value.search(/^-?\d+(?:\.\d+)?%$/) != -1) {
+				return parseFloat(value);
+			}
+			else {
+				throw new ArgumentError("Value is not a percentage: '" + value + "'");
+			}
+		}
+		else if(type == "string") {
+			return value;
+		}
+		else if(type == "color") {
+			if(value.search(/^#[0-9A-F]{6}$/) != -1) {
+				return Color.fromHex(value)
+			}
+			else {
+				throw new ArgumentError("Value is not a color: '" + value + "'");
+			}
+			return value;
+		}
+		else {
+			throw new ArgumentError("Invalid parameter format: " + type);
+		}
 	}
 }
 }
