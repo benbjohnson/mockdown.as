@@ -72,6 +72,19 @@ public class ParameterUtilTest
 	}
 
 	[Test]
+	public function shouldParseLength():void
+	{
+		ParameterUtil.parse(data, "10px", "foo:length:1");
+		Assert.assertEquals(10, data.foo);
+	}
+	
+	[Test(expects="ArgumentError", message="Value is not a length: '20'")]
+	public function shouldThrowErrorWhenParsingInvalidLength():void
+	{
+		ParameterUtil.parse(data, "20", "foo:length:1");
+	}
+
+	[Test]
 	public function shouldParseColor():void
 	{
 		ParameterUtil.parse(data, "#FF0000", "foo:color:1");

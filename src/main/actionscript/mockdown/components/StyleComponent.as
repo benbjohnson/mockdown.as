@@ -7,6 +7,7 @@ import mockdown.display.GradientFill;
 import mockdown.display.Stroke;
 import mockdown.display.SolidColorFill;
 import mockdown.geom.Rectangle;
+import mockdown.utils.ParameterUtil;
 
 import flash.errors.IllegalOperationError;
 
@@ -63,22 +64,7 @@ public dynamic class StyleComponent extends Component
 
 	public function set border(value:String):void
 	{
-		// Reset values if blank value is passed in
-		if(!value || value == "") {
-			borderThickness = borderAlpha = borderColor = NaN;
-		}
-		// Otherwise parse string
-		else {
-			var match:Array = value.match(/^(\d+)px #([A-Fa-f0-9]{6})(?: (\d+)%)?$/);
-			if(!match) {
-				throw new ArgumentError("Invalid border format");
-			}
-			else {
-				borderThickness = parseInt(match[1]);
-				borderColor = parseInt(match[2], 16);
-				borderAlpha = (match[3] ? parseInt(match[3]) : 100);
-			}
-		}
+		ParameterUtil.parse(this, value, "borderThickness:length:1 borderColor:color:1 borderAlpha:percent:1");
 	}
 
 	//---------------------------------
@@ -181,47 +167,16 @@ public dynamic class StyleComponent extends Component
 
 	public function set background(value:String):void
 	{
-		// Reset values if blank value is passed in
-		if(!value || value == "") {
-			backgroundAlpha = backgroundColor = NaN;
+		ParameterUtil.parse(this, value, "backgroundColors:color:* backgroundAlphas:percent:* backgroundGradientType:string:1 backgroundAngle:int:1");
+
+		// Throw error if too many alphas
+		if(backgroundAlphas.length > backgroundColors.length) {
+			throw new ArgumentError("Too many alpha values specified");
 		}
-		// Otherwise parse string
-		else {
-			// Split into colors and alphas sections
-			var args:Array   = value.split(/\s+/);
-			var colors:Array = args[0].split(/,/);
-			var alphas:Array = (args.length > 1 ? args[1].split(/,/) : []);
-			var gradientType:String = (args.length > 2 ? args[2] : "linear");
-			var angle:uint   = (args.length > 3 ? parseInt(args[3]) : 0);
-			
-			// Parse colors and alphas
-			colors = colors.map(function(item:String,...args):uint{return Color.fromHex(item)});
-			alphas = alphas.map(function(item:String,...args):uint{return parseInt(item)});
 
-			// Default alphas to 100% if not specifid
-			if(alphas.length == 0) {
-				colors.forEach(function(item:Object,...args):void{alphas.push(100)});
-			}
-			// Throw error if we don't have the same number of colors and alphas
-			else if(colors.length != alphas.length) {
-				throw new IllegalOperationError("The number of colors and alphas must match");
-			}
-			
-			// Default alphas if missing
-			for(var i:int=0; i<colors.length; i++) {
-				if(alphas.length == i) {
-					alphas.push(100);
-				}
-				else if(isNaN(alphas[i])) {
-					alphas[i] = 100;
-				}
-			}
-
-			// Assign values
-			backgroundColors = colors;
-			backgroundAlphas = alphas;
-			backgroundGradientType = gradientType;
-			backgroundAngle  = angle;
+		// Default alphas
+		while(backgroundAlphas.length < backgroundColors.length) {
+			backgroundAlphas.push(100);
 		}
 	}
 

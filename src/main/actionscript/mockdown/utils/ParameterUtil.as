@@ -105,6 +105,14 @@ public class ParameterUtil
 				throw new ArgumentError("Value is not a percentage: '" + value + "'");
 			}
 		}
+		else if(type == "length") {
+			if(value.search(/^-?\d+px$/) != -1) {
+				return parseInt(value);
+			}
+			else {
+				throw new ArgumentError("Value is not a length: '" + value + "'");
+			}
+		}
 		else if(type == "string") {
 			return value;
 		}

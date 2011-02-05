@@ -148,10 +148,10 @@ public class StyleComponentTest
 		assertThat(component.backgroundAlphas, array([100, 100]));
 	}
 
-	[Test(expects="flash.errors.IllegalOperationError", message="The number of colors and alphas must match")]
+	[Test(expects="ArgumentError", message="Too many alpha values specified")]
 	public function shouldThrowErrorIfColorAndAlphasCountsDoNotMatch():void
 	{
-		component.background = "#FF0000,#0000FF 20%";
+		component.background = "#FF0000,#0000FF 20%,50%,100%";
 	}
 
 	[Test]
