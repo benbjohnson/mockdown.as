@@ -25,6 +25,10 @@ public class ParameterUtilTest
 	//
 	//---------------------------------------------------------------------
 	
+	//---------------------------------
+	//	Parse
+	//---------------------------------
+
 	[Test]
 	public function shouldParseString():void
 	{
@@ -124,6 +128,76 @@ public class ParameterUtilTest
 	public function shouldThrowErrorWhenParsingInvalidType():void
 	{
 		ParameterUtil.parse(data, "12.1", "foo:xyz:*");
+	}
+
+
+	//---------------------------------
+	//	Format
+	//---------------------------------
+
+	[Test]
+	public function shouldFormatString():void
+	{
+		data.foo = "bar";
+		Assert.assertEquals("bar", ParameterUtil.format(data, "foo:string:1"));
+	}
+
+	[Test]
+	public function shouldFormatInteger():void
+	{
+		data.foo = 12;
+		Assert.assertEquals("12", ParameterUtil.format(data, "foo:int:1"));
+	}
+
+	[Test]
+	public function shouldFormatDecimal():void
+	{
+		data.foo = 12.1;
+		Assert.assertEquals("12.1", ParameterUtil.format(data, "foo:decimal:1"));
+	}
+	
+	[Test]
+	public function shouldFormatPercent():void
+	{
+		data.foo = 50.25;
+		Assert.assertEquals("50.25%", ParameterUtil.format(data, "foo:percent:1"));
+	}
+	
+	[Test]
+	public function shouldFormatLength():void
+	{
+		data.foo = 10;
+		Assert.assertEquals("10px", ParameterUtil.format(data, "foo:length:1"));
+	}
+	
+	[Test]
+	public function shouldFormatColor():void
+	{
+		data.foo = 0xFF0000;
+		Assert.assertEquals("#FF0000", ParameterUtil.format(data, "foo:color:1"));
+	}
+
+	[Test]
+	public function shouldFormatArrayOfColors():void
+	{
+		data.foo = [0xFF0000, 0x0000FF];
+		Assert.assertEquals("#FF0000,#0000FF", ParameterUtil.format(data, "foo:color:*"));
+	}
+
+	[Test]
+	public function shouldFormatMultiValue():void
+	{
+		data.thickness = 2;
+		data.colors = [0xFF0000, 0x0000FF];
+		data.alphas = [50, 100];
+		Assert.assertEquals("2px #FF0000,#0000FF 50%,100%", ParameterUtil.format(data, "thickness:length:1 colors:color:* alphas:percent:*"));
+	}
+	
+	[Test(expects="ArgumentError", message="Invalid parameter format: xyz")]
+	public function shouldThrowErrorWhenFormattingInvalidType():void
+	{
+		data.foo = 12;
+		ParameterUtil.format(data, "foo:xyz:1");
 	}
 }
 }

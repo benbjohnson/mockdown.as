@@ -129,6 +129,70 @@ public class ParameterUtil
 			throw new ArgumentError("Invalid parameter format: " + type);
 		}
 	}
+
+
+	//---------------------------------
+	//	Format
+	//---------------------------------
+
+	/**
+	 *	Formats a set of values into a space-delimited string.
+	 *	
+	 *	@param obj     The object that contains the properties to format.
+	 *	@param format  The format specification.
+	 */
+	static public function format(obj:Object, format:String):String
+	{
+		if(!obj) {
+			return "";
+		}
+		
+		// Find or parse format
+		var formats:Array = cache[format] as Array;
+		if(!formats) {
+		 	formats = Format.parse(format);
+		}
+		
+		// Loop over formats
+		var ret:Array = [];
+		for each(var f:Format in formats) {
+			var v:* = obj[f.name];
+			
+			// Format single value
+			if(f.max == 1) {
+				ret.push(formatValue(v, f.type));
+			}
+			// Format an array of values
+			else {
+				var subvalues:Array = v.map(function(item:*,...args):*{return formatValue(item, f.type)});
+				ret.push(subvalues.join(","));
+			}
+		}
+		
+		return ret.join(" ");
+	}
+	
+	static private function formatValue(value:*, type:String):String
+	{
+		if(type == "int" || type == "decimal") {
+			return (value != null && !isNaN(value) ? value.toString() : "0");
+		}
+		else if(type == "percent") {
+			return (value != null && !isNaN(value) ? value.toString() : "0") + "%";
+		}
+		else if(type == "length") {
+			return (value != null && !isNaN(value) ? value.toString() : "0") + "px";
+		}
+		else if(type == "string") {
+			return (value != null ? value.toString() : "");
+		}
+		else if(type == "color") {
+			return "#" + Color.toHex(value);
+		}
+		else {
+			throw new ArgumentError("Invalid parameter format: " + type);
+		}
+	}
 }
 }
 

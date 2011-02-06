@@ -22,7 +22,11 @@ public class Color
 	 */			
 	static public function toHex(value:uint):String
 	{
-		return (value & 0xFFFFFF).toString(16).toUpperCase();
+		var str:String = (value & 0xFFFFFF).toString(16).toUpperCase();
+		while(str.length < 6) {
+			str = "0" + str;
+		}
+		return str;
 	}
 
 	/**
