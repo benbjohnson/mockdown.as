@@ -54,6 +54,150 @@ public class StyleComponentTest
 		Assert.assertEquals(20, component.borderAlpha);
 	}
 
+	[Test]
+	public function shouldCascadeBorderTop():void
+	{
+		component.border = "10px #FF0000 20%";
+		Assert.assertEquals("10px #FF0000 20%", component.borderTop);
+		Assert.assertEquals("10px #FF0000 20%", component.borderBottom);
+		Assert.assertEquals("10px #FF0000 20%", component.borderLeft);
+		Assert.assertEquals("10px #FF0000 20%", component.borderRight);
+	}
+
+	[Test]
+	public function shouldCascadeBorderThickness():void
+	{
+		component.borderThickness = 10;
+		Assert.assertEquals(10, component.borderTopThickness);
+		Assert.assertEquals(10, component.borderBottomThickness);
+		Assert.assertEquals(10, component.borderLeftThickness);
+		Assert.assertEquals(10, component.borderRightThickness);
+	}
+
+	[Test]
+	public function shouldCascadeBorderColor():void
+	{
+		component.borderColor = 0xFF0000;
+		Assert.assertEquals(0xFF0000, component.borderTopColor);
+		Assert.assertEquals(0xFF0000, component.borderBottomColor);
+		Assert.assertEquals(0xFF0000, component.borderLeftColor);
+		Assert.assertEquals(0xFF0000, component.borderRightColor);
+	}
+
+	[Test]
+	public function shouldCascadeBorderAlpha():void
+	{
+		component.borderAlpha = 20;
+		Assert.assertEquals(20, component.borderTopAlpha);
+		Assert.assertEquals(20, component.borderBottomAlpha);
+		Assert.assertEquals(20, component.borderLeftAlpha);
+		Assert.assertEquals(20, component.borderRightAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Top
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderTopThickness():void
+	{
+		component.borderTop = "10px #FF0000";
+		Assert.assertEquals(10, component.borderTopThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderTopColor():void
+	{
+		component.borderTop = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderTopColor);
+	}
+
+	[Test]
+	public function shouldSetBorderTopAlpha():void
+	{
+		component.borderTop = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderTopAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Bottom
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderBottomThickness():void
+	{
+		component.borderBottom = "10px #FF0000";
+		Assert.assertEquals(10, component.borderBottomThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderBottomColor():void
+	{
+		component.borderBottom = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderBottomColor);
+	}
+
+	[Test]
+	public function shouldSetBorderBottomAlpha():void
+	{
+		component.borderBottom = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderBottomAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Left
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderLeftThickness():void
+	{
+		component.borderLeft = "10px #FF0000";
+		Assert.assertEquals(10, component.borderLeftThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderLeftColor():void
+	{
+		component.borderLeft = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderLeftColor);
+	}
+
+	[Test]
+	public function shouldSetBorderLeftAlpha():void
+	{
+		component.borderLeft = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderLeftAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Right
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderRightThickness():void
+	{
+		component.borderRight = "10px #FF0000";
+		Assert.assertEquals(10, component.borderRightThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderRightColor():void
+	{
+		component.borderRight = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderRightColor);
+	}
+
+	[Test]
+	public function shouldSetBorderRightAlpha():void
+	{
+		component.borderRight = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderRightAlpha);
+	}
+
 
 	//---------------------------------
 	//	Border Radius

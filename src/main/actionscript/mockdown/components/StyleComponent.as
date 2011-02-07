@@ -42,54 +42,240 @@ public dynamic class StyleComponent extends Component
 	//	Border
 	//---------------------------------
 
+	private const FORMAT_BORDER:String = "borderThickness:length:1 borderColor:color:1 borderAlpha:percent:1";
+
 	/**
-	 *	The border style. This is a string composed of thickness, color, alpha.
+	 *	The border style.
 	 */
 	public function get border():String
 	{
-		var value:String = "";
-
-		// Generate string only if color is set
-		if(!isNaN(borderColor)) {
-			value = borderThickness + "px #" + Color.toHex(borderColor);
-			
-			// Append alpha if it's less than 100%
-			if(borderAlpha < 100) {
-				value += " " + borderAlpha + "%";
-			}
-		}
-		
-		return value;
+		return ParameterUtil.format(this, FORMAT_BORDER);
 	}
 
 	public function set border(value:String):void
 	{
-		ParameterUtil.parse(this, value, "borderThickness:length:1 borderColor:color:1 borderAlpha:percent:1");
+		ParameterUtil.parse(this, value, FORMAT_BORDER);
 	}
 
+
 	//---------------------------------
-	//	Border styles
+	//	Border Thickness
 	//---------------------------------
+
+	private var _borderThickness:uint;
+	/**
+	 *	The border thickness.
+	 */
+	public function get borderThickness():uint
+	{
+		return _borderThickness;
+	}
+
+	public function set borderThickness(value:uint):void
+	{
+		_borderThickness = value;
+		borderTopThickness    = value;
+		borderBottomThickness = value;
+		borderLeftThickness   = value;
+		borderRightThickness  = value;
+	}
+
+
+	//---------------------------------
+	//	Border Color
+	//---------------------------------
+
+	private var _borderColor:Number;
+	
+	/**
+	 *	The border color.
+	 */
+	public function get borderColor():Number
+	{
+		return _borderColor;
+	}
+
+	public function set borderColor(value:Number):void
+	{
+		_borderColor = value;
+		borderTopColor    = value;
+		borderBottomColor = value;
+		borderLeftColor   = value;
+		borderRightColor  = value;
+	}
+
+
+	//---------------------------------
+	//	Border Alpha
+	//---------------------------------
+
+	private var _borderAlpha:uint;
+	
+	/**
+	 *	The border alpha.
+	 */
+	public function get borderAlpha():uint
+	{
+		return _borderAlpha;
+	}
+
+	public function set borderAlpha(value:uint):void
+	{
+		_borderAlpha = value;
+		borderTopAlpha    = value;
+		borderBottomAlpha = value;
+		borderLeftAlpha   = value;
+		borderRightAlpha  = value;
+	}
+
+
+	//---------------------------------
+	//	Border - Top
+	//---------------------------------
+
+	private const FORMAT_BORDER_TOP:String = "borderTopThickness:length:1 borderTopColor:color:1 borderTopAlpha:percent:1";
+
+	/**
+	 *	The top border style.
+	 */
+	public function get borderTop():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_TOP);
+	}
+
+	public function set borderTop(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_TOP);
+	}
 
 	[Property(type="uint")]
 	/**
-	 *	The color of the border.
+	 *	The color of the top border.
 	 */
-	public var borderColor:Number;
+	public var borderTopColor:Number;
 
 	/**
-	 *	The alpha transparency of the border.
+	 *	The alpha transparency of the top border.
 	 */
-	public var borderAlpha:uint = 100;
+	public var borderTopAlpha:uint = 100;
 
 	/**
-	 *	The thickness of the border, in pixels.
+	 *	The thickness of the top border, in pixels.
 	 */
-	public var borderThickness:uint = 1;
+	public var borderTopThickness:uint = 1;
 
 
 	//---------------------------------
-	//	Border
+	//	Border - Bottom
+	//---------------------------------
+
+	private const FORMAT_BORDER_BOTTOM:String = "borderBottomThickness:length:1 borderBottomColor:color:1 borderBottomAlpha:percent:1";
+
+	/**
+	 *	The bottom border style.
+	 */
+	public function get borderBottom():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_BOTTOM);
+	}
+
+	public function set borderBottom(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_BOTTOM);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the Bottom border.
+	 */
+	public var borderBottomColor:Number;
+
+	/**
+	 *	The alpha transparency of the bottom border.
+	 */
+	public var borderBottomAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the bottom border, in pixels.
+	 */
+	public var borderBottomThickness:uint = 1;
+
+
+	//---------------------------------
+	//	Border - Left
+	//---------------------------------
+
+	private const FORMAT_BORDER_LEFT:String = "borderLeftThickness:length:1 borderLeftColor:color:1 borderLeftAlpha:percent:1";
+
+	/**
+	 *	The left border style.
+	 */
+	public function get borderLeft():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_LEFT);
+	}
+
+	public function set borderLeft(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_LEFT);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the left border.
+	 */
+	public var borderLeftColor:Number;
+
+	/**
+	 *	The alpha transparency of the left border.
+	 */
+	public var borderLeftAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the left border, in pixels.
+	 */
+	public var borderLeftThickness:uint = 1;
+
+
+	//---------------------------------
+	//	Border - Right
+	//---------------------------------
+
+	private const FORMAT_BORDER_RIGHT:String = "borderRightThickness:length:1 borderRightColor:color:1 borderRightAlpha:percent:1";
+
+	/**
+	 *	The right border style.
+	 */
+	public function get borderRight():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_RIGHT);
+	}
+
+	public function set borderRight(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_RIGHT);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the right border.
+	 */
+	public var borderRightColor:Number;
+
+	/**
+	 *	The alpha transparency of the right border.
+	 */
+	public var borderRightAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the right border, in pixels.
+	 */
+	public var borderRightThickness:uint = 1;
+
+
+
+	//---------------------------------
+	//	Border Radius
 	//---------------------------------
 
 	/**
@@ -259,11 +445,7 @@ public dynamic class StyleComponent extends Component
 		super.render(display);
 		
 		// Create stroke and fill
-		var stroke:Stroke;
 		var fill:Fill;
-		if(!isNaN(borderColor)) {
-			stroke = new Stroke(borderColor, borderAlpha, borderThickness);
-		}
 		if(backgroundColors.length == 1) {
 			fill = new SolidColorFill(backgroundColor, backgroundAlpha);
 		}
@@ -272,12 +454,7 @@ public dynamic class StyleComponent extends Component
 		}
 
 		// Draw the rectangle on the display
-		var rect:Rectangle = new Rectangle(0, 0, pixelWidth, pixelHeight)
-		rect.borderTopLeftRadius     = borderTopLeftRadius;
-		rect.borderTopRightRadius    = borderTopRightRadius;
-		rect.borderBottomLeftRadius  = borderBottomLeftRadius;
-		rect.borderBottomRightRadius = borderBottomRightRadius;
-		display.drawRect(rect, stroke, fill);
+		display.drawBorderedBackground(this, fill);
 	}
 }
 }

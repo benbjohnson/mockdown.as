@@ -1,5 +1,6 @@
 package mockdown.display
 {
+import mockdown.components.StyleComponent;
 import mockdown.geom.Point;
 import mockdown.geom.Rectangle;
 
@@ -61,6 +62,14 @@ public interface RenderObject
 	 *	@param fill    The style of fill to use.
 	 */
 	function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void;
+
+	/**
+	 *	Draws a background with a border.
+	 *
+	 *	@param component  Specifies the styled component to draw.
+	 *	@param fill       The style of fill to use.
+	 */
+	function drawBorderedBackground(component:StyleComponent, fill:Fill=null):void;
 
 	/**
 	 *	Clears all previous drawing from the rendered output.

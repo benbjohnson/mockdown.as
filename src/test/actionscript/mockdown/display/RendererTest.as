@@ -42,6 +42,7 @@ public class RendererTest
 }
 }
 
+import mockdown.components.StyleComponent;
 import mockdown.display.*;
 import mockdown.geom.Point;
 import mockdown.geom.Rectangle;
@@ -55,6 +56,7 @@ class NOPRenderObject implements RenderObject
 	
 	public function drawLine(x1:int, y1:int, x2:int, y2:int, stroke:Stroke):void {}
 	public function drawRect(rect:Rectangle, stroke:Stroke, fill:Fill=null):void {}
+	public function drawBorderedBackground(component:StyleComponent, fill:Fill=null):void {}
 	public function clear():void {}
 
 	public function addRenderChild(child:RenderObject):void {}
