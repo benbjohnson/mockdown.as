@@ -1,5 +1,6 @@
 package mockdown.display.flash
 {
+import mockdown.components.StyleComponent;
 import mockdown.display.RenderObject;
 import mockdown.display.Stroke;
 import mockdown.display.Fill;
@@ -20,6 +21,23 @@ import flash.geom.Matrix;
  */
 public class FlashRenderObject extends Sprite implements RenderObject
 {
+	//--------------------------------------------------------------------------
+	//
+	//	Static Constants
+	//
+	//--------------------------------------------------------------------------
+
+	/**
+	 *	Used when calculating rounded corners.
+	 */
+	private static const SIN:Number = 0.292893218813453;
+
+	/**
+	 *	Used when calculating rounded corners.
+	 */
+	private static const TAN:Number = 0.585786437626905;
+
+
 	//--------------------------------------------------------------------------
 	//
 	//	Constructor
@@ -103,63 +121,78 @@ public class FlashRenderObject extends Sprite implements RenderObject
 		var rw:int = rect.width-thickness;
 		var rh:int = rect.height-thickness;
 
-		var tl:uint = rect.borderTopLeftRadius;
-		var tr:uint = rect.borderTopRightRadius;
-		var bl:uint = rect.borderBottomLeftRadius;
-		var br:uint = rect.borderBottomRightRadius;
-
-		// Draw rectangle
-		if(tl || tr || bl || br) {
-			drawRoundRect(rx, ry, rw, rh, tl, tr, bl, br);
-		}
-		else {
-			graphics.drawRect(rx, ry, rw, rh);
-		}
+		graphics.drawRect(rx, ry, rw, rh);
 		graphics.endFill();
 	}
 
-	// This method is based on the Flex SDK GraphicUtil.drawRoundRectComplex()
-	// method.
-	private function drawRoundRect(x:int, y:int, width:uint, height:uint,
-								  tl:uint, tr:uint, bl:uint, br:uint):void
+	/**
+	 *	@copy mockdown.display.IRenderOutput#drawRect()
+	 *
+	 *	@private
+	 *	This method is based on the Flex SDK GraphicUtil.drawRoundRectComplex()
+	 *	method.
+	 */
+	public function drawBorderedBackground(component:StyleComponent, fill:Fill=null):void
 	{
-        var xw:Number = x + width;
-        var yh:Number = y + height;
+		// TODO: Refactor this out so that it does not use StyleComponent
+		
+		var w:Number = component.pixelWidth;
+		var h:Number = component.pixelHeight;
+		
+		trace("w/h: + " + this + " -- " + w + ", " + h);
+		
+		// Determine dimensions
+		var rx:int = component.borderLeftThickness/2;
+		var ry:int = component.borderTopThickness/2;
+		var rw:int = w-(component.borderRightThickness/2);
+		var rh:int = h-(component.borderBottomThickness/2);
+
+		// Constrain border radius
+		var tl:uint = component.borderTopLeftRadius;
+		var tr:uint = component.borderTopRightRadius;
+		var bl:uint = component.borderBottomLeftRadius;
+		var br:uint = component.borderBottomRightRadius;
+
+		setFillStyle(new Rectangle(0, 0, w, h), fill);
+
+        var min:Number = w < h ? w * 2 : h * 2;
+        tl = Math.min(tl, min);
+        tr = Math.min(tr, min);
+        bl = Math.min(bl, min);
+        br = Math.min(br, min);
         
-        var min:Number = width < height ? width * 2 : height * 2;
-        tl = tl < min ? tl : min;
-        tr = tr < min ? tr : min;
-        bl = bl < min ? bl : min;
-        br = br < min ? br : min;
+        // Bottom-right corner
+		setStrokeStyle(new Stroke(component.borderBottomColor, component.borderBottomAlpha, component.borderBottomThickness));
+        var a:Number = br * SIN;
+        var s:Number = br * TAN;
+        graphics.moveTo(w, h - br);
+        graphics.curveTo(w, h - s, w - a, h - a);
+        graphics.curveTo(w - s, h, w - br, h);
         
-        // bottom-right corner
-        var a:Number = br * 0.292893218813453;
-        var s:Number = br * 0.585786437626905;
-        graphics.moveTo(xw, yh - br);
-        graphics.curveTo(xw, yh - s, xw - a, yh - a);
-        graphics.curveTo(xw - s, yh, xw - br, yh);
+        // Bottom-left corner
+		setStrokeStyle(new Stroke(component.borderLeftColor, component.borderLeftAlpha, component.borderLeftThickness));
+        a = bl * SIN;
+        s = bl * TAN;
+        graphics.lineTo(bl, h);
+        graphics.curveTo(s, h, a, h - a);
+        graphics.curveTo(0, h - s, 0, h - bl);
         
-        // bottom-left corner
-        a = bl * 0.292893218813453;
-        s = bl * 0.585786437626905;
-        graphics.lineTo(x + bl, yh);
-        graphics.curveTo(x + s, yh, x + a, yh - a);
-        graphics.curveTo(x, yh - s, x, yh - bl);
+        // Top-left corner
+		setStrokeStyle(new Stroke(component.borderTopColor, component.borderTopAlpha, component.borderTopThickness));
+        a = tl * SIN;
+        s = tl * TAN;
+        graphics.lineTo(0, tl);
+        graphics.curveTo(0, s, a, a);
+        graphics.curveTo(s, 0, tl, 0);
         
-        // top-left corner
-        a = tl * 0.292893218813453;
-        s = tl * 0.585786437626905;
-        graphics.lineTo(x, y + tl);
-        graphics.curveTo(x, y + s, x + a, y + a);
-        graphics.curveTo(x + s, y, x + tl, y);
-        
-        // top-right corner
-        a = tr * 0.292893218813453;
-        s = tr * 0.585786437626905;
-        graphics.lineTo(xw - tr, y);
-        graphics.curveTo(xw - s, y, xw - a, y + a);
-        graphics.curveTo(xw, y + s, xw, y + tr);
-        graphics.lineTo(xw, yh - br);
+        // Top-right corner
+		setStrokeStyle(new Stroke(component.borderRightColor, component.borderRightAlpha, component.borderRightThickness));
+        a = tr * SIN;
+        s = tr * TAN;
+        graphics.lineTo(w - tr, 0);
+        graphics.curveTo(w - s, 0, w - a, a);
+        graphics.curveTo(w, s, w, tr);
+        graphics.lineTo(w, h - br);
 	}
 
 	/**
@@ -175,7 +208,8 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	 */
 	private function setStrokeStyle(stroke:Stroke):void
 	{
-		if(stroke) {
+		if(stroke && stroke.thickness > 0) {
+			trace("  stroke: " + stroke.thickness + " : " + stroke.color);
 			graphics.lineStyle(stroke.thickness, stroke.color, stroke.alpha/100, true, LineScaleMode.NORMAL, CapsStyle.SQUARE, JointStyle.MITER);
 		}
 		else {

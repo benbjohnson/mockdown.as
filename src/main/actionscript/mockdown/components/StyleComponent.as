@@ -162,7 +162,7 @@ public dynamic class StyleComponent extends Component
 	/**
 	 *	The thickness of the top border, in pixels.
 	 */
-	public var borderTopThickness:uint = 1;
+	public var borderTopThickness:uint = 0;
 
 
 	//---------------------------------
@@ -198,7 +198,7 @@ public dynamic class StyleComponent extends Component
 	/**
 	 *	The thickness of the bottom border, in pixels.
 	 */
-	public var borderBottomThickness:uint = 1;
+	public var borderBottomThickness:uint = 0;
 
 
 	//---------------------------------
@@ -234,7 +234,7 @@ public dynamic class StyleComponent extends Component
 	/**
 	 *	The thickness of the left border, in pixels.
 	 */
-	public var borderLeftThickness:uint = 1;
+	public var borderLeftThickness:uint = 0;
 
 
 	//---------------------------------
@@ -270,7 +270,7 @@ public dynamic class StyleComponent extends Component
 	/**
 	 *	The thickness of the right border, in pixels.
 	 */
-	public var borderRightThickness:uint = 1;
+	public var borderRightThickness:uint = 0;
 
 
 

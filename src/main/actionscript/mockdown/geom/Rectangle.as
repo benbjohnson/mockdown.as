@@ -52,30 +52,5 @@ public class Rectangle
 	 *	The height of the rectangle, in pixels.
 	 */
 	public var height:uint = 0;
-
-
-	//---------------------------------
-	//	Border radius
-	//---------------------------------
-	
-	/**
-	 *	The border radius of the top left corner.
-	 */
-	public var borderTopLeftRadius:uint = 0;
-	
-	/**
-	 *	The border radius of the top right corner.
-	 */
-	public var borderTopRightRadius:uint = 0;
-	
-	/**
-	 *	The border radius of the bottom left corner.
-	 */
-	public var borderBottomLeftRadius:uint = 0;
-	
-	/**
-	 *	The border radius of the bottom right corner.
-	 */
-	public var borderBottomRightRadius:uint = 0;
 }
 }
