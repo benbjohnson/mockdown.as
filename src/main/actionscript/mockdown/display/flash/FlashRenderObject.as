@@ -161,38 +161,33 @@ public class FlashRenderObject extends Sprite implements RenderObject
         bl = Math.min(bl, min);
         br = Math.min(br, min);
         
-        // Bottom-right corner
+        // Border - bottom
 		setStrokeStyle(new Stroke(component.borderBottomColor, component.borderBottomAlpha, component.borderBottomThickness));
-        var a:Number = br * SIN;
-        var s:Number = br * TAN;
-        graphics.moveTo(w, h - br);
-        graphics.curveTo(w, h - s, w - a, h - a);
-        graphics.curveTo(w - s, h, w - br, h);
-        
-        // Bottom-left corner
-		setStrokeStyle(new Stroke(component.borderLeftColor, component.borderLeftAlpha, component.borderLeftThickness));
-        a = bl * SIN;
-        s = bl * TAN;
+        graphics.moveTo(w, h - (br * TAN));
+        graphics.curveTo(w - (br * TAN), h, w - br, h);
         graphics.lineTo(bl, h);
-        graphics.curveTo(s, h, a, h - a);
-        graphics.curveTo(0, h - s, 0, h - bl);
-        
-        // Top-left corner
-		setStrokeStyle(new Stroke(component.borderTopColor, component.borderTopAlpha, component.borderTopThickness));
-        a = tl * SIN;
-        s = tl * TAN;
+        graphics.curveTo(bl * TAN, h, bl * SIN, h - (bl * SIN));
+
+        // Border - left
+		setStrokeStyle(new Stroke(component.borderLeftColor, component.borderLeftAlpha, component.borderLeftThickness));
+        graphics.curveTo(0, h - (bl * TAN), 0, h - bl);
         graphics.lineTo(0, tl);
-        graphics.curveTo(0, s, a, a);
-        graphics.curveTo(s, 0, tl, 0);
-        
-        // Top-right corner
-		setStrokeStyle(new Stroke(component.borderRightColor, component.borderRightAlpha, component.borderRightThickness));
-        a = tr * SIN;
-        s = tr * TAN;
+        graphics.curveTo(0, tl * TAN, tl * SIN, tl * SIN);
+
+		// Border - top
+		setStrokeStyle(new Stroke(component.borderTopColor, component.borderTopAlpha, component.borderTopThickness));
+        graphics.curveTo(tl * TAN, 0, tl, 0);
         graphics.lineTo(w - tr, 0);
-        graphics.curveTo(w - s, 0, w - a, a);
-        graphics.curveTo(w, s, w, tr);
+        graphics.curveTo(w - (tr * TAN), 0, w - (tr * SIN), (tr * SIN));
+
+		// Border - right
+		setStrokeStyle(new Stroke(component.borderRightColor, component.borderRightAlpha, component.borderRightThickness));
+        graphics.curveTo(w, (tr * TAN), w, tr);
         graphics.lineTo(w, h - br);
+        graphics.curveTo(w, h - (br * TAN), w - (br * SIN), h - (br * SIN));
+
+		// FIX: There is a problem with the bottom right corner rendering. It
+		//      looks good enough for right now with a low corner radius.
 	}
 
 	/**
