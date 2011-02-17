@@ -1,6 +1,6 @@
 package mockdown.components.parsers
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.loaders.ComponentLoader;
 import mockdown.core.Type;
@@ -129,7 +129,7 @@ public class DefaultComponentParser implements ComponentParser
 		// Find component
 		descriptor.parent = loader.find(name);
 		if(!descriptor.parent) {
-			throw new BlockParseError(block, "Component not found: " + name);
+			throw new BlockParseError(block, "BaseComponent not found: " + name);
 		}
 		
 		// Parse property values

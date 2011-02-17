@@ -1,6 +1,6 @@
 package mockdown.components.parsers
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.loaders.ComponentLoader;
 

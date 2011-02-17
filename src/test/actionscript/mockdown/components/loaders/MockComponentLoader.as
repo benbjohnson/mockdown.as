@@ -1,6 +1,6 @@
 package mockdown.components.loaders
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import org.mock4as.Mock;
 
 public class MockComponentLoader extends Mock implements ComponentLoader
@@ -9,9 +9,9 @@ public class MockComponentLoader extends Mock implements ComponentLoader
 		record("find", name);
 		return expectedReturnFor("find");
 	}
-	public function newInstance(name:String):Component {
+	public function newInstance(name:String):BaseComponent {
 		record("newInstance", name);
-		return expectedReturnFor("newInstance") as Component;
+		return expectedReturnFor("newInstance") as BaseComponent;
 	}
 	public function addLibrary(name:String):void {
 		record("addLibrary", name);

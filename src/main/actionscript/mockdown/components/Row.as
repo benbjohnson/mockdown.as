@@ -35,7 +35,7 @@ public dynamic class Row extends LayoutContainer
 	 */
 	override protected function measureImplicit():void
 	{
-		var child:Component;
+		var child:BaseComponent;
 		
 		// Calculate width as sum of child widths + padding + gaps
 		if(isNaN(width)) {
@@ -94,7 +94,7 @@ public dynamic class Row extends LayoutContainer
 	protected function layoutPercentChildren():void
 	{
 		var num:Number;
-		var lastPercentChild:Component;
+		var lastPercentChild:BaseComponent;
 
 		// Determine remaining height for percentages
 		var totalChildExplicitWidth:Number = getTotalChildExplicitWidth();
@@ -104,7 +104,7 @@ public dynamic class Row extends LayoutContainer
 		var remaining:int = totalRemaining;
 		
 		// Calculate percent width & height for children
-		for each(var child:Component in _children) {
+		for each(var child:BaseComponent in _children) {
 			// Calculate width based on percentage
 			if(!isNaN(child.percentWidth)) {
 				// If there is width available, calculate percentage of it.
@@ -132,7 +132,7 @@ public dynamic class Row extends LayoutContainer
 	 */
 	protected function layoutChildPositions():void
 	{
-		var child:Component;
+		var child:BaseComponent;
 		var pos:int = 0;
 		var total:int = gap * (_children.length-1);
 		
@@ -183,7 +183,7 @@ public dynamic class Row extends LayoutContainer
 	{
 		var total:uint = 0;
 		
-		for each(var child:Component in _children) {
+		for each(var child:BaseComponent in _children) {
 			var num:Number = child.width;
 			total += !isNaN(num) ? num : 0;
 		}
@@ -199,7 +199,7 @@ public dynamic class Row extends LayoutContainer
 	{
 		var total:uint = 0;
 		
-		for each(var child:Component in _children) {
+		for each(var child:BaseComponent in _children) {
 			var num:Number = child.percentWidth;
 			total += !isNaN(num) ? num : 0;
 		}

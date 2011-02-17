@@ -1,6 +1,6 @@
 package mockdown.display
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 
 /**
  *	This class recursively renders a tree of components onto a view.
@@ -47,7 +47,7 @@ public class Renderer
 	 *
 	 *	@return  The output of the rendering.
 	 */
-	public function render(component:Component):RenderObject
+	public function render(component:BaseComponent):RenderObject
 	{
 		// Throw error if render object class is missing.
 		if(renderObjectClass == null) {
@@ -69,7 +69,7 @@ public class Renderer
 	/**
 	 *	Recursively performs a render on a component tree.
 	 */
-	protected function renderComponent(component:Component):RenderObject
+	protected function renderComponent(component:BaseComponent):RenderObject
 	{
 		// If no component is provided then return no output
 		if(component == null) {
@@ -81,7 +81,7 @@ public class Renderer
 		component.render(object);
 		
 		// Render children
-		for each(var child:Component in component.children) {
+		for each(var child:BaseComponent in component.children) {
 			object.addRenderChild(renderComponent(child));
 		}
 		

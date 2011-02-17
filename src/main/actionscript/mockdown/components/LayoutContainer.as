@@ -13,7 +13,7 @@ import flash.errors.IllegalOperationError;
 /**
  *	This class represents a container that lays out its children.
  */
-public dynamic class LayoutContainer extends StyleComponent
+public dynamic class LayoutContainer extends Component
 {
 	//--------------------------------------------------------------------------
 	//
@@ -84,7 +84,7 @@ public dynamic class LayoutContainer extends StyleComponent
 	 */
 	protected function layoutChildren():void
 	{
-		for each(var child:Component in _children) {
+		for each(var child:BaseComponent in _children) {
 			child.layout();
 		}
 	}

@@ -1,6 +1,6 @@
 package mockdown.display.flash
 {
-import mockdown.components.StyleComponent;
+import mockdown.components.Component;
 import mockdown.display.RenderObject;
 import mockdown.display.Stroke;
 import mockdown.display.Fill;
@@ -132,9 +132,9 @@ public class FlashRenderObject extends Sprite implements RenderObject
 	 *	This method is based on the Flex SDK GraphicUtil.drawRoundRectComplex()
 	 *	method.
 	 */
-	public function drawBorderedBackground(component:StyleComponent, fill:Fill=null):void
+	public function drawBorderedBackground(component:Component, fill:Fill=null):void
 	{
-		// TODO: Refactor this out so that it does not use StyleComponent
+		// TODO: Refactor this out so that it does not use Component
 		
 		var w:Number = component.pixelWidth;
 		var h:Number = component.pixelHeight;

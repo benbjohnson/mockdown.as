@@ -1,6 +1,6 @@
 package mockdown.components.loaders
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 
 /**
  *	This class loads registered component types by name.
@@ -41,7 +41,7 @@ public class RegistryComponentLoader extends BaseComponentLoader
 	//--------------------------------------------------------------------------
 	
 	//---------------------------------
-	//	Component registration
+	//	BaseComponent registration
 	//---------------------------------
 	
 	/**
@@ -58,11 +58,11 @@ public class RegistryComponentLoader extends BaseComponentLoader
 		}
 		// Throw error if component type is null
 		if(type == null) {
-			throw new ArgumentError("Component type is required when registering a component");
+			throw new ArgumentError("BaseComponent type is required when registering a component");
 		}
 		// Throw error if component type is not a class
 		if(!(type is Class)) {
-			throw new ArgumentError("Component type must be a class");
+			throw new ArgumentError("BaseComponent type must be a class");
 		}
 		
 		// Register component in lookup

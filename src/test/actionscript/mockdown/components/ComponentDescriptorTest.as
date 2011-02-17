@@ -17,7 +17,7 @@ public class ComponentDescriptorTest
 	[Before]
 	public function setup():void
 	{
-		descriptor = new ComponentDescriptor(Component);
+		descriptor = new ComponentDescriptor(BaseComponent);
 	}
 	
 
@@ -30,7 +30,7 @@ public class ComponentDescriptorTest
 	[Test]
 	public function constructorShouldSetParent():void
 	{
-		Assert.assertEquals(Component, descriptor.parent);
+		Assert.assertEquals(BaseComponent, descriptor.parent);
 	}
 
 
@@ -114,14 +114,14 @@ public class ComponentDescriptorTest
 	[Test]
 	public function shouldCreateComponentFromParentClass():void
 	{
-		Assert.assertTrue(descriptor.newInstance() is Component);
+		Assert.assertTrue(descriptor.newInstance() is BaseComponent);
 	}
 
 	[Test]
 	public function shouldCreateComponentFromParentDescriptor():void
 	{
 		var child:ComponentDescriptor = new ComponentDescriptor(descriptor);
-		Assert.assertTrue(child.newInstance() is Component);
+		Assert.assertTrue(child.newInstance() is BaseComponent);
 	}
 
 	[Test(expects="flash.errors.IllegalOperationError", message="Cannot create new instance from descriptor when missing parent")]
@@ -136,7 +136,7 @@ public class ComponentDescriptorTest
 	{
 		descriptor.values = {x:10, y:20};
 		
-		var component:Component = descriptor.newInstance();
+		var component:BaseComponent = descriptor.newInstance();
 		Assert.assertEquals(10, component.x);
 		Assert.assertEquals(20, component.y);
 	}
@@ -144,14 +144,14 @@ public class ComponentDescriptorTest
 	[Test]
 	public function shouldCreateComponentWithChildren():void
 	{
-		var a:ComponentDescriptor  = new ComponentDescriptor(Component);
-		var b:ComponentDescriptor  = new ComponentDescriptor(Component);
-		var ba:ComponentDescriptor = new ComponentDescriptor(Component);
+		var a:ComponentDescriptor  = new ComponentDescriptor(BaseComponent);
+		var b:ComponentDescriptor  = new ComponentDescriptor(BaseComponent);
+		var ba:ComponentDescriptor = new ComponentDescriptor(BaseComponent);
 		
 		descriptor.children = [a, b];
 		b.children = [ba];
 		
-		var component:Component = descriptor.newInstance();
+		var component:BaseComponent = descriptor.newInstance();
 		Assert.assertEquals(2, component.children.length);
 		Assert.assertEquals(0, a.children.length);
 		Assert.assertEquals(1, b.children.length);

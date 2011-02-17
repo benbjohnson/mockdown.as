@@ -1,7 +1,7 @@
 package mockdown.components.parsers
 {
 import mockdown.components.Column;
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.Row;
 import mockdown.components.loaders.MockComponentLoader;
@@ -81,7 +81,7 @@ public class DefaultComponentParserTest
 		parser.parse("%");
 	}
 
-	[Test(expects="mockdown.errors.BlockParseError", message="Component not found: foo")]
+	[Test(expects="mockdown.errors.BlockParseError", message="BaseComponent not found: foo")]
 	public function shouldThrowErrorForMissingComponent():void
 	{
 		parser.parse("%foo");
@@ -194,8 +194,8 @@ public class DefaultComponentParserTest
 //
 //-----------------------------------------------------------------------------
 
-import mockdown.components.Component;
-class TestComponent extends Component
+import mockdown.components.BaseComponent;
+class TestComponent extends BaseComponent
 {
 	public var stringVariable:String;
 	public var booleanVariable:Boolean;

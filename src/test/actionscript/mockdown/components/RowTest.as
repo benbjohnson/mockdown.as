@@ -11,9 +11,9 @@ public class RowTest
 	//---------------------------------------------------------------------
 	
 	private var root:Row;
-	private var a:Component;
-	private var b:Component;
-	private var c:Component;
+	private var a:BaseComponent;
+	private var b:BaseComponent;
+	private var c:BaseComponent;
 	
 	[Before]
 	public function setup():void
@@ -25,9 +25,9 @@ public class RowTest
 		root.paddingRight  = 4;
 		root.gap = 4;
 
-		root.addChild(a = new Component());
-		root.addChild(b = new Component());
-		root.addChild(c = new Component());
+		root.addChild(a = new BaseComponent());
+		root.addChild(b = new BaseComponent());
+		root.addChild(c = new BaseComponent());
 	}
 
 

@@ -1,6 +1,6 @@
 package mockdown.components.loaders
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.ComponentDescriptor;
 
 import flash.errors.IllegalOperationError;
@@ -71,7 +71,7 @@ public class BaseComponentLoader implements ComponentLoader
 	/**
 	 *	@copy ComponentLoader#newInstance()
 	 */
-	public function newInstance(name:String):Component
+	public function newInstance(name:String):BaseComponent
 	{
 		var type:* = find(name);
 		
@@ -89,7 +89,7 @@ public class BaseComponentLoader implements ComponentLoader
 		}
 		// Throw an error if we don't have a class or descriptor
 		else {
-			throw new IllegalOperationError("Component type must be a class or descriptor");
+			throw new IllegalOperationError("BaseComponent type must be a class or descriptor");
 		}
 	}
 	

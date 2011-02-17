@@ -1,17 +1,21 @@
 package mockdown.components
 {
+import mockdown.display.Color;
 import mockdown.display.RenderObject;
+import mockdown.display.Fill;
+import mockdown.display.GradientFill;
 import mockdown.display.Stroke;
 import mockdown.display.SolidColorFill;
 import mockdown.geom.Rectangle;
-import mockdown.utils.MathUtil;
+import mockdown.utils.ParameterUtil;
 
 import flash.errors.IllegalOperationError;
 
 /**
- *	This class represents a visual component on a mockup.
+ *	This class represents a component that has the ability to display a border
+ *	and background.
  */
-public dynamic class Component
+public dynamic class Component extends BaseComponent
 {
 	//--------------------------------------------------------------------------
 	//
@@ -26,8 +30,8 @@ public dynamic class Component
 	{
 		super();
 	}
-	
-	
+
+
 	//--------------------------------------------------------------------------
 	//
 	//	Properties
@@ -35,150 +39,394 @@ public dynamic class Component
 	//--------------------------------------------------------------------------
 
 	//---------------------------------
-	//	Parent
+	//	Border
 	//---------------------------------
-	
-	/**
-	 *	The parent component in the display tree hierarchy.
-	 */
-	public var parent:Component;
 
-	//---------------------------------
-	//	Children
-	//---------------------------------
-	
-	protected var _children:Array = [];
-	
+	private const FORMAT_BORDER:String = "borderThickness:length:1 borderColor:color:1 borderAlpha:percent:1";
+
 	/**
-	 *	A list of child components attached to this component in the display
-	 *	tree.
+	 *	The border style.
 	 */
-	public function get children():Array
+	public function get border():String
 	{
-		return _children.slice();
+		return ParameterUtil.format(this, FORMAT_BORDER);
 	}
-	
 
-	//---------------------------------
-	//	Position
-	//---------------------------------
-	
-	/**
-	 *	The absolute position from the left of the parent container.
-	 */
-	public var x:int;
-	
-	/**
-	 *	The absolute position from the top of the parent container.
-	 */
-	public var y:int;
+	public function set border(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER);
+	}
 
 
 	//---------------------------------
-	//	Position
+	//	Border Thickness
 	//---------------------------------
 
+	private var _borderThickness:uint;
 	/**
-	 *	The top offset from the parent component.
+	 *	The border thickness.
 	 */
-	public var top:Number;
+	public function get borderThickness():uint
+	{
+		return _borderThickness;
+	}
 
-	/**
-	 *	The bottom offset from the parent component.
-	 */
-	public var bottom:Number;
-
-	/**
-	 *	The left offset from the parent component.
-	 */
-	public var left:Number;
-
-	/**
-	 *	The right offset from the parent component.
-	 */
-	public var right:Number;
-	
-	
-	//---------------------------------
-	//	Dimension
-	//---------------------------------
-
-	/**
-	 *	The explicit width of the component, in pixels.
-	 */
-	public var pixelWidth:uint;
-	
-	/**
-	 *	The explicit height of the component, in pixels.
-	 */
-	public var pixelHeight:uint;
-
-	[Property(percentField="percentWidth")]
-	/**
-	 *	The width of the component.
-	 */
-	public var width:Number;
-	
-	[Property(percentField="percentHeight")]
-	/**
-	 *	The height of the component.
-	 */
-	public var height:Number;
-
-	/**
-	 *	The percentage width of the component.
-	 */
-	public var percentWidth:Number;
-	
-	/**
-	 *	The percentage height of the component.
-	 */
-	public var percentHeight:Number;
-
-	/**
-	 *	The minimium width of the component.
-	 */
-	public var minWidth:Number;
-	
-	/**
-	 *	The minimum height of the component.
-	 */
-	public var minHeight:Number;
-
-	/**
-	 *	The maximum width of the component.
-	 */
-	public var maxWidth:Number;
-	
-	/**
-	 *	The maximum height of the component.
-	 */
-	public var maxHeight:Number;
+	public function set borderThickness(value:uint):void
+	{
+		_borderThickness = value;
+		borderTopThickness    = value;
+		borderBottomThickness = value;
+		borderLeftThickness   = value;
+		borderRightThickness  = value;
+	}
 
 
 	//---------------------------------
-	//	Padding
+	//	Border Color
+	//---------------------------------
+
+	private var _borderColor:Number;
+	
+	/**
+	 *	The border color.
+	 */
+	public function get borderColor():Number
+	{
+		return _borderColor;
+	}
+
+	public function set borderColor(value:Number):void
+	{
+		_borderColor = value;
+		borderTopColor    = value;
+		borderBottomColor = value;
+		borderLeftColor   = value;
+		borderRightColor  = value;
+	}
+
+
+	//---------------------------------
+	//	Border Alpha
+	//---------------------------------
+
+	private var _borderAlpha:uint;
+	
+	/**
+	 *	The border alpha.
+	 */
+	public function get borderAlpha():uint
+	{
+		return _borderAlpha;
+	}
+
+	public function set borderAlpha(value:uint):void
+	{
+		_borderAlpha = value;
+		borderTopAlpha    = value;
+		borderBottomAlpha = value;
+		borderLeftAlpha   = value;
+		borderRightAlpha  = value;
+	}
+
+
+	//---------------------------------
+	//	Border - Top
+	//---------------------------------
+
+	private const FORMAT_BORDER_TOP:String = "borderTopThickness:length:1 borderTopColor:color:1 borderTopAlpha:percent:1";
+
+	/**
+	 *	The top border style.
+	 */
+	public function get borderTop():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_TOP);
+	}
+
+	public function set borderTop(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_TOP);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the top border.
+	 */
+	public var borderTopColor:Number;
+
+	/**
+	 *	The alpha transparency of the top border.
+	 */
+	public var borderTopAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the top border, in pixels.
+	 */
+	public var borderTopThickness:uint = 0;
+
+
+	//---------------------------------
+	//	Border - Bottom
+	//---------------------------------
+
+	private const FORMAT_BORDER_BOTTOM:String = "borderBottomThickness:length:1 borderBottomColor:color:1 borderBottomAlpha:percent:1";
+
+	/**
+	 *	The bottom border style.
+	 */
+	public function get borderBottom():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_BOTTOM);
+	}
+
+	public function set borderBottom(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_BOTTOM);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the Bottom border.
+	 */
+	public var borderBottomColor:Number;
+
+	/**
+	 *	The alpha transparency of the bottom border.
+	 */
+	public var borderBottomAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the bottom border, in pixels.
+	 */
+	public var borderBottomThickness:uint = 0;
+
+
+	//---------------------------------
+	//	Border - Left
+	//---------------------------------
+
+	private const FORMAT_BORDER_LEFT:String = "borderLeftThickness:length:1 borderLeftColor:color:1 borderLeftAlpha:percent:1";
+
+	/**
+	 *	The left border style.
+	 */
+	public function get borderLeft():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_LEFT);
+	}
+
+	public function set borderLeft(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_LEFT);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the left border.
+	 */
+	public var borderLeftColor:Number;
+
+	/**
+	 *	The alpha transparency of the left border.
+	 */
+	public var borderLeftAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the left border, in pixels.
+	 */
+	public var borderLeftThickness:uint = 0;
+
+
+	//---------------------------------
+	//	Border - Right
+	//---------------------------------
+
+	private const FORMAT_BORDER_RIGHT:String = "borderRightThickness:length:1 borderRightColor:color:1 borderRightAlpha:percent:1";
+
+	/**
+	 *	The right border style.
+	 */
+	public function get borderRight():String
+	{
+		return ParameterUtil.format(this, FORMAT_BORDER_RIGHT);
+	}
+
+	public function set borderRight(value:String):void
+	{
+		ParameterUtil.parse(this, value, FORMAT_BORDER_RIGHT);
+	}
+
+	[Property(type="uint")]
+	/**
+	 *	The color of the right border.
+	 */
+	public var borderRightColor:Number;
+
+	/**
+	 *	The alpha transparency of the right border.
+	 */
+	public var borderRightAlpha:uint = 100;
+
+	/**
+	 *	The thickness of the right border, in pixels.
+	 */
+	public var borderRightThickness:uint = 0;
+
+
+
+	//---------------------------------
+	//	Border Radius
 	//---------------------------------
 
 	/**
-	 *	The amount to pad children from the top of the container.
+	 *	The radius for the four corners of the border.
 	 */
-	public var paddingTop:uint;
+	public function get borderRadius():String
+	{
+		var values:Array = [borderTopLeftRadius, borderTopRightRadius,
+							borderBottomRightRadius, borderBottomLeftRadius];
+		
+		return values.join(" ");
+	}
+
+	public function set borderRadius(value:String):void
+	{
+		var values:Array = (value ? value.split(/\s+/) : [0]);
+		borderTopLeftRadius  = (values.length > 0 ? parseInt(values[0]) : 0);
+		borderTopRightRadius = (values.length > 1 ? parseInt(values[1]) : borderTopLeftRadius);
+		borderBottomRightRadius = (values.length > 2 ? parseInt(values[2]) : borderTopLeftRadius);
+		borderBottomLeftRadius = (values.length > 3 ? parseInt(values[3]) : borderTopRightRadius);
+	}
+
+	//---------------------------------
+	//	Border radius styles
+	//---------------------------------
 
 	/**
-	 *	The amount to pad children from the bottom of the container.
+	 *	The border radius of the top left corner.
 	 */
-	public var paddingBottom:uint;
+	public var borderTopLeftRadius:uint = 0;
 
 	/**
-	 *	The amount to pad children from the left of the container.
+	 *	The border radius of the top right corner.
 	 */
-	public var paddingLeft:uint;
+	public var borderTopRightRadius:uint = 0;
 
 	/**
-	 *	The amount to pad children from the right of the container.
+	 *	The border radius of the bottom left corner.
 	 */
-	public var paddingRight:uint;
+	public var borderBottomLeftRadius:uint = 0;
+
+	/**
+	 *	The border radius of the bottom right corner.
+	 */
+	public var borderBottomRightRadius:uint = 0;
+
+
+	//---------------------------------
+	//	Background
+	//---------------------------------
+
+	/**
+	 *	The background style. This style is composed of:
+	 *
+	 *	<pre>
+	 *	COLORS ALPHAS ANGLE GRADIENT-TYPE
+	 *	</pre>
+	 */
+	public function get background():String
+	{
+		var value:String = "";
+
+		// Generate string only if color is set
+		if(!isNaN(backgroundColor)) {
+			value = "#" + Color.toHex(backgroundColor);
+			
+			// Append alpha is it's less than 100%
+			if(backgroundAlpha < 100) {
+				value += " " + backgroundAlpha + "%";
+			}
+		}
+		
+		return value;
+	}
+
+	public function set background(value:String):void
+	{
+		ParameterUtil.parse(this, value, "backgroundColors:color:* backgroundAlphas:percent:* backgroundGradientType:string:1 backgroundAngle:int:1");
+
+		// Throw error if too many alphas
+		if(backgroundAlphas.length > backgroundColors.length) {
+			throw new ArgumentError("Too many alpha values specified");
+		}
+
+		// Default alphas
+		while(backgroundAlphas.length < backgroundColors.length) {
+			backgroundAlphas.push(100);
+		}
+	}
+
+
+	//---------------------------------
+	//	Solid background styles
+	//---------------------------------
+	
+	/**
+	 *	The color of the background.
+	 */
+	public function get backgroundColor():uint
+	{
+		return backgroundColors[0];
+	}
+
+	public function set backgroundColor(value:uint):void
+	{
+		backgroundColors = [value];
+	}
+
+
+	/**
+	 *	The alpha transparency of the background.
+	 */
+	public function get backgroundAlpha():uint
+	{
+		return backgroundAlphas[0];
+	}
+
+	public function set backgroundAlpha(value:uint):void
+	{
+		backgroundAlphas = [value];
+	}
+
+
+	//---------------------------------
+	//	Gradient background styles
+	//---------------------------------
+	
+	[Property(itemType="uint")]
+	/**
+	 *	A list of colors to use for the background. If only one is specified,
+	 *	the background is a solid color. If multiple are specified then a
+	 *	gradient background is produced.
+	 */
+	public var backgroundColors:Array = [];
+
+	[Property(itemType="uint")]
+	/**
+	 *	The alpha transparency of the background.
+	 */
+	public var backgroundAlphas:Array = [100];
+
+	/**
+	 *	The type of gradient to use for the background. Possible values are
+	 *	"linear" or "radial".
+	 */
+	public var backgroundGradientType:String = "linear";
+
+	/**
+	 *	The angle of the background gradient.
+	 */
+	public var backgroundAngle:uint = 0;
 
 
 	//--------------------------------------------------------------------------
@@ -186,170 +434,27 @@ public dynamic class Component
 	//	Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	//---------------------------------
-	//	Children
-	//---------------------------------
-	
-	/**
-	 *	Appends a component to the list of children.
-	 *	
-	 *	@param child  The component to append.
-	 */
-	public function addChild(child:Component):void
-	{
-		if(child != null && _children.indexOf(child) == -1) {
-			child.parent = this;
-			_children.push(child);
-		}
-	}
-	
-	/**
-	 *	Removes a component from the list of children.
-	 *	
-	 *	@param child  The component to remove.
-	 */
-	public function removeChild(child:Component):void
-	{
-		if(child != null && _children.indexOf(child) != -1) {
-			child.parent = null;
-			_children.splice(_children.indexOf(child), 1);
-		}
-	}
-
-	/**
-	 *	Removes all children from a component.
-	 */
-	public function removeAllChildren():void
-	{
-		var children:Array = this.children;
-		for each(var child:Component in children) {
-			removeChild(child);
-		}
-	}
-
-
-	//---------------------------------
-	//	Measurement
-	//---------------------------------
-	
-	/**
-	 *	Resets the pixel dimensions of the component and its children.
-	 */
-	public function reset():void
-	{
-		// Reset dimensions
-		pixelWidth  = 0;
-		pixelHeight = 0;
-		
-		// Reset child pixel dimensions
-		for each(var child:Component in _children) {
-			child.reset();
-		}
-	}
-
-	/**
-	 *	Determines the final pixel dimensions for the component. This is
-	 *	calculated for all components once before rendering to screen.
-	 */
-	public function measure():void
-	{
-		measureExplicit();
-		measureChildren();
-		measureImplicit();
-	}
-
-	/**
-	 *	Attempts to explicitly measures the component.
-	 */
-	protected function measureExplicit():void
-	{
-		var num:Number;
-		
-		// Keep dimension within min/max range
-		if(!isNaN(width)) {
-			pixelWidth  = MathUtil.restrict(width, minWidth, maxWidth);
-		}
-		if(!isNaN(height)) {
-			pixelHeight = MathUtil.restrict(height, minHeight, maxHeight);
-		}
-	}
-	
-	/**
-	 *	Calls <code>measure()</code> on each visual child.
-	 */
-	protected function measureChildren():void
-	{
-		for each(var child:Component in _children) {
-			child.measure();
-		}
-	}
-	
-	/**
-	 *	Attempts to measure the component as the largest dimensions of its children.
-	 */
-	protected function measureImplicit():void
-	{
-		var child:Component;
-		
-		// Measure width
-		if(isNaN(width)) {
-			// Sum child widths
-			var pixelWidth:uint = 0;
-			for each(child in _children) {
-				pixelWidth = Math.max(pixelWidth, child.pixelWidth);
-			}
-			
-			// Add padding
-			pixelWidth = pixelWidth + paddingLeft + paddingRight;
-			
-			// Restrict width to min/max
-			this.pixelWidth = MathUtil.restrict(pixelWidth, minWidth, maxWidth);
-		}
-		
-		// Measure height
-		if(isNaN(height)) {
-			// Sum child heights
-			var pixelHeight:uint = 0;
-			for each(child in _children) {
-				pixelHeight = Math.max(pixelHeight, child.pixelHeight);
-			}
-
-			// Add padding
-			pixelHeight = pixelHeight + paddingTop + paddingBottom;
-			
-			// Restrict height to min/max
-			this.pixelHeight = MathUtil.restrict(pixelHeight, minHeight, maxHeight);
-		}
-	}
-
-
-	//---------------------------------
-	//	Layout
-	//---------------------------------
-
-	/**
-	 *	Lays out the component and its children after the size of all componets
-	 *	has been computed.
-	 */
-	public function layout():void
-	{
-	}
-
 
 	//---------------------------------
 	//	Rendering
 	//---------------------------------
 
-	/**
-	 *	Renders the component visually to the screen.
-	 */
-	public function render(display:RenderObject):void
+	/** @private */
+	override public function render(display:RenderObject):void
 	{
-		//trace("render: " + this + " : " + pixelWidth + ", " + pixelHeight);
-		display.clear();
-		display.move(x, y);
-		display.resize(pixelWidth, pixelHeight);
+		super.render(display);
+		
+		// Create stroke and fill
+		var fill:Fill;
+		if(backgroundColors.length == 1) {
+			fill = new SolidColorFill(backgroundColor, backgroundAlpha);
+		}
+		else if(backgroundColors.length > 1) {
+			fill = new GradientFill(backgroundGradientType, backgroundColors, backgroundAlphas, backgroundAngle);
+		}
+
+		// Draw the rectangle on the display
+		display.drawBorderedBackground(this, fill);
 	}
 }
 }

@@ -1,6 +1,6 @@
 package
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.loaders.ComponentLoader;
 import mockdown.components.loaders.FileComponentLoader;
 import mockdown.components.loaders.SystemComponentLoader;
@@ -116,7 +116,7 @@ public class MockdownViewer extends Sprite
 		var loader:FileComponentLoader = new FileComponentLoader(systemLoader);
 		loader.paths = [new LocalFile(new File(projectPath))];
 		
-		var component:Component = loader.newInstance(filename);
+		var component:BaseComponent = loader.newInstance(filename);
 		if(!component) {
 			trace("No component found: " + filename);
 			return;

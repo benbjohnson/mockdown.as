@@ -1,6 +1,6 @@
 package mockdown.components.loaders
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.parsers.ComponentParser;
 import mockdown.components.parsers.DefaultComponentParser;
 import mockdown.errors.LibraryNotFoundError;

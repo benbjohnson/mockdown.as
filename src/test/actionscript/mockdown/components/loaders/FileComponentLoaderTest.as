@@ -1,6 +1,6 @@
 package mockdown.components.loaders
 {
-import mockdown.components.Component;
+import mockdown.components.BaseComponent;
 import mockdown.components.ComponentDescriptor;
 import mockdown.components.parsers.MockComponentParser;
 import mockdown.filesystem.MockFile;
@@ -201,5 +201,5 @@ public class FileComponentLoaderTest
 }
 }
 
-import mockdown.components.Component;
-class TestComponent extends Component{}
+import mockdown.components.BaseComponent;
+class TestComponent extends BaseComponent{}

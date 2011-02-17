@@ -1,242 +1,308 @@
 package mockdown.components
 {
 import asunit.framework.Assert;
+import org.hamcrest.assertThat;
+import org.hamcrest.collection.*;
 
 public class ComponentTest
 {
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------
 	//
-	//	Setup
+	//  Setup
 	//
-	//--------------------------------------------------------------------------
-
+	//---------------------------------------------------------------------
+	
 	private var component:Component;
-	private var parent:Component;
-	private var child:Component;
 	
 	[Before]
 	public function setup():void
 	{
 		component = new Component();
+		component.pixelWidth  = 100;
+		component.pixelHeight = 200;
+	}
 
-		parent = new Component();
-		child  = new Component();
-		parent.addChild(child);
+
+	//---------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//---------------------------------------------------------------------
+	
+	//---------------------------------
+	//	Border
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderThickness():void
+	{
+		component.border = "10px #FF0000";
+		Assert.assertEquals(10, component.borderThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderColor():void
+	{
+		component.border = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderColor);
+	}
+
+	[Test]
+	public function shouldSetBorderAlpha():void
+	{
+		component.border = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderAlpha);
+	}
+
+	[Test]
+	public function shouldCascadeBorderTop():void
+	{
+		component.border = "10px #FF0000 20%";
+		Assert.assertEquals("10px #FF0000 20%", component.borderTop);
+		Assert.assertEquals("10px #FF0000 20%", component.borderBottom);
+		Assert.assertEquals("10px #FF0000 20%", component.borderLeft);
+		Assert.assertEquals("10px #FF0000 20%", component.borderRight);
+	}
+
+	[Test]
+	public function shouldCascadeBorderThickness():void
+	{
+		component.borderThickness = 10;
+		Assert.assertEquals(10, component.borderTopThickness);
+		Assert.assertEquals(10, component.borderBottomThickness);
+		Assert.assertEquals(10, component.borderLeftThickness);
+		Assert.assertEquals(10, component.borderRightThickness);
+	}
+
+	[Test]
+	public function shouldCascadeBorderColor():void
+	{
+		component.borderColor = 0xFF0000;
+		Assert.assertEquals(0xFF0000, component.borderTopColor);
+		Assert.assertEquals(0xFF0000, component.borderBottomColor);
+		Assert.assertEquals(0xFF0000, component.borderLeftColor);
+		Assert.assertEquals(0xFF0000, component.borderRightColor);
+	}
+
+	[Test]
+	public function shouldCascadeBorderAlpha():void
+	{
+		component.borderAlpha = 20;
+		Assert.assertEquals(20, component.borderTopAlpha);
+		Assert.assertEquals(20, component.borderBottomAlpha);
+		Assert.assertEquals(20, component.borderLeftAlpha);
+		Assert.assertEquals(20, component.borderRightAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Top
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderTopThickness():void
+	{
+		component.borderTop = "10px #FF0000";
+		Assert.assertEquals(10, component.borderTopThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderTopColor():void
+	{
+		component.borderTop = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderTopColor);
+	}
+
+	[Test]
+	public function shouldSetBorderTopAlpha():void
+	{
+		component.borderTop = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderTopAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Bottom
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderBottomThickness():void
+	{
+		component.borderBottom = "10px #FF0000";
+		Assert.assertEquals(10, component.borderBottomThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderBottomColor():void
+	{
+		component.borderBottom = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderBottomColor);
+	}
+
+	[Test]
+	public function shouldSetBorderBottomAlpha():void
+	{
+		component.borderBottom = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderBottomAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Left
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderLeftThickness():void
+	{
+		component.borderLeft = "10px #FF0000";
+		Assert.assertEquals(10, component.borderLeftThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderLeftColor():void
+	{
+		component.borderLeft = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderLeftColor);
+	}
+
+	[Test]
+	public function shouldSetBorderLeftAlpha():void
+	{
+		component.borderLeft = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderLeftAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Right
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBorderRightThickness():void
+	{
+		component.borderRight = "10px #FF0000";
+		Assert.assertEquals(10, component.borderRightThickness);
+	}
+
+	[Test]
+	public function shouldSetBorderRightColor():void
+	{
+		component.borderRight = "10px #FF0000";
+		Assert.assertEquals(0xFF0000, component.borderRightColor);
+	}
+
+	[Test]
+	public function shouldSetBorderRightAlpha():void
+	{
+		component.borderRight = "10px #FF0000 20%";
+		Assert.assertEquals(20, component.borderRightAlpha);
+	}
+
+
+	//---------------------------------
+	//	Border Radius
+	//---------------------------------
+	
+	[Test]
+	public function shouldParseBlankBorderRadius():void
+	{
+		component.borderRadius = "";
+		Assert.assertEquals(0, component.borderTopLeftRadius);
+		Assert.assertEquals(0, component.borderTopRightRadius);
+		Assert.assertEquals(0, component.borderBottomRightRadius);
+		Assert.assertEquals(0, component.borderBottomLeftRadius);
+	}
+
+	[Test]
+	public function shouldParse1ArgBorderRadius():void
+	{
+		component.borderRadius = "1";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(1, component.borderTopRightRadius);
+		Assert.assertEquals(1, component.borderBottomRightRadius);
+		Assert.assertEquals(1, component.borderBottomLeftRadius);
 	}
 	
-
-	//--------------------------------------------------------------------------
-	//
-	//	Properties
-	//
-	//--------------------------------------------------------------------------
-
-
-	//--------------------------------------------------------------------------
-	//
-	//	Methods
-	//
-	//--------------------------------------------------------------------------
-
-	//-----------------------------
-	//  Children
-	//-----------------------------
-
 	[Test]
-	public function shouldAddChild():void
+	public function shouldParse2ArgBorderRadius():void
 	{
-		var child:Component = new Component();
-		component.addChild(child);
-		Assert.assertEquals(child, component.children[0]);
+		component.borderRadius = "1 2";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(1, component.borderBottomRightRadius);
+		Assert.assertEquals(2, component.borderBottomLeftRadius);
+	}
+	
+	[Test]
+	public function shouldParse3ArgBorderRadius():void
+	{
+		component.borderRadius = "1 2 3";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(3, component.borderBottomRightRadius);
+		Assert.assertEquals(2, component.borderBottomLeftRadius);
+	}
+	
+	[Test]
+	public function shouldParse4ArgBorderRadius():void
+	{
+		component.borderRadius = "1 2 3 4";
+		Assert.assertEquals(1, component.borderTopLeftRadius);
+		Assert.assertEquals(2, component.borderTopRightRadius);
+		Assert.assertEquals(3, component.borderBottomRightRadius);
+		Assert.assertEquals(4, component.borderBottomLeftRadius);
+	}
+
+	//---------------------------------
+	//	Background
+	//---------------------------------
+	
+	[Test]
+	public function shouldSetBackgroundColor():void
+	{
+		component.background = "#FF0000";
+		Assert.assertEquals(0xFF0000, component.backgroundColor);
 	}
 
 	[Test]
-	public function shouldNotAddChildTwice():void
+	public function shouldSetBackgroundColors():void
 	{
-		var child:Component = new Component();
-		component.addChild(child);
-		component.addChild(child);
-		Assert.assertEquals(1, component.children.length);
+		component.background = "#FF0000,#0000FF";
+		assertThat(component.backgroundColors, array([0xFF0000, 0x0000FF]));
 	}
 
 	[Test]
-	public function shouldSetParentWhenAddingChild():void
+	public function shouldSetBackgroundAlpha():void
 	{
-		var child:Component = new Component();
-		component.addChild(child);
-		Assert.assertEquals(component, child.parent);
+		component.background = "#FF0000 20%";
+		assertThat(component.backgroundAlph, 20);
 	}
 
 	[Test]
-	public function shouldRemoveChild():void
+	public function shouldSetBackgroundAlphas():void
 	{
-		var child:Component = new Component();
-		component.addChild(child);
-		component.removeChild(child);
-		Assert.assertEquals(0, component.children.length);
+		component.background = "#FF0000,#0000FF 20%,30%";
+		assertThat(component.backgroundAlphas, array([20, 30]));
 	}
 
 	[Test]
-	public function shouldUnsetParentWhenRemovingChild():void
+	public function shouldDefaultBackgroundAlphasIfNoneSpecified():void
 	{
-		var child:Component = new Component();
-		component.addChild(child);
-		component.removeChild(child);
-		Assert.assertNull(child.parent);
+		component.background = "#FF0000,#0000FF";
+		assertThat(component.backgroundAlphas, array([100, 100]));
 	}
 
-
-	//-----------------------------
-	//  Reset
-	//-----------------------------
-
-	[Test]
-	public function shouldResetPixelWidth():void
+	[Test(expects="ArgumentError", message="Too many alpha values specified")]
+	public function shouldThrowErrorIfColorAndAlphasCountsDoNotMatch():void
 	{
-		component.pixelWidth = 100;
-		component.reset();
-		Assert.assertEquals(0, component.pixelWidth);
+		component.background = "#FF0000,#0000FF 20%,50%,100%";
 	}
 
 	[Test]
-	public function shouldResetPixelHeight():void
+	public function shouldSetBackgroundGradientType():void
 	{
-		component.pixelHeight = 100;
-		component.reset();
-		Assert.assertEquals(0, component.pixelHeight);
-	}
-
-	[Test]
-	public function shouldResetChildWidth():void
-	{
-		child.pixelWidth = 100;
-		parent.reset();
-		Assert.assertEquals(0, child.pixelWidth);
-	}
-
-	[Test]
-	public function shouldResetChildHeight():void
-	{
-		child.pixelHeight = 100;
-		parent.reset();
-		Assert.assertEquals(0, child.pixelHeight);
-	}
-
-
-
-	//-----------------------------
-	//  Measurement (Explicit)
-	//-----------------------------
-
-	[Test]
-	public function shouldMeasureExplicitWidth():void
-	{
-		component.width = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelWidth);
-	}
-
-	[Test]
-	public function shouldMeasureExplicitHeight():void
-	{
-		component.height = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelHeight);
-	}
-
-
-	//-----------------------------
-	//  Measurement (Min/Max)
-	//-----------------------------
-
-	[Test]
-	public function shouldRestrictWidthByMinWidth():void
-	{
-		component.width    = 50;
-		component.minWidth = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelWidth);
-	}
-
-	[Test]
-	public function shouldRestrictHeihtByMinHeight():void
-	{
-		component.height    = 50;
-		component.minHeight = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelHeight);
-	}
-
-	[Test]
-	public function shouldRestrictWidthByMaxWidth():void
-	{
-		component.width    = 150;
-		component.maxWidth = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelWidth);
-	}
-
-	[Test]
-	public function shouldRestrictWidthByMaxHeight():void
-	{
-		component.height    = 150;
-		component.maxHeight = 100;
-		component.measure();
-		Assert.assertEquals(100, component.pixelHeight);
-	}
-
-
-	//-----------------------------
-	//  Measurement (Children)
-	//-----------------------------
-
-	[Test]
-	public function shouldMeasureChildren():void
-	{
-		child.width  = 100;
-		child.height = 200;
-		parent.measure();
-		Assert.assertEquals(100, child.pixelWidth);
-		Assert.assertEquals(200, child.pixelHeight);
-	}
-
-
-	//-----------------------------
-	//  Measurement (Implicit)
-	//-----------------------------
-
-	[Test]
-	public function shouldMeasureImplicitWidth():void
-	{
-		var c0:Component, c1:Component;
-		component.addChild(c0 = new Component());
-		component.addChild(c1 = new Component());
-		
-		c0.width = 100;
-		c1.width = 200;
-		
-		component.paddingLeft  = 1;
-		component.paddingRight = 2;
-		component.measure();
-
-		Assert.assertEquals(203, component.pixelWidth);
-	}
-
-	[Test]
-	public function shouldMeasureImplicitHeight():void
-	{
-		var c0:Component, c1:Component;
-		component.addChild(c0 = new Component());
-		component.addChild(c1 = new Component());
-		
-		c0.height = 100;
-		c1.height = 200;
-		
-		component.paddingTop  = 1;
-		component.paddingBottom = 2;
-		component.measure();
-
-		Assert.assertEquals(203, component.pixelHeight);
+		component.background = "#FF0000,#0000FF";
+		assertThat(component.backgroundColors, array([0xFF0000, 0x0000FF]));
 	}
 }
 }

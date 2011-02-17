@@ -128,13 +128,13 @@ public class ComponentDescriptor
 	 *
 	 *	@return  A component as described by this descriptor.
 	 */
-	public function newInstance():Component
+	public function newInstance():BaseComponent
 	{
-		var component:Component;
+		var component:BaseComponent;
 		
 		// Instantiate if parent is a class
 		if(parent is Class) {
-			component = new parent() as Component;
+			component = new parent() as BaseComponent;
 		}
 		// Create new instance from parent descriptor
 		else if(parent is ComponentDescriptor) {

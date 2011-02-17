@@ -1,6 +1,6 @@
 package mockdown.display
 {
-import mockdown.components.StyleComponent;
+import mockdown.components.Component;
 import mockdown.geom.Point;
 import mockdown.geom.Rectangle;
 
@@ -69,7 +69,7 @@ public interface RenderObject
 	 *	@param component  Specifies the styled component to draw.
 	 *	@param fill       The style of fill to use.
 	 */
-	function drawBorderedBackground(component:StyleComponent, fill:Fill=null):void;
+	function drawBorderedBackground(component:Component, fill:Fill=null):void;
 
 	/**
 	 *	Clears all previous drawing from the rendered output.

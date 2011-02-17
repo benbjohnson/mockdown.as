@@ -1,1 +1,2 @@
-%row width=461 height=36 border="1px #CDCDCD" background="#FCFCFC,#E8E8E8" backgroundAngle="90" borderRadius="0 0 6 6"
+%row width=461 height=36 border="1px #CDCDCD" borderTop="0px" background="#FCFCFC,#E8E8E8" backgroundAngle="90" borderRadius="0 0 6 6"
+  

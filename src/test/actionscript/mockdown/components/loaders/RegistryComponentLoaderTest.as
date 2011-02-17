@@ -52,13 +52,13 @@ public class RegistryComponentLoaderTest
 		loader.register(null, Object);
 	}
 
-	[Test(expects="ArgumentError", message="Component type is required when registering a component")]
+	[Test(expects="ArgumentError", message="BaseComponent type is required when registering a component")]
 	public function shouldThrowErrorWhenRegisteringClassWithMissingType():void
 	{
 		loader.register("foo", null);
 	}
 
-	[Test(expects="ArgumentError", message="Component type must be a class")]
+	[Test(expects="ArgumentError", message="BaseComponent type must be a class")]
 	public function shouldThrowErrorWhenRegisteringClassWithNonClassType():void
 	{
 		loader.register("foo", {});
@@ -89,5 +89,5 @@ public class RegistryComponentLoaderTest
 }
 }
 
-import mockdown.components.Component;
-class TestClass extends Component{}
+import mockdown.components.BaseComponent;
+class TestClass extends BaseComponent{}
